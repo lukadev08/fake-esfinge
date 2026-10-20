@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulador e-Sfinge Tributário — Planejamento do escopo de desenvolvimento</title>
+<style>
+:root{color-scheme:light;--ink:#203340;--muted:#526875;--accent:#155b76;--line:#d7e1e6;--paper:#fff;--back:#f3f6f8}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:1.5rem}
+body{margin:0;background:var(--back);color:var(--ink);font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+a{color:var(--accent);text-underline-offset:.18em;overflow-wrap:anywhere}
+a:hover{text-decoration-thickness:2px}
+a:focus-visible{outline:3px solid #e0a629;outline-offset:3px}
+.skip{position:absolute;left:1rem;top:-5rem;background:white;padding:.6rem 1rem;z-index:3}
+.skip:focus{top:1rem}
+.document{max-width:1120px;margin:2.5rem auto;padding:3.5rem 4rem;background:var(--paper);border:1px solid var(--line);border-radius:12px}
+header{padding-bottom:1.8rem;border-bottom:3px solid var(--accent);margin-bottom:2rem}
+header h1{font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.18;margin:0 0 .7rem;color:#173e56}
+.subtitle{font-size:1.22rem;margin:0 0 .6rem}.date{font-size:.92rem;color:var(--muted);margin:0}
+nav{padding:1.5rem 1.8rem;background:#f6f9fb;border:1px solid var(--line);border-radius:8px;margin:0 0 3rem}
+nav h2{margin:0 0 .8rem;font-size:1.1rem;border:0;padding:0}
+nav ul{margin:.3rem 0;padding-left:1.3rem}nav>ul{list-style:none;padding-left:0}nav li{margin:.23rem 0}nav a{text-decoration:none}nav a:hover{text-decoration:underline}
+main h1{font-size:1.65rem;line-height:1.3;margin:3rem 0 1rem;border-bottom:1px solid var(--line);padding-bottom:.6rem;color:#173e56}
+main h1:first-child{margin-top:0}
+main h2{font-size:1.2rem;margin:1.9rem 0 .8rem;line-height:1.4;color:#234e64}
+p{margin:.85rem 0}li{margin:.4rem 0}strong{font-weight:650}
+table{border-collapse:collapse;width:100%;margin:1.25rem 0 1.75rem;font-size:.9rem;line-height:1.5;table-layout:fixed}
+th,td{text-align:left;vertical-align:top;padding:.7rem .8rem;border:1px solid var(--line);overflow-wrap:anywhere}
+th{background:#eaf1f5;color:#173e56;font-weight:650}tbody tr:nth-child(even){background:#f8fafb}
+table p{margin:.15rem 0}code{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-size:.9em;background:#edf2f5;padding:.1em .25em;border-radius:3px;overflow-wrap:anywhere}
+pre{overflow-x:auto;background:#f3f6f8;border:1px solid var(--line);border-radius:6px;padding:1.2rem;font-size:.85rem;line-height:1.6;tab-size:4}
+pre code{background:none;padding:0;white-space:pre;overflow-wrap:normal}
+@media(max-width:760px){.document{margin:0;border:0;border-radius:0;padding:1.5rem 1rem}nav{padding:1rem}table{font-size:.78rem}th,td{padding:.5rem .4rem}main h1{font-size:1.4rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{@page{size:A4;margin:17mm}body{background:white;font-size:10pt;line-height:1.45}.document{max-width:none;margin:0;padding:0;border:0;border-radius:0}nav,.skip{display:none}header{margin-bottom:1.5rem}header h1{font-size:24pt}main h1{font-size:16pt;margin-top:1.8rem}main h2{font-size:12pt}h1,h2,th{break-after:avoid}table{font-size:8pt}thead{display:table-header-group}tr{break-inside:avoid}th,td{padding:.35rem .45rem}pre{white-space:pre-wrap;overflow:visible;font-size:7pt}pre code{white-space:pre-wrap}a{color:inherit;text-decoration:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#conteudo">Ir para o conteúdo</a>
+<div class="document">
+<header>
+<h1>Simulador e-Sfinge Tributário</h1>
+<p class="subtitle">Planejamento do escopo de desenvolvimento</p>
+<p class="date">20 de outubro de 2026 · versão 1.0</p>
+</header>
+<nav aria-label="Sumário">
+<h2>Sumário</h2>
+<ul>
+<li><a href="#recomendação-e-resultado-esperado" id="toc-recomendação-e-resultado-esperado">1. Recomendação e resultado esperado</a></li>
+<li><a href="#problema-e-evidências-verificadas" id="toc-problema-e-evidências-verificadas">2. Problema e evidências verificadas</a>
+<ul>
+<li><a href="#homologação-e-produção" id="toc-homologação-e-produção">2.1 Homologação e produção</a></li>
+<li><a href="#distinções-que-orientam-o-escopo" id="toc-distinções-que-orientam-o-escopo">2.2 Distinções que orientam o escopo</a></li>
+<li><a href="#limites-da-pesquisa-realizada" id="toc-limites-da-pesquisa-realizada">2.3 Limites da pesquisa realizada</a></li>
+</ul></li>
+<li><a href="#fronteira-do-produto-e-independência-da-origem" id="toc-fronteira-do-produto-e-independência-da-origem">3. Fronteira do produto e independência da origem</a></li>
+<li><a href="#escopo-funcional-proposto" id="toc-escopo-funcional-proposto">4. Escopo funcional proposto</a>
+<ul>
+<li><a href="#incluído-no-mvp" id="toc-incluído-no-mvp">4.1 Incluído no MVP</a></li>
+<li><a href="#assuntos-e-níveis-de-cobertura" id="toc-assuntos-e-níveis-de-cobertura">4.2 Assuntos e níveis de cobertura</a></li>
+<li><a href="#fora-do-mvp" id="toc-fora-do-mvp">4.3 Fora do MVP</a></li>
+</ul></li>
+<li><a href="#contratos-e-superfície-de-api" id="toc-contratos-e-superfície-de-api">5. Contratos e superfície de API</a>
+<ul>
+<li><a href="#inventário-inicial-de-rotas" id="toc-inventário-inicial-de-rotas">5.1 Inventário inicial de rotas</a></li>
+<li><a href="#pacote-de-contrato-necessário-antes-da-implementação-compatível" id="toc-pacote-de-contrato-necessário-antes-da-implementação-compatível">5.2 Pacote de contrato necessário antes da implementação compatível</a></li>
+<li><a href="#autenticação-e-erros" id="toc-autenticação-e-erros">5.3 Autenticação e erros</a></li>
+</ul></li>
+<li><a href="#arquitetura-de-referência" id="toc-arquitetura-de-referência">6. Arquitetura de referência</a></li>
+<li><a href="#modelo-de-dados-e-invariantes" id="toc-modelo-de-dados-e-invariantes">7. Modelo de dados e invariantes</a></li>
+<li><a href="#comportamento-e-processamento" id="toc-comportamento-e-processamento">8. Comportamento e processamento</a>
+<ul>
+<li><a href="#fluxo-nominal-proposto" id="toc-fluxo-nominal-proposto">8.1 Fluxo nominal proposto</a></li>
+<li><a href="#situações-externas-e-recuperação" id="toc-situações-externas-e-recuperação">8.2 Situações externas e recuperação</a></li>
+<li><a href="#retransmissão-e-resposta-perdida" id="toc-retransmissão-e-resposta-perdida">8.3 Retransmissão e resposta perdida</a></li>
+</ul></li>
+<li><a href="#validação-e-fidelidade" id="toc-validação-e-fidelidade">9. Validação e fidelidade</a></li>
+<li><a href="#cenário-fictício-mínimo-e-prova-do-fluxo-completo" id="toc-cenário-fictício-mínimo-e-prova-do-fluxo-completo">10. Cenário fictício mínimo e prova do fluxo completo</a></li>
+<li><a href="#matriz-mínima-de-cenários-e-aceite" id="toc-matriz-mínima-de-cenários-e-aceite">11. Matriz mínima de cenários e aceite</a></li>
+<li><a href="#portabilidade-operação-e-evidências" id="toc-portabilidade-operação-e-evidências">12. Portabilidade, operação e evidências</a></li>
+<li><a href="#plano-de-desenvolvimento-e-entregáveis" id="toc-plano-de-desenvolvimento-e-entregáveis">13. Plano de desenvolvimento e entregáveis</a></li>
+<li><a href="#critérios-de-conclusão-do-mvp" id="toc-critérios-de-conclusão-do-mvp">14. Critérios de conclusão do MVP</a></li>
+<li><a href="#decisões-pendentes-e-perguntas-para-implementação" id="toc-decisões-pendentes-e-perguntas-para-implementação">15. Decisões pendentes e perguntas para implementação</a></li>
+<li><a href="#riscos-e-medidas-de-projeto" id="toc-riscos-e-medidas-de-projeto">16. Riscos e medidas de projeto</a></li>
+<li><a href="#fontes-situação-de-acesso-e-rastreabilidade" id="toc-fontes-situação-de-acesso-e-rastreabilidade">17. Fontes, situação de acesso e rastreabilidade</a></li>
+</ul>
+</nav>
+<main id="conteudo">
+<h1 id="recomendação-e-resultado-esperado">1. Recomendação e resultado esperado</h1>
+<p>Desenvolver um simulador HTTP com estado, portável e reiniciável, que ocupe o lugar da API do TCE/SC no ambiente de testes do integrador. O simulador deverá receber os lotes efetivamente produzidos pelo integrador, conservar seus conteúdos, controlar remessas, executar processamento assíncrono controlado e devolver respostas compatíveis com o contrato selecionado.</p>
+<p>O resultado esperado é poder repetir o fluxo de integração quantas vezes forem necessárias, inclusive quando os períodos das cidades clientes estiverem ratificados no TCE. O ensaio deverá demonstrar que os registros esperados chegaram ao destino, que não foram perdidos na divisão em lotes e que o integrador reagiu corretamente a sucesso, rejeição, demora e interrupção.</p>
+<p>Este documento entrega o planejamento de desenvolvimento. Não contém uma implementação nem uma declaração de conformidade integral com o TCE. As decisões de arquitetura são propostas; comportamentos oficiais e lacunas de pesquisa estão identificados separadamente.</p>
+<p><strong>Restrições confirmadas pelo usuário:</strong> integrador em Java 21 com Spring 3.5, URL base e credenciais configuráveis, operações atuais de processamento interno, envio, consulta de lote e cancelamento; simulador executado em Docker. Os DTOs seguem o Swagger informado na conversa. Exemplos completos de requisições/respostas e erros poderão ser fornecidos futuramente; não foram analisados nesta etapa. A nomenclatura “Spring 3.5” será confirmada no inventário do projeto, presumindo-se Spring Boot 3.5.</p>
+<p><strong>Recorte funcional confirmado:</strong> cadastro de contribuinte, lançamento de crédito tributário, diário de arrecadação, baixa de crédito tributário, saldo inicial e início do prazo prescricional. O cancelamento utilizado atua sobre lotes/assuntos de um envio em andamento e inclui cancelamento parcial. Cada remessa contém um único assunto, com um ou mais lotes; o integrador chama o início remoto de processamento depois de transmitir todos os lotes dessa remessa. O fluxo é denominado atualmente “envio-lote”, cujo nome será ajustado.</p>
+<p><strong>Base inicial recomendada:</strong> exercício 2026, família de endpoints V6, leiaute 6.06 e catálogo de CONs 6.9 como referências a congelar na etapa inicial. A versão efetivamente usada pelo integrador ainda precisa ser confirmada. As publicações de 2027 não devem ser misturadas ao perfil 2026. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/2154922045">F06</a>, <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/1517223937">F07</a>, <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/2310539061">F16</a>.</p>
+<h1 id="problema-e-evidências-verificadas">2. Problema e evidências verificadas</h1>
+<h2 id="homologação-e-produção">2.1 Homologação e produção</h2>
+<p>O aviso oficial de 21/08/2023 informa que os dados tributários de testes passaram a acompanhar a cópia de produção da semana anterior, com mascaramento de determinados campos. Isso caracteriza uma base copiada; a fonte não demonstra que ambos os ambientes utilizem uma única base transacional. Também não oferece, nesse aviso, um mecanismo de reset por empresa ou município. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/132579359">F01</a>.</p>
+<p>A tabela oficial de comportamento após ratificação marca o Tributário como impedido para novos envios e cancelamentos no período ratificado. A combinação entre essa regra e a cópia de produção é uma explicação consistente para os bloqueios relatados. O diagnóstico exato de cada erro continua dependendo da requisição, competência, UG e resposta concreta. Não foi verificado que todo erro de ausência de lotes decorra da ratificação. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/13882932">F02</a>.</p>
+<p>O catálogo de endpoints de outubro de 2025 aponta os seguintes endereços de documentação, diferentes do endereço antigo informado na conversa: <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/1560969264">F03</a>.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Ambiente</th>
+<th>Swagger indicado atualmente pela documentação</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Homologação/Sandbox</td>
+<td><a href="https://api.virtual.testing.tce.sc.gov.br/esfingeonline/swagger-ui.html">Swagger em api.virtual.testing.tce.sc.gov.br</a></td>
+</tr>
+<tr class="even">
+<td>Produção</td>
+<td><a href="https://api.virtual.tce.sc.gov.br/esfingeonline/swagger-ui.html">Swagger em api.virtual.tce.sc.gov.br</a></td>
+</tr>
+</tbody>
+</table>
+<p>Esses endereços apontam para a interface Swagger. A composição da URL base de serviço deverá ser extraída da especificação; não se deve configurar o cliente usando a URL da página HTML como base.</p>
+<h2 id="distinções-que-orientam-o-escopo">2.2 Distinções que orientam o escopo</h2>
+<p>Remessa é o agrupamento lógico; lote é uma parcela transmitida assincronamente. A orientação para 2026 admite até 64 remessas por UG/mês, sem estabelecer esse mesmo limite para a quantidade de lotes. Também impede abrir duas remessas simultaneamente para a mesma UG/competência. As faixas sugeridas de 10 mil a 50 mil registros por lote e de até 500 mil por remessa são recomendações de dimensionamento, não limites obrigatórios a inventar no simulador. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/2154921985">F05</a>.</p>
+<p>A V6 introduz o início explícito do processamento, entre a recepção dos lotes e a finalização. O perfil anterior tem fluxo diferente; reproduzir apenas a descrição antiga produziria testes enganosos. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/1582465028">F04</a>, <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/759267332">F11</a>.</p>
+<p>A ratificação V6.06 é documentada como exclusiva do TCE Virtual/e-Sfinge Web. No MVP, o bloqueio de competência será semeado ou acionado pelo controle administrativo do simulador. Não será criada uma rota fictícia de ratificação dentro da superfície compatível com o TCE. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/2154923870">F08</a>.</p>
+<h2 id="limites-da-pesquisa-realizada">2.3 Limites da pesquisa realizada</h2>
+<ul>
+<li>A conversa referenciada foi lida pela ferramenta de chats. Suas duas mensagens estão disponíveis; as duas respostas anteriores aparecem somente como marcadores internos, sem conteúdo. Não foi possível recuperar ou auditar a lista exata de fontes citadas nessas respostas. A pesquisa deste documento foi refeita em fontes oficiais.</li>
+<li>O Swagger antigo não pôde ser lido pela ferramenta de pesquisa. O endereço atual retornou a interface sem conteúdo textual da especificação. Uma tentativa de obter <code>/v2/api-docs</code> também não forneceu contrato legível. Isso não prova indisponibilidade do serviço para seus usuários.</li>
+<li>As rotas da seção 5 foram verificadas no manual oficial V6. Métodos HTTP, schemas completos, headers e respostas por operação ainda não foram confirmados por exportação OpenAPI.</li>
+<li>A página oficial de CONs lista a versão 6.9 de 17/09/2026. O arquivo vinculado no SharePoint não pôde ser recuperado nesta pesquisa; não se afirma ter analisado suas regras individualmente.</li>
+<li>O FAQ atual e o material histórico de 2020 foram localizados. Servem como contexto e esclarecimento, sem substituir o contrato anual em uso. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/13912693">F15</a>, <a href="https://www.tcesc.tc.br/sites/default/files/Perguntas%20e%20Respostas_tributario_Esfinge2020_v1.06.pdf">F18</a>.</li>
+<li>Nenhuma chamada autenticada, transmissão, cancelamento ou ratificação foi realizada no TCE. Não foi solicitado acesso a contas municipais.</li>
+</ul>
+<h1 id="fronteira-do-produto-e-independência-da-origem">3. Fronteira do produto e independência da origem</h1>
+<p>O serviço independente continua responsável pela captura e disponibilização dos registros. O integrador da empresa continua responsável por obter esses registros, transformá-los no formato de envio, montar remessas e lotes e conduzir o diálogo com o destino. O simulador começa na fronteira HTTP que hoje aponta para o TCE.</p>
+<pre class="text"><code>Serviço independente de dados
+            |
+            v
+Integrador real da empresa
+  obtém -&gt; transforma -&gt; organiza remessas/lotes -&gt; envia -&gt; acompanha
+                                                     |
+                                                     v
+                                          Simulador local do TCE
+                                          recebe e conserva payloads
+                                          processa e valida subconjunto
+                                          expõe consultas e resultados
+
+Executor de testes ----------------------&gt; Controle administrativo
+  prepara cenário, avança relógio, consulta evidências e reinicia estado</code></pre>
+<p><strong>Contrato de independência:</strong> o simulador não acessará banco, API, fila, arquivos internos ou credenciais do fornecedor de dados. Não conhecerá classes ou modelos de domínio do serviço de captura. Sua entrada serão as requisições no formato do TCE; sua configuração adicional será exclusivamente de cenários de teste.</p>
+<p>Para comprovar também a parte anterior ao envio, o teste deverá alimentar o integrador com um conjunto conhecido no ambiente do serviço independente ou em um substituto de teste já disponível para ele. Se for necessário construir esse substituto, ele será um artefato separado, fora do MVP do simulador. Reproduzir a lógica de montagem de lotes dentro do simulador eliminaria justamente a parte que se quer verificar.</p>
+<p>Um cliente simples e arquivos JSON poderão acompanhar o simulador para validar seu próprio funcionamento. Eles não substituem os ensaios que executam o integrador real desde a obtenção dos registros.</p>
+<h1 id="escopo-funcional-proposto">4. Escopo funcional proposto</h1>
+<h2 id="incluído-no-mvp">4.1 Incluído no MVP</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>ID</th>
+<th>Capacidade</th>
+<th>Entrega verificável</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>RF01</td>
+<td>Perfil de contrato anual</td>
+<td>Rotas e schemas selecionados, versão registrada e manifesto de cobertura</td>
+</tr>
+<tr class="even">
+<td>RF02</td>
+<td>Autenticação simulada</td>
+<td>Usuário/UG fictícios, emissão e expiração controladas, rejeição de token inválido</td>
+</tr>
+<tr class="odd">
+<td>RF03</td>
+<td>Remessas e lotes</td>
+<td>Abertura, recepção de payload real, identificadores, vínculo entre entidades e consultas</td>
+</tr>
+<tr class="even">
+<td>RF04</td>
+<td>Processamento controlado</td>
+<td>Executor assíncrono, fila persistida e avanço manual para testes determinísticos</td>
+</tr>
+<tr class="odd">
+<td>RF05</td>
+<td>Validação mínima</td>
+<td>Formato do contrato, sequência de operações e regras tributárias explicitamente selecionadas</td>
+</tr>
+<tr class="even">
+<td>RF06</td>
+<td>Finalização</td>
+<td>Verificação de resultados e totalizadores, resultado coerente com os dados aceitos</td>
+</tr>
+<tr class="odd">
+<td>RF07</td>
+<td>Cancelamento e recuperação de erros</td>
+<td>Descarte de lote/assunto, cancelamento parcial em andamento e recuperação do perfil, conforme casos confirmados</td>
+</tr>
+<tr class="even">
+<td>RF08</td>
+<td>Competência bloqueada</td>
+<td>Cenário com ratificação simulada e restauração do estado inicial</td>
+</tr>
+<tr class="odd">
+<td>RF09</td>
+<td>Falhas de transporte</td>
+<td>Demora, erro HTTP, perda de resposta e falha interna selecionados por cenário</td>
+</tr>
+<tr class="even">
+<td>RF10</td>
+<td>Evidências de execução</td>
+<td>Diário de chamadas, conteúdos sanitizados, contagens e resultados por lote/remessa</td>
+</tr>
+<tr class="odd">
+<td>RF11</td>
+<td>Portabilidade</td>
+<td>Imagem, configuração por arquivo/variáveis, persistência local e execução em CI</td>
+</tr>
+<tr class="even">
+<td>RF12</td>
+<td>Reset e isolamento</td>
+<td>Recriação repetível, proteção contra tarefas antigas e instância independente por teste</td>
+</tr>
+</tbody>
+</table>
+<p>O MVP deve implementar o fluxo completo para os seis assuntos confirmados, antes de ampliar a profundidade de validação tributária. Receber todos os assuntos silenciosamente sem validar nada não atende ao objetivo.</p>
+<h2 id="assuntos-e-níveis-de-cobertura">4.2 Assuntos e níveis de cobertura</h2>
+<p>O leiaute V6.06 relaciona cadastros, créditos, saldo inicial, dívida ativa, revisões, baixas, arrecadação e estornos. O suporte inicial seguirá os seis assuntos informados pelo usuário, com profundidade explícita no manifesto. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/2154923885">F09</a>.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Grupo</th>
+<th>Cobertura proposta para o MVP</th>
+<th>Evolução</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Cadastro de contribuinte</td>
+<td>Recepção, formato e referências do cenário mínimo</td>
+<td>Histórico cadastral e demais exceções</td>
+</tr>
+<tr class="even">
+<td>Lançamento de crédito tributário</td>
+<td>Recepção, formato e regras selecionadas de vínculo/data</td>
+<td>Mais combinações e consistências financeiras</td>
+</tr>
+<tr class="odd">
+<td>Diário de arrecadação</td>
+<td>Recepção, formato e vínculos com os créditos do cenário</td>
+<td>Exceções por natureza e tipo de arrecadação</td>
+</tr>
+<tr class="even">
+<td>Baixa de crédito tributário</td>
+<td>Recepção, formato, vínculo e cronologia selecionada</td>
+<td>Tipos e exceções adicionais</td>
+</tr>
+<tr class="odd">
+<td>Saldo inicial</td>
+<td>Recepção, formato e cenário de abertura de exercício</td>
+<td>Reintegrações e demais tipos conforme prioridade</td>
+</tr>
+<tr class="even">
+<td>Início do prazo prescricional</td>
+<td>Recepção, formato, vínculo e datas do cenário</td>
+<td>Exceções e histórico adicional</td>
+</tr>
+<tr class="odd">
+<td>Imóvel, propriedade, revisões, estornos, cobrança, CDA e situação de cobrança</td>
+<td>Fora do MVP, salvo dependência comprovada dos seis assuntos</td>
+<td>Pacotes separados de ampliação</td>
+</tr>
+<tr class="even">
+<td>Nota Fiscal de Serviço</td>
+<td>Fora do recorte informado para o MVP</td>
+<td>Pacote de trabalho separado</td>
+</tr>
+</tbody>
+</table>
+<p>NFS-e é um serviço próprio dentro do módulo, documentado como dependente da conclusão do Tributário. Não está entre os seis assuntos informados. Sua inclusão futura exigirá escopo próprio, com schemas e casos; não basta aceitá-lo como mais uma lista genérica. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/2154923972">F10</a>.</p>
+<p>Um assunto sem suporte deverá provocar um erro identificável no relatório de teste. No modo estrito, não poderá finalizar com sucesso. Um modo permissivo poderá existir para investigação, mas sua execução deverá ser marcada como cobertura parcial, sem contar para o aceite.</p>
+<h2 id="fora-do-mvp">4.3 Fora do MVP</h2>
+<ul>
+<li>Captura de dados, migração, saneamento ou montagem de lotes do serviço independente.</li>
+<li>Reprodução do portal TCE Virtual, SGI, assinatura eletrônica, certificados e permissões reais.</li>
+<li>Implementação integral de todas as CONs, cálculos e exceções do TCE.</li>
+<li>Demais módulos do e-Sfinge, SOAP e compatibilidade com vários exercícios simultaneamente.</li>
+<li>Cancelamento de remessa já concluída, que não faz parte do uso informado nesta etapa.</li>
+<li>Recuperação de lotes com assuntos misturados; o fluxo confirmado usa um assunto por remessa.</li>
+<li>Espelhamento de produção, importação automática de dados municipais ou encaminhamento de requisições ao TCE.</li>
+<li>Portal administrativo completo, infraestrutura de mensageria externa e operação de serviço público.</li>
+<li>Webhooks e relatórios oficiais, salvo se o inventário do integrador demonstrar dependência; nesse caso, reavaliar antes de construir o MVP.</li>
+</ul>
+<h1 id="contratos-e-superfície-de-api">5. Contratos e superfície de API</h1>
+<h2 id="inventário-inicial-de-rotas">5.1 Inventário inicial de rotas</h2>
+<p>Os caminhos abaixo constam no manual V6; são relativos à base de serviço. Não constituem um OpenAPI validado. Métodos, parâmetros e corpos serão fixados no pacote de contrato da etapa E0. Para reconstruir cada caminho, concatenar o prefixo e o sufixo: nas sete primeiras linhas, o prefixo é <code>/v6/tributario/</code>; na última linha, é <code>/servicosGerais/</code>. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/1582465028">F04</a>.</p>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Operação</th>
+<th>Sufixo do caminho documentado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Abrir remessa</td>
+<td><code>iniciarEnvio</code></td>
+</tr>
+<tr class="even">
+<td>Receber lote</td>
+<td><code>enviarParcialLote</code></td>
+</tr>
+<tr class="odd">
+<td>Disparar processamento</td>
+<td><code>iniciar-processamento</code></td>
+</tr>
+<tr class="even">
+<td>Consultar lote</td>
+<td><code>consultarPorNumeroLote/{numeroLote}</code></td>
+</tr>
+<tr class="odd">
+<td>Finalizar remessa</td>
+<td><code>finalizarEnvio</code></td>
+</tr>
+<tr class="even">
+<td>Descartar assunto</td>
+<td><code>descarteParcialPorAssunto</code></td>
+</tr>
+<tr class="odd">
+<td>Descartar lote</td>
+<td><code>descartar-lote</code></td>
+</tr>
+<tr class="even">
+<td>Consultar lotes da remessa</td>
+<td><code>consultarStatusLotePorChavePacote/{chavePacote}</code></td>
+</tr>
+</tbody>
+</table>
+<p>Autenticação e a correspondência exata do cancelamento parcial do integrador precisam ser inventariadas. Estão confirmados descarte de lotes/assuntos em andamento e início remoto de processamento. O cancelamento parcial deve ser mapeado às operações reais, sem criar um endpoint adicional com base apenas no nome usado pela aplicação. Cancelamento de remessa concluída fica fora do recorte atual.</p>
+<p>A sequência informada pelo usuário é: abrir remessa de um assunto, transmitir todos os seus lotes, iniciar o processamento remoto, acompanhar e finalizar. O simulador deverá testar exatamente essa sequência e revelar chamadas sobrepostas ou fora da ordem contratada. A alteração do nome interno “envio-lote” pertence ao integrador e não exige criar uma rota alternativa no simulador.</p>
+<h2 id="pacote-de-contrato-necessário-antes-da-implementação-compatível">5.2 Pacote de contrato necessário antes da implementação compatível</h2>
+<p>Registrar, para cada operação efetivamente usada: método HTTP; caminho; parâmetros e localização; headers; content type; schema de entrada; schema de sucesso e erro; campos opcionais; comportamento de campo ausente versus nulo; tipos numéricos; representação das datas; identificadores; exemplos sanitizados e referências de origem.</p>
+<p>A referência de transporte oficial usa REST/JSON, UTF-8 e datas ISO-8601. O versionamento anual se aplica ao envio, enquanto autenticação e serviços gerais permanecem sem esse prefixo anual. Essas orientações não resolvem os detalhes de cada endpoint. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/13877935">F12</a>, <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/758677529">F13</a>.</p>
+<p>O pacote deverá ser armazenado com data de obtenção, hash e origem. Se não for possível exportar OpenAPI, produzir um contrato derivado dos manuais e dos exemplos do integrador, com lacunas marcadas. Ele não deverá ser apresentado como especificação oficial exportada.</p>
+<h2 id="autenticação-e-erros">5.3 Autenticação e erros</h2>
+<p>O manual de autenticação descreve os parâmetros <code>codigoAcesso</code>, <code>codigoUg</code> e <code>senha</code>, e o retorno <code>auth_token</code>. O simulador usará valores fictícios e emitirá tokens válidos somente nele. O endpoint e os headers exatos ainda precisam ser confirmados. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/13867166">F14</a>.</p>
+<p>A página de uso de tokens contém referências conflitantes a duração de uma hora e seis horas. Por isso, o planejamento propõe duração configurável e um cenário determinístico de expiração; não fixa nenhuma dessas durações como regra atual do TCE. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/13861444">F17</a>.</p>
+<p>O catálogo genérico de retornos associa 200/201 a sucesso, 400 a negócio, 401 à autenticação, 422 à formação/obrigatoriedade e 500 a erro de servidor. A correspondência por operação deverá ser conferida; erro de negócio detectado no processamento assíncrono também precisa ser representado na consulta de lote. Não se deve trocar indiscriminadamente todo erro tributário por HTTP 400. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/13870220">F19</a>.</p>
+<p>Mensagens e códigos oficiais só serão reproduzidos quando houver evidência. Uma regra exclusiva do simulador terá identificação própria no controle administrativo; não receberá um número de CON inventado.</p>
+<h1 id="arquitetura-de-referência">6. Arquitetura de referência</h1>
+<p>Recomenda-se um único serviço com adaptador HTTP, motor de domínio, armazenamento e executor de tarefas, implementado em Java 21 e Spring Boot 3.5 para aproveitar a plataforma já conhecida pela equipe. Essa escolha não cria dependência de código do integrador ou do serviço de origem. SQLite e diretório local de payloads são suficientes para a primeira versão de uso individual/CI; em Java, pode-se usar acesso SQL explícito para evitar uma camada ORM desnecessária no MVP.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Componente</th>
+<th>Responsabilidade</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Adaptador compatível</td>
+<td>Implementar o contrato TCE selecionado sem parâmetros exclusivos de teste no payload</td>
+</tr>
+<tr class="even">
+<td>Autenticação local</td>
+<td>Vincular token a usuário/UG fictícios e controlar expiração</td>
+</tr>
+<tr class="odd">
+<td>Motor de remessas</td>
+<td>Aplicar precondições e coordenar lotes, dados aceitos e finalização</td>
+</tr>
+<tr class="even">
+<td>Executor assíncrono</td>
+<td>Consumir trabalhos persistidos e produzir transições observáveis</td>
+</tr>
+<tr class="odd">
+<td>Validador por perfil</td>
+<td>Aplicar somente regras cadastradas e expor a cobertura</td>
+</tr>
+<tr class="even">
+<td>Armazenamento</td>
+<td>Guardar requisições, dados, vínculos, resultados e agenda de tarefas</td>
+</tr>
+<tr class="odd">
+<td>Controle administrativo</td>
+<td>Preparar, inspecionar, avançar tempo, injetar falhas e reiniciar cenários</td>
+</tr>
+</tbody>
+</table>
+<p>O controle administrativo deverá usar porta separada ou prefixo reservado, por exemplo <code>/__simulator</code>, com chave própria. Os nomes dessa interface são proposta interna. O integrador não dependerá dela para funcionar: o executor de testes a utiliza antes e depois do fluxo normal.</p>
+<p>Não é necessário Kafka, Redis ou um cluster para o MVP. Caso uso compartilhado e grande concorrência sejam requisitos confirmados, reavaliar persistência e operação antes de escolher o banco definitivo.</p>
+<h1 id="modelo-de-dados-e-invariantes">7. Modelo de dados e invariantes</h1>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Entidade proposta</th>
+<th>Dados mínimos</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Execução/cenário</td>
+<td>ID, geração de reset, perfil, seed, instante inicial e plano de falhas</td>
+</tr>
+<tr class="even">
+<td>UG e usuário</td>
+<td>Identificadores fictícios, vínculo e permissões simuladas</td>
+</tr>
+<tr class="odd">
+<td>Competência</td>
+<td>UG, ano/mês e condição aberta/ratificada</td>
+</tr>
+<tr class="even">
+<td>Remessa</td>
+<td>Chave opaca, UG, competência, etiqueta, política de cancelamento e fase interna</td>
+</tr>
+<tr class="odd">
+<td>Lote</td>
+<td>Número, remessa, sequência de chegada, situação, payload/hash, contagens e erros</td>
+</tr>
+<tr class="even">
+<td>Registro recebido</td>
+<td>Assunto, chave de negócio e localização no payload original</td>
+</tr>
+<tr class="odd">
+<td>Registro efetivo</td>
+<td>Conteúdo aceito, versão e origem em lote/remessa, com trilha de remoção</td>
+</tr>
+<tr class="even">
+<td>Trabalho</td>
+<td>Remessa/lote, momento agendado, condição de execução e geração do cenário</td>
+</tr>
+<tr class="odd">
+<td>Evento</td>
+<td>Chamada, resposta sanitizada, transição, instante e correlação</td>
+</tr>
+</tbody>
+</table>
+<p>As fases internas sugeridas para remessa — aberta, em processamento, recuperável, finalizada, cancelada e expirada — são conceitos do simulador. Não serão publicadas como enums oficiais do TCE.</p>
+<p>Invariantes de projeto:</p>
+<ol type="1">
+<li>Consultar não deve, por si só, alterar o resultado do processamento. O avanço decorrerá do executor ou de comando administrativo explícito.</li>
+<li>Cada lote conserva o vínculo com sua remessa, UG e cenário; uma chave de outra UG não dá acesso a ele.</li>
+<li>Persistir o lote e registrar o trabalho correspondente deve ser consistente. Um reinício não pode esquecer o lote já reconhecido ao cliente.</li>
+<li>Reiniciar o cenário invalida os trabalhos da geração anterior; eles não podem modificar o novo estado.</li>
+<li>Dados recebidos, dados processados e dados efetivos são conjuntos distintos. O relatório deve permitir explicar sua diferença.</li>
+<li>Remover dados de um assunto não equivale a reescrever todo o histórico de status. O histórico e o conjunto efetivo precisam ser rastreáveis separadamente.</li>
+<li>Contagens e valores são calculados a partir dos payloads e de seus efeitos; nenhum resultado é gerado apenas porque o cenário se chama “sucesso”.</li>
+<li>Valores monetários usam representação decimal exata; identificadores preservam os zeros e tipos exigidos pelo contrato.</li>
+</ol>
+<p>O cenário principal requer referências entre os registros efetivos das remessas já finalizadas dos seis assuntos. Atomicidade por registro/lote, visibilidade de remessas ainda em andamento e comportamento de reenvio precisam de casos observados. Não se deve escolher uma transação de banco conveniente e anunciá-la como garantia do TCE.</p>
+<h1 id="comportamento-e-processamento">8. Comportamento e processamento</h1>
+<h2 id="fluxo-nominal-proposto">8.1 Fluxo nominal proposto</h2>
+<p>O executor de teste prepara a competência e as credenciais fictícias. Para cada assunto, o integrador abre a remessa, transmite todos os seus lotes e solicita processamento; o simulador passa a executar os trabalhos. O integrador acompanha as consultas e conclui o envio. Repete-se o ciclo nos demais assuntos, na ordem de dependência do cenário. Ao fim, o executor compara os registros esperados com os dados efetivos das remessas no simulador e verifica a conclusão no próprio integrador.</p>
+<p>Deverão existir dois modos de execução: automático, com latência configurada, para uso exploratório; e manual, com avanço explícito de tarefas/tempo, para CI. A mesma sequência de entrada, seed e comandos deverá produzir o mesmo resultado lógico. A passagem do tempo real não poderá ser necessária para testar expiração longa.</p>
+<h2 id="situações-externas-e-recuperação">8.2 Situações externas e recuperação</h2>
+<p>Vocabulário documentado no fluxo assíncrono: <code>RECEBIDO</code>, <code>EM_PROCESSAMENTO</code>, <code>PROCESSADO_SUCESSO</code>, <code>PROCESSADO_ERRO_NEGOCIO</code>, <code>PROCESSADO_ERRO_INTERNO</code>, <code>ABORTADO_ERRO_LOTE_ANTERIOR</code>, <code>ABORTADO_AGUARDANDO_DESCARTE_PARCIAL</code> e <code>ABORTADO</code>. O cancelamento automático define se a recuperação conserva dados anteriores; o fluxo de descarte deve respeitar dependências. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/759267332">F11</a>.</p>
+<p>Para V6, acrescentar <code>LOTE_DESCARTADO</code> e preservar as exceções do caso de um assunto. A documentação também distingue lotes mistos, cuja recuperação fica para ampliação futura. Ela prevê timeout de 72 horas, renovado pelas operações indicadas. Os casos incluídos serão transformados em tabelas de decisão antes de codificar. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/1582465028">F04</a>.</p>
+<p>Há pontos que exigem fechamento de contrato: a relação entre finalização e lotes descartados/abortados após recuperação, o comportamento de descarte com cancelamento automático desativado e o resultado quando não há lotes elegíveis. O simulador não deve assumir que uma lista vazia significa processamento bem-sucedido.</p>
+<h2 id="retransmissão-e-resposta-perdida">8.3 Retransmissão e resposta perdida</h2>
+<p>Guardar o hash do payload ajuda a investigar repetição, mas não cria uma garantia oficial de idempotência. O modo compatível deverá reproduzir o comportamento confirmado do TCE para repetição de abertura, envio, processamento e finalização.</p>
+<p>Incluir duas falhas diferentes: falha antes de aceitar a operação, sem efeito persistido; e falha depois de aceitar, com resposta perdida. O segundo caso testa se o integrador consulta e reconcilia o estado antes de reenviar, evitando duplicidades. Qualquer política temporária enquanto a semântica oficial estiver desconhecida deverá constar no manifesto como aproximação.</p>
+<h1 id="validação-e-fidelidade">9. Validação e fidelidade</h1>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Nível</th>
+<th>O que verifica</th>
+<th>Aceite no MVP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Contrato</td>
+<td>Tipos, campos, enums, formatos e estruturas do perfil</td>
+<td>Obrigatório para as operações e assuntos habilitados</td>
+</tr>
+<tr class="even">
+<td>Fluxo</td>
+<td>Ordem das operações, vínculo de chaves, concorrência e bloqueio de competência</td>
+<td>Obrigatório</td>
+</tr>
+<tr class="odd">
+<td>Domínio selecionado</td>
+<td>Referências cadastrais, cronologia e regras dos casos do piloto</td>
+<td>Lista fechada de regras com origem e testes</td>
+</tr>
+<tr class="even">
+<td>Catálogo completo</td>
+<td>Todas as CONs e exceções anuais</td>
+<td>Fora do MVP</td>
+</tr>
+</tbody>
+</table>
+<p>Lista inicial proposta para escolha com a equipe: referência cadastral ausente; chave de negócio repetida; data de movimentação incompatível; baixa anterior ao crédito; totalizadores divergentes; tentativa em competência bloqueada. Cada regra deve indicar a etapa de aplicação: recepção, processamento ou finalização. Estas são candidatas, não uma afirmação de que todas correspondem a CONs já analisadas.</p>
+<p>Para os assuntos sem validação profunda, o manifesto separará “formato compatível” de “regra de negócio implementada”. Campos extras e desconhecidos seguirão a política confirmada no contrato; não serão descartados silenciosamente.</p>
+<p>O manifesto de cobertura deverá conter: operação, assunto, regra, versão de referência, evidência, teste associado e situação — implementada, aproximada, não implementada ou pendente. Ele acompanhará todo relatório de execução.</p>
+<h1 id="cenário-fictício-mínimo-e-prova-do-fluxo-completo">10. Cenário fictício mínimo e prova do fluxo completo</h1>
+<p>Propor uma UG fictícia A, uma UG B para isolamento, competência 202601 e relógio fixo. Janeiro permite incluir saldo inicial no cenário principal, cobrindo os seis assuntos confirmados. Uma variante em fevereiro testa continuidade de estado; outra cobre mês sem movimento. O leiaute exige atenção específica a saldo inicial e permite pacote sem movimentação, observadas suas condições. <a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/2154923885">F09</a>.</p>
+<p>Conjunto lógico de exemplo, a adaptar aos campos e referências efetivamente usados:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dado sintético</th>
+<th>Quantidade</th>
+<th>Relação pretendida</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Contribuintes</td>
+<td>3</td>
+<td>Identificadores estáveis, nomes fictícios</td>
+</tr>
+<tr class="even">
+<td>Créditos</td>
+<td>4</td>
+<td>Vínculos e datas definidos no manifesto de entrada</td>
+</tr>
+<tr class="odd">
+<td>Arrecadações</td>
+<td>2</td>
+<td>Vinculadas aos créditos escolhidos</td>
+</tr>
+<tr class="even">
+<td>Baixa</td>
+<td>1</td>
+<td>Caso nominal ou data inválida em variante negativa</td>
+</tr>
+<tr class="odd">
+<td>Saldo inicial</td>
+<td>1</td>
+<td>Saldo de abertura com referência de exercício anterior conforme DTO</td>
+</tr>
+<tr class="even">
+<td>Início do prazo prescricional</td>
+<td>1</td>
+<td>Vinculado ao crédito compatível com as pré-condições do perfil</td>
+</tr>
+</tbody>
+</table>
+<p>Essas quantidades são propostas de teste, não prescrições do TCE. A equipe fornecerá os atributos e o estado anterior que tornem o conjunto válido no perfil adotado, inclusive referências para saldo inicial e prazo prescricional. A preparação pode semear pré-condições históricas pelo controle administrativo; elas serão distinguidas dos registros realmente enviados pelo integrador. Não usar cópias reais de contribuintes para preencher lacunas.</p>
+<p>Roteiro de aceite ponta a ponta:</p>
+<ol type="1">
+<li>Preparar esse conjunto no ambiente de origem de teste, por procedimento externo ao simulador, e gerar um manifesto independente com chaves e contagens esperadas.</li>
+<li>Carregar somente a configuração do destino: credenciais fictícias, UG, competência aberta e plano de processamento.</li>
+<li>Configurar o integrador real para apontar ao simulador e acionar seu fluxo normal de obtenção, transformação, agrupamento e envio, com remessas separadas para os seis assuntos.</li>
+<li>Em pelo menos uma remessa, fracionar o assunto em dois ou mais lotes. Usar tamanho de lote reduzido no integrador se ele permitir. Verificar que o início de processamento remoto ocorre após o envio de todos esses lotes.</li>
+<li>Antes do processamento, provar que os payloads foram conservados e ainda não equivalem aos dados efetivos finais.</li>
+<li>Executar o processamento, acompanhar consultas e finalizar pelo integrador. Repetir nos demais assuntos, conservando referências válidas entre remessas concluídas.</li>
+<li>Comparar o manifesto de entrada com a união dos registros efetivos por chave de negócio; conferir conteúdo selecionado, contagens, duplicatas e perdas. Gerar o esperado sem reutilizar o algoritmo de montagem de lotes que está sendo testado.</li>
+<li>Conferir o estado de conclusão no integrador e exportar evidências. Repetir após reset com o mesmo resultado lógico.</li>
+</ol>
+<p>Sem uma maneira de preparar entrada conhecida no serviço independente, ainda é possível testar a interface de destino; permanece limitada a comprovação da obtenção e transformação anterior aos lotes. Essa dependência deve aparecer no aceite, sem acoplar o simulador à origem.</p>
+<h1 id="matriz-mínima-de-cenários-e-aceite">11. Matriz mínima de cenários e aceite</h1>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>ID</th>
+<th>Exercício</th>
+<th>Resultado observável esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T01</td>
+<td>Seis assuntos em remessas separadas, uma delas com vários lotes</td>
+<td>Referências entre remessas, conteúdo e contagens corretos; integrador conclui</td>
+</tr>
+<tr class="even">
+<td>T02</td>
+<td>Receber e consultar antes do disparo</td>
+<td>Não avançar processamento pela simples consulta</td>
+</tr>
+<tr class="odd">
+<td>T03</td>
+<td>Finalizar durante processamento</td>
+<td>Resposta de impedimento compatível; sem conclusão prematura</td>
+</tr>
+<tr class="even">
+<td>T04</td>
+<td>Regra de domínio em lote intermediário</td>
+<td>Erro com referência ao registro e efeitos coerentes nos demais lotes</td>
+</tr>
+<tr class="odd">
+<td>T05</td>
+<td>Cancelamento automático ativado/omitido</td>
+<td>Efeitos de cancelamento conferidos nos dados, além dos status</td>
+</tr>
+<tr class="even">
+<td>T06</td>
+<td>Recuperação com cancelamento desativado</td>
+<td>Corrigir e reenviar sem perder dados anteriores válidos</td>
+</tr>
+<tr class="odd">
+<td>T07</td>
+<td>Corrigir e reprocessar remessa de um assunto</td>
+<td>Conservar efeitos válidos e aplicar somente os efeitos esperados do reenvio</td>
+</tr>
+<tr class="even">
+<td>T08</td>
+<td>Descartar lote/assunto e cancelar parcialmente</td>
+<td>Cobrir o uso real do integrador, elegibilidade e efeitos rastreáveis</td>
+</tr>
+<tr class="odd">
+<td>T09</td>
+<td>Competência ratificada</td>
+<td>Impedir operações cobertas; reset permite repetir o teste</td>
+</tr>
+<tr class="even">
+<td>T10</td>
+<td>UG/token/chave incompatíveis</td>
+<td>Negar acesso e evitar alteração de outro cenário</td>
+</tr>
+<tr class="odd">
+<td>T11</td>
+<td>Token expira no meio do fluxo</td>
+<td>Integrador renova ou apresenta falha controlada, sem perder evidência</td>
+</tr>
+<tr class="even">
+<td>T12</td>
+<td>Demora e resposta perdida após aceitação</td>
+<td>Reconciliação observável; repetição segue política confirmada</td>
+</tr>
+<tr class="odd">
+<td>T13</td>
+<td>Reinício e reset com trabalhos pendentes</td>
+<td>Reinício conserva estado; reset impede trabalho antigo no novo cenário</td>
+</tr>
+<tr class="even">
+<td>T14</td>
+<td>Duas aberturas simultâneas</td>
+<td>Resultado consistente para a mesma UG/competência</td>
+</tr>
+<tr class="odd">
+<td>T15</td>
+<td>Processar sem lotes elegíveis e repetir disparo ativo</td>
+<td>Respostas contratadas para chamadas inválidas, sem sucesso inventado</td>
+</tr>
+<tr class="even">
+<td>T16</td>
+<td>Pacote sem movimento e janeiro</td>
+<td>Casos distintos, validados conforme pré-condições do perfil</td>
+</tr>
+<tr class="odd">
+<td>T17</td>
+<td>Sequência de remessas e limite mensal</td>
+<td>Verificar fronteira 64/65; política de contagem deve ser confirmada</td>
+</tr>
+<tr class="even">
+<td>T18</td>
+<td>Campo/assunto sem suporte</td>
+<td>Não produzir aprovação silenciosa no modo estrito</td>
+</tr>
+<tr class="odd">
+<td>T19</td>
+<td>Expiração longa com relógio virtual</td>
+<td>Resultado reprodutível sem espera de 72 horas reais</td>
+</tr>
+</tbody>
+</table>
+<p>T01 só passa com o integrador real. Os demais podem começar como testes do simulador e ganhar execução pelo integrador conforme suas capacidades. Os resultados ainda pendentes de contrato deverão ser definidos em E0/E2 antes de afirmar compatibilidade.</p>
+<h1 id="portabilidade-operação-e-evidências">12. Portabilidade, operação e evidências</h1>
+<p>Docker é requisito confirmado. Entrega operacional proposta: imagem OCI/Docker versionada com runtime Java 21; arquivo Compose para instância única; configuração de exemplo sem segredos; volume local; instruções de início/reset; verificação de saúde; comando de execução da suíte; manifesto de compatibilidade. A imagem deverá executar em Linux no CI. Suporte simultâneo a amd64/arm64 será confirmado com os equipamentos da equipe.</p>
+<p>O ambiente deverá funcionar sem acesso ao TCE após baixar os artefatos. Não haverá modo proxy com encaminhamento ao destino real. Cada execução de CI poderá usar instância, porta e volume próprios, sem exigir um header de teste adicional nas chamadas do integrador.</p>
+<p>Para uso compartilhado, isolamento entre equipes e autenticação administrativa passam a ser requisitos de operação, com validação específica. O padrão inicial é instância por execução, mais simples de reproduzir e limpar.</p>
+<p>Cada relatório deverá conter: versão da imagem e contrato; configuração/seed; origem fictícia dos dados; sequência de operações; IDs de correlação; estados observados; contagens recebidas/aceitas/removidas; divergências; regras executadas e limitações. Logs comuns não devem expor senha, token ou dados pessoais. O armazenamento detalhado de payload fica restrito ao cenário de teste e tem limpeza junto com a execução.</p>
+<p>Metas de engenharia propostas, a calibrar com o hardware real: inicialização em até 30 segundos; suíte funcional pequena em até dois minutos; teste opcional de 50 mil registros por lote sem perda. São metas do projeto, não promessas de desempenho ou limites do TCE. Medir uso de memória e duração e fixar orçamento na etapa do piloto.</p>
+<h1 id="plano-de-desenvolvimento-e-entregáveis">13. Plano de desenvolvimento e entregáveis</h1>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Etapa</th>
+<th>Entrega</th>
+<th>Condição de saída</th>
+<th>Ordem de grandeza proposta</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>E0 — Fechar contrato e piloto</td>
+<td>Inventário do cliente, OpenAPI ou contrato derivado, exemplos, assuntos e decisões</td>
+<td>Rotas/métodos/schemas e resultados dos casos prioritários definidos</td>
+<td>2–4 dias úteis</td>
+</tr>
+<tr class="even">
+<td>E1 — Recepção e estado</td>
+<td>Autenticação local, abertura, lotes persistidos, consultas e evidências</td>
+<td>Receber payload real do cliente e reabrir a instância sem perdê-lo</td>
+<td>3–5 dias úteis</td>
+</tr>
+<tr class="odd">
+<td>E2 — Ciclo e recuperação</td>
+<td>Executor, finalização, cancelamento/descarte, relógio e regras selecionadas</td>
+<td>Tabelas de decisão e testes dos efeitos sobre os dados</td>
+<td>5–8 dias úteis</td>
+</tr>
+<tr class="even">
+<td>E3 — Piloto ponta a ponta</td>
+<td>Execução do integrador com entrada conhecida e cenários de falha</td>
+<td>T01 e casos prioritários demonstrados com evidências</td>
+<td>3–5 dias úteis</td>
+</tr>
+<tr class="odd">
+<td>E4 — Empacotar e documentar</td>
+<td>Imagem, Compose, CI, guia, cobertura e relatório de aceite</td>
+<td>Outra pessoa reproduz instalação, teste e reset</td>
+<td>2–3 dias úteis</td>
+</tr>
+</tbody>
+</table>
+<p>Estimativa preliminar total: 15–25 dias úteis de trabalho técnico, para uma pessoa com apoio de QA e acesso ao responsável pelo integrador, após disponibilidade dos insumos. Trata-se de faixa de planejamento baseada nas entregas propostas, sem análise do código do cliente. Prazo de calendário dependerá da equipe e dos tempos de resposta.</p>
+<p>Reestimar ao concluir E0. NFS-e, compatibilidade legada, autenticação adicional, interface visual, grandes volumes e regras tributárias extensas são itens que podem ampliar materialmente essa faixa. Bloqueios de contrato não devem ser consumidos como implementação baseada em suposição.</p>
+<p>Responsabilidades sugeridas: desenvolvimento cuida do simulador e contratos; responsável pelo integrador informa chamadas e comportamento do cliente; especialista tributário seleciona as regras; QA define o esperado independente e verifica o fluxo; responsável pela origem viabiliza o conjunto sintético sem transferir essa responsabilidade ao simulador.</p>
+<h1 id="critérios-de-conclusão-do-mvp">14. Critérios de conclusão do MVP</h1>
+<ol type="1">
+<li>O integrador aponta ao simulador por configuração, sem alterar sua lógica de agrupamento e envio. Eventual ajuste necessário para separar URL e credenciais é identificado e concluído no cliente.</li>
+<li>A pessoa responsável consegue instalar, carregar cenário, executar, inspecionar e reiniciar a partir do guia, em máquina/CI definidos no piloto.</li>
+<li>O fluxo completo prova conteúdo, vínculos e contagens, incluindo múltiplos lotes; não se limita a verificar strings de status.</li>
+<li>A matriz mínima aplicável ao contrato é executada, com os casos pendentes encerrados ou explicitamente retirados do escopo acordado antes do aceite.</li>
+<li>Falhas, recuperação e reset são reprodutíveis, sem dependência de calendário municipal ou disponibilidade do TCE.</li>
+<li>Nenhuma execução aprovada no modo estrito contém operação ou assunto ignorado silenciosamente.</li>
+<li>Pacote de contrato, manifesto de cobertura, testes e evidências identificam as aproximações. Conformidade com o subconjunto não é apresentada como homologação oficial.</li>
+</ol>
+<p>A homologação oficial continuará útil para diferenças de contrato e validações não cobertas, quando houver condições disponíveis. O benefício do simulador é permitir regressão frequente e investigação controlada entre essas oportunidades.</p>
+<h1 id="decisões-pendentes-e-perguntas-para-implementação">15. Decisões pendentes e perguntas para implementação</h1>
+<p>Todas as perguntas encaminhadas durante a elaboração foram respondidas e incorporadas: plataforma, troca de configuração, Docker, seis assuntos, cancelamento parcial e processamento remoto após todos os lotes de uma remessa de um assunto. Os itens abaixo são detalhamentos para a implementação e não impedem a entrega deste planejamento.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>ID</th>
+<th>Informação necessária</th>
+<th>Premissa de planejamento enquanto pendente</th>
+<th>Consequência</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D01</td>
+<td>Há dependências adicionais dos seis assuntos que exijam ampliar o piloto?</td>
+<td>Seis assuntos confirmados; NFS-e fora do recorte</td>
+<td>Verificar dependências sem ampliar o produto silenciosamente</td>
+</tr>
+<tr class="even">
+<td>D02</td>
+<td>Confirmar nomenclatura Spring Boot 3.5, sistemas operacionais e arquiteturas de máquina</td>
+<td>Java 21/Spring 3.5, URL/credenciais configuráveis e Docker já confirmados</td>
+<td>Fecha detalhes do empacotamento</td>
+</tr>
+<tr class="odd">
+<td>D03</td>
+<td>Completar contrato de DTOs, respostas e erros; selecionar falhas prioritárias</td>
+<td>DTOs seguem o Swagger informado; usuário poderá prover insumos futuramente</td>
+<td>Necessário para afirmar compatibilidade exata</td>
+</tr>
+<tr class="even">
+<td>D04</td>
+<td>Como preparar entrada conhecida no ambiente do serviço independente?</td>
+<td>Procedimento externo ao simulador</td>
+<td>Necessário para T01 ponta a ponta</td>
+</tr>
+<tr class="odd">
+<td>D05</td>
+<td>Qual exercício/versão é efetivamente enviado?</td>
+<td>Perfil 2026, referências 6.06/6.9</td>
+<td>Evita mistura com 2025/2027</td>
+</tr>
+<tr class="even">
+<td>D06</td>
+<td>O cliente depende também de webhook ou relatórios?</td>
+<td>Consulta de lote confirmada; cancelamento de remessa concluída fora do recorte</td>
+<td>Dependências adicionais entram antes de E1</td>
+</tr>
+<tr class="odd">
+<td>D07</td>
+<td>Qual valor de cancelamento automático o cliente envia: SIM, NAO ou omitido?</td>
+<td>Um assunto por remessa já confirmado; lotes mistos fora do MVP</td>
+<td>Define o comportamento padrão e a prioridade de recuperação</td>
+</tr>
+<tr class="even">
+<td>D08</td>
+<td>Precisa de uso simultâneo por equipes? Quais volumes e sistemas operacionais?</td>
+<td>Instância por execução e persistência local</td>
+<td>Pode mudar banco e operação</td>
+</tr>
+<tr class="odd">
+<td>D09</td>
+<td>Quais regras de domínio dos seis assuntos são essenciais no piloto?</td>
+<td>Conjunto mínimo da seção 9; abertura e prazo prescricional incluídos</td>
+<td>Fecha compromisso de fidelidade</td>
+</tr>
+<tr class="even">
+<td>D10</td>
+<td>Qual é a semântica observada de repetição, descarte, lotes vazios e contagem mensal?</td>
+<td>Lacunas explícitas, sem respostas inventadas</td>
+<td>Fecha as tabelas de decisão</td>
+</tr>
+<tr class="odd">
+<td>D11</td>
+<td>Qual rota e payload correspondem ao cancelamento parcial do cliente?</td>
+<td>Ordem de processamento confirmada; falta somente mapear os detalhes do cancelamento às operações oficiais</td>
+<td>Fecha o contrato de cancelamento</td>
+</tr>
+</tbody>
+</table>
+<p>Não são necessários dados pessoais ou credenciais reais para responder a essas questões. Exemplos de payload devem preservar estrutura, tipos e relações relevantes, substituindo seus conteúdos sensíveis.</p>
+<h1 id="riscos-e-medidas-de-projeto">16. Riscos e medidas de projeto</h1>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Risco concreto</th>
+<th>Efeito</th>
+<th>Medida proposta</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Contrato incompleto</td>
+<td>Cliente funciona no fake e falha no TCE</td>
+<td>Congelar contrato e confrontar amostras; não aceitar lacunas como conformidade</td>
+</tr>
+<tr class="even">
+<td>Regras fiscais insuficientes</td>
+<td>Falso resultado de aprovação dos dados</td>
+<td>Manifesto por regra e revisão pelo especialista tributário</td>
+</tr>
+<tr class="odd">
+<td>Mistura de versões</td>
+<td>Fluxo errado ou campos incompatíveis</td>
+<td>Perfil anual explícito e suíte própria</td>
+</tr>
+<tr class="even">
+<td>Resposta perdida e repetição</td>
+<td>Duplicidade ou envio inconclusivo</td>
+<td>Ensaios com falha antes/depois da aceitação e reconciliação</td>
+</tr>
+<tr class="odd">
+<td>Origem sem dados controlados</td>
+<td>Teste cobre só o destino</td>
+<td>Procedimento externo de fixture e esperado independente</td>
+</tr>
+<tr class="even">
+<td>Assunto ignorado</td>
+<td>Sucesso artificial</td>
+<td>Modo estrito e erro de cobertura</td>
+</tr>
+<tr class="odd">
+<td>Reset concorrente</td>
+<td>Contaminação de uma execução nova</td>
+<td>Geração de cenário e invalidação de tarefas antigas</td>
+</tr>
+</tbody>
+</table>
+<h1 id="fontes-situação-de-acesso-e-rastreabilidade">17. Fontes, situação de acesso e rastreabilidade</h1>
+<p>Pesquisa e leitura em 20/10/2026. “Lido” significa conteúdo recuperado por ferramenta de pesquisa; não atesta comportamento de uma chamada autenticada. Os links curtos do Confluence preservam o identificador da página oficial.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Ref.</th>
+<th>Fonte</th>
+<th>Uso e situação</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>F01</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/132579359">Aviso 21/08/2023 — Dados tributários em testes</a></td>
+<td>Lido; cópia de produção e mascaramento</td>
+</tr>
+<tr class="even">
+<td>F02</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/13882932">Extrato e relação com ratificação</a></td>
+<td>Lido; bloqueios por assunto</td>
+</tr>
+<tr class="odd">
+<td>F03</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/1560969264">Endpoints — API</a></td>
+<td>Lido; endereços atualizados</td>
+</tr>
+<tr class="even">
+<td>F04</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/1582465028">Tributário V6 — Envio assíncrono</a></td>
+<td>Lido; fluxo, caminhos e particularidades V6; OpenAPI não exportado</td>
+</tr>
+<tr class="odd">
+<td>F05</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/2154921985">Tributário — Múltiplos pacotes</a></td>
+<td>Lido; remessa/lote e dimensionamento</td>
+</tr>
+<tr class="even">
+<td>F06</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/2154922045">Versão 6.06 de 10/06/2026</a></td>
+<td>Lido; referência anual e erratas</td>
+</tr>
+<tr class="odd">
+<td>F07</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/1517223937">CONs 2026</a></td>
+<td>Índice lido; arquivo 6.9 vinculado não recuperado</td>
+</tr>
+<tr class="even">
+<td>F08</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/2154923870">V6.06 — Ratificação Tributário</a></td>
+<td>Lido; operação exclusiva no portal</td>
+</tr>
+<tr class="odd">
+<td>F09</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/2154923885">V6.06 — Tributário</a></td>
+<td>Conteúdo recuperado parcialmente; lista de assuntos e regras gerais; detalhamento completo não auditado</td>
+</tr>
+<tr class="even">
+<td>F10</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/2154923972">V6.06 — Nota Fiscal de Serviço</a></td>
+<td>Lido; separação e dependência de serviço</td>
+</tr>
+<tr class="odd">
+<td>F11</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/759267332">Tributário — Envio assíncrono anterior à V6</a></td>
+<td>Lido; comparação histórica, sem substituir V6</td>
+</tr>
+<tr class="even">
+<td>F12</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/13877935">Tecnologias e Padrões</a></td>
+<td>Lido; formato e transporte</td>
+</tr>
+<tr class="odd">
+<td>F13</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/758677529">Mudança no versionamento da API</a></td>
+<td>Lido; prefixo anual e exceções</td>
+</tr>
+<tr class="even">
+<td>F14</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/13867166">Autenticação</a></td>
+<td>Conteúdo recuperado por busca; parâmetros e token</td>
+</tr>
+<tr class="odd">
+<td>F15</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/13912693">FAQ — Módulo Tributário</a></td>
+<td>Trechos recuperados; contexto histórico e esclarecimentos</td>
+</tr>
+<tr class="even">
+<td>F16</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/2310539061">V7.00 — Tributário / ramo 2027</a></td>
+<td>Lido; referência futura, não adotada no MVP 2026</td>
+</tr>
+<tr class="odd">
+<td>F17</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/13861444">Utilização das APIs</a></td>
+<td>Lido; inconsistência de duração de token identificada</td>
+</tr>
+<tr class="even">
+<td>F18</td>
+<td><a href="https://www.tcesc.tc.br/sites/default/files/Perguntas%20e%20Respostas_tributario_Esfinge2020_v1.06.pdf">Perguntas e Respostas Tributário 2020, v1.06</a></td>
+<td>Localizado; referência histórica, não validada para perfil V6</td>
+</tr>
+<tr class="odd">
+<td>F19</td>
+<td><a href="https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/13870220">Códigos de Retorno</a></td>
+<td>Lido; orientação genérica, não matriz por endpoint</td>
+</tr>
+<tr class="even">
+<td>F20</td>
+<td><a href="https://manualesfinge.tcesc.tc.br/">Portal oficial e-Sfinge</a></td>
+<td>Lido; navegação e contatos técnicos</td>
+</tr>
+<tr class="odd">
+<td>F21</td>
+<td><a href="https://api.virtual.testing.tce.sc.gov.br/esfingeonline/swagger-ui.html">Swagger atual de homologação</a></td>
+<td>Interface localizada, especificação não extraída</td>
+</tr>
+<tr class="even">
+<td>F22</td>
+<td><a href="https://virtual.testing.tce.sc.gov.br/esfingeonline/swagger-ui.html">Swagger informado na conversa</a></td>
+<td>Não acessível pela ferramenta de pesquisa</td>
+</tr>
+</tbody>
+</table>
+</main>
+</div>
+</body>
+</html>
