@@ -1,0 +1,1151 @@
+{
+  "status": "approved-published",
+  "repository": "lukadev08/fake-esfinge",
+  "date": "2026-10-23",
+  "sources_sha256": {
+    "docs/prd-simulador-tributario.md": "f435418dcbb3139fa94967c50cccc8b09683dd56af4686947e3350f59886edd9",
+    "docs/planejamento-simulador-tributario.md": "a768bff20a3b7e0513cc99836db2cb7c7e534dbe90e48a07565a47bb8ba0bc46",
+    "docs/contrato-e0.md": "30e79707d2ae9be53349f9254466899c28a1a352a474e340c1807fb033b19462",
+    "ARCHITECTURE.md": "c94b10ae7302d75bb9e120c71d57c224d8d3a5137cece7e86a1af8e770733806",
+    "docs/contratos/2026-v6-6.06/README.md": "2df23c9a08109b93339672b8cfb3384d2af5eb4e9dc51356718680445b507ed2",
+    "docs/contratos/2026-v6-6.06/schemas.json": "e5588ce92c2bae4b2e7afa71475165e8e41a4dee28d76263aae438be949ffa8b"
+  },
+  "issues": [
+    {
+      "id": "I01",
+      "stage": "E1",
+      "type": "AFK",
+      "title": "[E1][AFK] Autenticar usuário e UG fictícios no perfil 2026",
+      "stories": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        45,
+        49,
+        50,
+        51
+      ],
+      "blocked_by": [],
+      "matrix": [
+        "T10",
+        "T11"
+      ],
+      "description": "Entregar o primeiro caminho executável: configurar um cenário local do perfil 2026/V6/6.06, autenticar usuário/UG fictícios e obter a chave usada em auth_token. Incluir somente o build, composição, persistência e execução Docker Linux amd64 mínimos necessários para demonstrar esse comportamento; o empacotamento operacional completo pertence a E4. A configuração inicial pode ser carregada no início da instância, sem antecipar painel ou catálogo genérico de cenários.",
+      "criteria": [
+        "POST /autenticacao/login usa os headers e a query contratados, sem corpo; responde 200 com chave opaca. Credenciais inválidas retornam 401; UG não autorizada, 403; parâmetros malformados, 400.",
+        "O token vincula usuário, UG e cenário, com validade padrão de uma hora configurável. Teste com relógio substituível demonstra 401 antes de qualquer efeito para token inválido/expirado; o avanço administrativo será entregue em I16.",
+        "Contexto do cenário, perfil e identidades fictícias são configuráveis e rastreáveis; chave administrativa própria protege a inspeção mínima de configuração sob /__simulator e não autentica chamadas compatíveis.",
+        "Build Maven de um módulo fixa versões exatas para Java 21/Spring Boot 3.5; SQLite usa migrações SQL versionadas e chaves estrangeiras por conexão. Inicializar/reabrir base é verificável, e incompatibilidade não recria dados silenciosamente.",
+        "Teste HTTP e teste do núcleo demonstram login/negações; SQLite temporário valida o estado persistido; verificação de dependências de classes protege as fronteiras hexagonais. Imagem mínima inicia com configuração fictícia e volume local, sem chamadas ao TCE.",
+        "Logs e erros não expõem credenciais, tokens, dados pessoais, SQL ou stack trace; manifesto inicial registra perfil, fontes, aproximações e capacidades ainda não implementadas."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nEntregar o primeiro caminho executável: configurar um cenário local do perfil 2026/V6/6.06, autenticar usuário/UG fictícios e obter a chave usada em auth_token. Incluir somente o build, composição, persistência e execução Docker Linux amd64 mínimos necessários para demonstrar esse comportamento; o empacotamento operacional completo pertence a E4. A configuração inicial pode ser carregada no início da instância, sem antecipar painel ou catálogo genérico de cenários.\n\nTipo: **AFK**. Etapa: **E1**. Histórias: H01, H03, H04, H05, H06, H07, H08, H45, H49, H50, H51.\n\nMatriz/aceite: T10, T11. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] POST /autenticacao/login usa os headers e a query contratados, sem corpo; responde 200 com chave opaca. Credenciais inválidas retornam 401; UG não autorizada, 403; parâmetros malformados, 400.\n- [ ] O token vincula usuário, UG e cenário, com validade padrão de uma hora configurável. Teste com relógio substituível demonstra 401 antes de qualquer efeito para token inválido/expirado; o avanço administrativo será entregue em I16.\n- [ ] Contexto do cenário, perfil e identidades fictícias são configuráveis e rastreáveis; chave administrativa própria protege a inspeção mínima de configuração sob /__simulator e não autentica chamadas compatíveis.\n- [ ] Build Maven de um módulo fixa versões exatas para Java 21/Spring Boot 3.5; SQLite usa migrações SQL versionadas e chaves estrangeiras por conexão. Inicializar/reabrir base é verificável, e incompatibilidade não recria dados silenciosamente.\n- [ ] Teste HTTP e teste do núcleo demonstram login/negações; SQLite temporário valida o estado persistido; verificação de dependências de classes protege as fronteiras hexagonais. Imagem mínima inicia com configuração fictícia e volume local, sem chamadas ao TCE.\n- [ ] Logs e erros não expõem credenciais, tokens, dados pessoais, SQL ou stack trace; manifesto inicial registra perfil, fontes, aproximações e capacidades ainda não implementadas.\n\n## Blocked by\n\nNenhum — pode iniciar após aprovação da divisão e autorização de implementação.\n",
+      "github": {
+        "issue_number": 1,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/1"
+      }
+    },
+    {
+      "id": "I02",
+      "stage": "E1",
+      "type": "AFK",
+      "title": "[E1][AFK] Abrir envio e receber lotes de contribuintes sem processar",
+      "stories": [
+        2,
+        4,
+        5,
+        8,
+        9,
+        11,
+        12,
+        18,
+        19,
+        20,
+        21,
+        23,
+        26,
+        36,
+        40,
+        45,
+        46,
+        49,
+        50
+      ],
+      "blocked_by": [
+        "I01"
+      ],
+      "matrix": [
+        "T01",
+        "T02",
+        "T10",
+        "T13",
+        "T14",
+        "T18"
+      ],
+      "description": "Permitir abrir um envio de uma UG/competência, transmitir vários lotes de cadastro de contribuinte e consultar cada lote em RECEBIDO, inclusive depois de reiniciar a instância. Disponibilizar inspeção administrativa mínima de bytes, registros recebidos, contagens e eventos. É uma fatia de recepção E1; não deve simular sucesso de processamento ou finalização ainda indisponíveis.",
+      "criteria": [
+        "GET /v6/tributario/iniciarEnvio valida anoMes inteiro de 2026 e cancelamentoAutomatico=NAO; devolve chavePacote opaca. Uma abertura concorrente vence por UG/competência; demais recebem 409 sem efeitos. SIM, omissão e outros valores recebem 422.",
+        "POST /v6/tributario/enviarParcialLote recebe cadastrosContribuintes não vazio e a chave na query; permite vários lotes normais antes do disparo, sem deduplicar por hash ou impor limite de 10.000.",
+        "Schema do perfil rejeita obrigatórios ausentes/nulos, tipos/formatos inválidos, extras, listas vazias/nulas e assuntos misturados; opcionais admitem ausência/null. Headers HTTP comuns não são extras do payload. Capacidade conhecida sem suporte retorna 422; recurso inexistente, 404.",
+        "Bytes, hash, ordem, vínculos lote/remessa/UG/cenário, contagens derivadas e evento são persistidos atomicamente antes da confirmação. Falha de commit não retorna sucesso. SQLite real testa rollback, contenção e integridade dos vínculos.",
+        "Consulta usa situacao e identificadorRemessa; recepção usa identificadorRemessaOnline, numeroLote e dataEnvio no formato contratado. Receber e consultar repetidamente não inicia processamento; dados recebidos ainda não são efetivos.",
+        "Chave/lote de outra UG ou cenário retorna 404 sem vazamento ou mutação. Inspeção administrativa de conteúdo exige chave própria; logs comuns permanecem sanitizados. Reabertura conserva bytes, identificadores com zeros, estado e contagens, autenticando novamente se necessário."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nPermitir abrir um envio de uma UG/competência, transmitir vários lotes de cadastro de contribuinte e consultar cada lote em RECEBIDO, inclusive depois de reiniciar a instância. Disponibilizar inspeção administrativa mínima de bytes, registros recebidos, contagens e eventos. É uma fatia de recepção E1; não deve simular sucesso de processamento ou finalização ainda indisponíveis.\n\nTipo: **AFK**. Etapa: **E1**. Histórias: H02, H04, H05, H08, H09, H11, H12, H18, H19, H20, H21, H23, H26, H36, H40, H45, H46, H49, H50.\n\nMatriz/aceite: T01, T02, T10, T13, T14, T18. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] GET /v6/tributario/iniciarEnvio valida anoMes inteiro de 2026 e cancelamentoAutomatico=NAO; devolve chavePacote opaca. Uma abertura concorrente vence por UG/competência; demais recebem 409 sem efeitos. SIM, omissão e outros valores recebem 422.\n- [ ] POST /v6/tributario/enviarParcialLote recebe cadastrosContribuintes não vazio e a chave na query; permite vários lotes normais antes do disparo, sem deduplicar por hash ou impor limite de 10.000.\n- [ ] Schema do perfil rejeita obrigatórios ausentes/nulos, tipos/formatos inválidos, extras, listas vazias/nulas e assuntos misturados; opcionais admitem ausência/null. Headers HTTP comuns não são extras do payload. Capacidade conhecida sem suporte retorna 422; recurso inexistente, 404.\n- [ ] Bytes, hash, ordem, vínculos lote/remessa/UG/cenário, contagens derivadas e evento são persistidos atomicamente antes da confirmação. Falha de commit não retorna sucesso. SQLite real testa rollback, contenção e integridade dos vínculos.\n- [ ] Consulta usa situacao e identificadorRemessa; recepção usa identificadorRemessaOnline, numeroLote e dataEnvio no formato contratado. Receber e consultar repetidamente não inicia processamento; dados recebidos ainda não são efetivos.\n- [ ] Chave/lote de outra UG ou cenário retorna 404 sem vazamento ou mutação. Inspeção administrativa de conteúdo exige chave própria; logs comuns permanecem sanitizados. Reabertura conserva bytes, identificadores com zeros, estado e contagens, autenticando novamente se necessário.\n\n## Blocked by\n\n- I01 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 2,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/2"
+      }
+    },
+    {
+      "id": "I03",
+      "stage": "E1",
+      "type": "AFK",
+      "title": "[E1][AFK] Receber e inspecionar lotes de lançamento de crédito tributário",
+      "stories": [
+        2,
+        11,
+        13,
+        18,
+        19,
+        20,
+        21,
+        26,
+        45
+      ],
+      "blocked_by": [
+        "I02"
+      ],
+      "matrix": [
+        "T01",
+        "T02",
+        "T18"
+      ],
+      "description": "Estender o caminho de envio/consulta/inspeção persistida para lancamentosCreditosTributarios, reutilizando a abertura e a infraestrutura da recepção. Aplicar o schema credito fechado, sem acrescentar validação tributária ou relações de negócio.",
+      "criteria": [
+        "Lotes de crédito separados são recebidos e consultados em RECEBIDO, preservando todas as propriedades, referências, tipos e multiplicidades; lotes mistos são rejeitados.",
+        "Obrigatórios, opcionais, comprimentos e datas seguem o schema; competência do crédito valida o mês sem restringir créditos históricos a 2026. Propriedades imobiliárias/transferência fora do schema recebem 422.",
+        "Dinheiro usa BigDecimal e texto decimal no SQLite; número JSON deve representar múltiplo exato de 0,01, sem coerção ou arredondamento. Testes incluem valores grandes, 1/1.0/1.00 e casas fracionárias inválidas, preservando bytes originais.",
+        "Vários lotes e reinício preservam conteúdo/contagens e vínculos. Inspeção administrativa demonstra identificadores e valores sem ponto flutuante; contagens não são deduplicadas por chave ou hash.",
+        "Testes HTTP/SQLite positivos e negativos e manifesto distinguem validação estrutural de vínculos, cronologia e cálculos não implementados."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nEstender o caminho de envio/consulta/inspeção persistida para lancamentosCreditosTributarios, reutilizando a abertura e a infraestrutura da recepção. Aplicar o schema credito fechado, sem acrescentar validação tributária ou relações de negócio.\n\nTipo: **AFK**. Etapa: **E1**. Histórias: H02, H11, H13, H18, H19, H20, H21, H26, H45.\n\nMatriz/aceite: T01, T02, T18. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] Lotes de crédito separados são recebidos e consultados em RECEBIDO, preservando todas as propriedades, referências, tipos e multiplicidades; lotes mistos são rejeitados.\n- [ ] Obrigatórios, opcionais, comprimentos e datas seguem o schema; competência do crédito valida o mês sem restringir créditos históricos a 2026. Propriedades imobiliárias/transferência fora do schema recebem 422.\n- [ ] Dinheiro usa BigDecimal e texto decimal no SQLite; número JSON deve representar múltiplo exato de 0,01, sem coerção ou arredondamento. Testes incluem valores grandes, 1/1.0/1.00 e casas fracionárias inválidas, preservando bytes originais.\n- [ ] Vários lotes e reinício preservam conteúdo/contagens e vínculos. Inspeção administrativa demonstra identificadores e valores sem ponto flutuante; contagens não são deduplicadas por chave ou hash.\n- [ ] Testes HTTP/SQLite positivos e negativos e manifesto distinguem validação estrutural de vínculos, cronologia e cálculos não implementados.\n\n## Blocked by\n\n- I02 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 3,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/3"
+      }
+    },
+    {
+      "id": "I04",
+      "stage": "E1",
+      "type": "AFK",
+      "title": "[E1][AFK] Receber e inspecionar lotes de diário de arrecadação",
+      "stories": [
+        2,
+        14,
+        18,
+        19,
+        20,
+        21,
+        26,
+        45
+      ],
+      "blocked_by": [
+        "I02"
+      ],
+      "matrix": [
+        "T01",
+        "T02",
+        "T18"
+      ],
+      "description": "Receber diarioGeralArrecadacao pelo fluxo persistido de lotes, com consulta e inspeção administrativas. Preservar a aproximação relatada numeroParcelas no plural e as referências recebidas, sem validar a integridade tributária com créditos.",
+      "criteria": [
+        "Schema arrecadacao valida obrigatórios/nulos, opcionais, tipos, datas e extras; numeroParcelas é inteiro opcional e numeroParcela é rejeitado no modo estrito.",
+        "Bytes, dinheiro decimal exato, identificadores, ordem e multiplicidades são preservados em SQLite e demonstrados por inspeção antes/depois de reinício.",
+        "Lotes múltiplos de um assunto são aceitos antes de disparo; consulta continua em RECEBIDO sem produzir efeitos de processamento.",
+        "Testes HTTP/SQLite cobrem aceitação e rejeições; manifesto registra a divergência do nome e regras de arrecadação/vínculos não implementadas."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nReceber diarioGeralArrecadacao pelo fluxo persistido de lotes, com consulta e inspeção administrativas. Preservar a aproximação relatada numeroParcelas no plural e as referências recebidas, sem validar a integridade tributária com créditos.\n\nTipo: **AFK**. Etapa: **E1**. Histórias: H02, H14, H18, H19, H20, H21, H26, H45.\n\nMatriz/aceite: T01, T02, T18. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] Schema arrecadacao valida obrigatórios/nulos, opcionais, tipos, datas e extras; numeroParcelas é inteiro opcional e numeroParcela é rejeitado no modo estrito.\n- [ ] Bytes, dinheiro decimal exato, identificadores, ordem e multiplicidades são preservados em SQLite e demonstrados por inspeção antes/depois de reinício.\n- [ ] Lotes múltiplos de um assunto são aceitos antes de disparo; consulta continua em RECEBIDO sem produzir efeitos de processamento.\n- [ ] Testes HTTP/SQLite cobrem aceitação e rejeições; manifesto registra a divergência do nome e regras de arrecadação/vínculos não implementadas.\n\n## Blocked by\n\n- I02 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 4,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/4"
+      }
+    },
+    {
+      "id": "I05",
+      "stage": "E1",
+      "type": "AFK",
+      "title": "[E1][AFK] Receber e inspecionar lotes de baixa de crédito tributário",
+      "stories": [
+        2,
+        15,
+        18,
+        19,
+        20,
+        21,
+        26,
+        45
+      ],
+      "blocked_by": [
+        "I02"
+      ],
+      "matrix": [
+        "T01",
+        "T02",
+        "T18"
+      ],
+      "description": "Habilitar baixasCreditosTributarios no mesmo caminho persistido de recepção, consulta e inspeção. Conservar as referências e datas recebidas, com validação estrutural do schema baixa e cronologia fiscal explicitamente adiada.",
+      "criteria": [
+        "Lotes separados de baixa obedecem ao schema, inclusive obrigatórios/nulos, opcionais, formatos e política estrita de extras, sem coerção.",
+        "Conteúdo, referências, tipos, zeros e eventuais valores monetários mantêm representação exata e bytes originais; reinício conserva os registros e suas contagens.",
+        "Consulta em RECEBIDO não processa e a inspeção administrativa identifica o lote, assunto, UG, cenário e registros recebidos.",
+        "Testes HTTP/SQLite cobrem positivos/negativos; manifesto deixa vínculos e baixa anterior ao crédito como regras não implementadas, sem aprovação fiscal implícita."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nHabilitar baixasCreditosTributarios no mesmo caminho persistido de recepção, consulta e inspeção. Conservar as referências e datas recebidas, com validação estrutural do schema baixa e cronologia fiscal explicitamente adiada.\n\nTipo: **AFK**. Etapa: **E1**. Histórias: H02, H15, H18, H19, H20, H21, H26, H45.\n\nMatriz/aceite: T01, T02, T18. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] Lotes separados de baixa obedecem ao schema, inclusive obrigatórios/nulos, opcionais, formatos e política estrita de extras, sem coerção.\n- [ ] Conteúdo, referências, tipos, zeros e eventuais valores monetários mantêm representação exata e bytes originais; reinício conserva os registros e suas contagens.\n- [ ] Consulta em RECEBIDO não processa e a inspeção administrativa identifica o lote, assunto, UG, cenário e registros recebidos.\n- [ ] Testes HTTP/SQLite cobrem positivos/negativos; manifesto deixa vínculos e baixa anterior ao crédito como regras não implementadas, sem aprovação fiscal implícita.\n\n## Blocked by\n\n- I02 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 5,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/5"
+      }
+    },
+    {
+      "id": "I06",
+      "stage": "E1",
+      "type": "AFK",
+      "title": "[E1][AFK] Receber e inspecionar saldo inicial em cenário de janeiro",
+      "stories": [
+        2,
+        16,
+        18,
+        19,
+        20,
+        21,
+        26,
+        44,
+        45,
+        52
+      ],
+      "blocked_by": [
+        "I02"
+      ],
+      "matrix": [
+        "T01",
+        "T02",
+        "T16",
+        "T18"
+      ],
+      "description": "Receber saldosIniciaisCreditoTributario e demonstrar sua recepção estrutural com dados fictícios em janeiro. O exemplo de teste do simulador não substitui preparação de origem e execução pelo integrador real no aceite complementar.",
+      "criteria": [
+        "Schema saldo aplica apenas exigências estruturais fechadas; condições, defaults fiscais e tipos de saldo não documentados não são inferidos.",
+        "Abertura de janeiro de 2026, envio, consulta e inspeção persistida conservam referências históricas, bytes, identificadores e decimais exatos após reinício.",
+        "Aceitação e rejeições são demonstradas por HTTP e SQLite real, sem converter recebido em efetivo ou avançar processamento pela consulta.",
+        "Manifesto registra cobertura estrutural e a necessidade de cenário complementar se o assunto faltar no piloto; não declara T01/T16 integral nem validação de abertura de exercício concluída."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nReceber saldosIniciaisCreditoTributario e demonstrar sua recepção estrutural com dados fictícios em janeiro. O exemplo de teste do simulador não substitui preparação de origem e execução pelo integrador real no aceite complementar.\n\nTipo: **AFK**. Etapa: **E1**. Histórias: H02, H16, H18, H19, H20, H21, H26, H44, H45, H52.\n\nMatriz/aceite: T01, T02, T16, T18. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] Schema saldo aplica apenas exigências estruturais fechadas; condições, defaults fiscais e tipos de saldo não documentados não são inferidos.\n- [ ] Abertura de janeiro de 2026, envio, consulta e inspeção persistida conservam referências históricas, bytes, identificadores e decimais exatos após reinício.\n- [ ] Aceitação e rejeições são demonstradas por HTTP e SQLite real, sem converter recebido em efetivo ou avançar processamento pela consulta.\n- [ ] Manifesto registra cobertura estrutural e a necessidade de cenário complementar se o assunto faltar no piloto; não declara T01/T16 integral nem validação de abertura de exercício concluída.\n\n## Blocked by\n\n- I02 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 6,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/6"
+      }
+    },
+    {
+      "id": "I07",
+      "stage": "E1",
+      "type": "AFK",
+      "title": "[E1][AFK] Receber e inspecionar início do prazo prescricional",
+      "stories": [
+        2,
+        17,
+        18,
+        19,
+        20,
+        21,
+        26,
+        44,
+        45
+      ],
+      "blocked_by": [
+        "I02"
+      ],
+      "matrix": [
+        "T01",
+        "T02",
+        "T18"
+      ],
+      "description": "Habilitar inicioPrazoPrescricional com o schema derivado dos quatro campos aprovados e com os mesmos recursos persistidos de consulta e inspeção. Declarar a ausência de DTO extraído como limite da evidência, sem reabrir decisões já fechadas em E0.",
+      "criteria": [
+        "Os quatro campos do schema prazo preservam ano inteiro, código string e datas de calendário YYYY-MM-DD; tipos/formatos incompatíveis, obrigatórios nulos/ausentes e extras são rejeitados.",
+        "Envio/consulta/inspeção e reinício preservam bytes, referências e contagens; receber ou consultar não inicia processamento.",
+        "Testes HTTP/SQLite demonstram casos positivos e negativos e isolamento existente; não validam prescrição fiscal ou relação com o crédito.",
+        "Manifesto identifica contrato derivado sem DTO, regras adiadas e cobertura complementar pendente quando o assunto não aparecer no piloto."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nHabilitar inicioPrazoPrescricional com o schema derivado dos quatro campos aprovados e com os mesmos recursos persistidos de consulta e inspeção. Declarar a ausência de DTO extraído como limite da evidência, sem reabrir decisões já fechadas em E0.\n\nTipo: **AFK**. Etapa: **E1**. Histórias: H02, H17, H18, H19, H20, H21, H26, H44, H45.\n\nMatriz/aceite: T01, T02, T18. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] Os quatro campos do schema prazo preservam ano inteiro, código string e datas de calendário YYYY-MM-DD; tipos/formatos incompatíveis, obrigatórios nulos/ausentes e extras são rejeitados.\n- [ ] Envio/consulta/inspeção e reinício preservam bytes, referências e contagens; receber ou consultar não inicia processamento.\n- [ ] Testes HTTP/SQLite demonstram casos positivos e negativos e isolamento existente; não validam prescrição fiscal ou relação com o crédito.\n- [ ] Manifesto identifica contrato derivado sem DTO, regras adiadas e cobertura complementar pendente quando o assunto não aparecer no piloto.\n\n## Blocked by\n\n- I02 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 7,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/7"
+      }
+    },
+    {
+      "id": "I08",
+      "stage": "E1",
+      "type": "HITL",
+      "title": "[E1][HITL] Comprovar recepção de payload real e persistência de E1",
+      "stories": [
+        1,
+        2,
+        20,
+        21,
+        36,
+        44,
+        49,
+        50
+      ],
+      "blocked_by": [
+        "I03",
+        "I04",
+        "I05",
+        "I06",
+        "I07"
+      ],
+      "matrix": [
+        "T01",
+        "T02",
+        "T13"
+      ],
+      "description": "Com o solicitante, receber localmente payload efetivamente produzido pelo integrador e reabrir a instância sem perder conteúdo ou vínculos. Esse é o ponto de saída de E1 e bloqueia o início de E2. Não exige fornecer SQL interno nem concluir o fluxo completo do piloto nesta etapa.",
+      "criteria": [
+        "Solicitante configura URL/credenciais fictícias e executa recepção de payload real no ambiente local controlado; conferência identifica bytes, assunto, chave, lote, UG e contagem antes/depois da reabertura.",
+        "Consultas antes do disparo mantêm RECEBIDO sem processamento; registros efetivos ainda não são declarados.",
+        "Saída E1 é aprovada expressamente pelo solicitante com versão do artefato/contrato e conclusão sanitizada quando permitido; detalhes e payloads permanecem internos e fora do Git/serviços externos.",
+        "Divergências de contrato são reconciliadas antes de encerrar o ticket; limitações e assuntos ausentes são registrados sem afirmar T01 ou aceite E3."
+      ],
+      "labels": [
+        "ready-for-human"
+      ],
+      "body": "## What to build\n\nCom o solicitante, receber localmente payload efetivamente produzido pelo integrador e reabrir a instância sem perder conteúdo ou vínculos. Esse é o ponto de saída de E1 e bloqueia o início de E2. Não exige fornecer SQL interno nem concluir o fluxo completo do piloto nesta etapa.\n\nTipo: **HITL**. Etapa: **E1**. Histórias: H01, H02, H20, H21, H36, H44, H49, H50.\n\nMatriz/aceite: T01, T02, T13. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nExige participação e aceite humano; não encerrar por simulação do agente ou evidência que ele não pôde verificar.\n\n## Acceptance criteria\n\n- [ ] Solicitante configura URL/credenciais fictícias e executa recepção de payload real no ambiente local controlado; conferência identifica bytes, assunto, chave, lote, UG e contagem antes/depois da reabertura.\n- [ ] Consultas antes do disparo mantêm RECEBIDO sem processamento; registros efetivos ainda não são declarados.\n- [ ] Saída E1 é aprovada expressamente pelo solicitante com versão do artefato/contrato e conclusão sanitizada quando permitido; detalhes e payloads permanecem internos e fora do Git/serviços externos.\n- [ ] Divergências de contrato são reconciliadas antes de encerrar o ticket; limitações e assuntos ausentes são registrados sem afirmar T01 ou aceite E3.\n\n## Blocked by\n\n- I03 (identificador local; substituir pela issue publicada).\n- I04 (identificador local; substituir pela issue publicada).\n- I05 (identificador local; substituir pela issue publicada).\n- I06 (identificador local; substituir pela issue publicada).\n- I07 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 8,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/8"
+      }
+    },
+    {
+      "id": "I09",
+      "stage": "E2",
+      "type": "AFK",
+      "title": "[E2][AFK] Processar ciclos por assunto em modos manual e automático",
+      "stories": [
+        10,
+        11,
+        22,
+        23,
+        24,
+        26,
+        36,
+        38,
+        40,
+        45
+      ],
+      "blocked_by": [
+        "I08"
+      ],
+      "matrix": [
+        "T01",
+        "T02",
+        "T13",
+        "T15"
+      ],
+      "description": "Entregar o caminho de disparo explícito até resultados persistidos dos seis assuntos. O operador controla cenário, latência e modo pelo HTTP administrativo; o integrador envia todos os lotes de um assunto, dispara, consulta até sucesso e repete com a mesma chave. A validação inicial é estrutural, sem regras fiscais.",
+      "criteria": [
+        "POST /v6/tributario/iniciar-processamento agenda trabalhos somente após disparo; consulta usa situacao, com estados observáveis RECEBIDO, EM_PROCESSAMENTO e PROCESSADO_SUCESSO e envelopes contratuais.",
+        "Dados recebidos, processados e efetivos permanecem distinguíveis; contagens e resultados derivam dos registros e preservam multiplicidades e referências. Teste percorre os seis assuntos sob uma chave, incluindo múltiplos lotes.",
+        "Uma mesma porta atende executor automático e avanço administrativo manual protegido por chave própria; acionamentos são serializados, ordenados por instante e sequência persistida. Modo manual não depende de sono/tempo real e consultas não avançam tarefas.",
+        "Trabalho, transição, evento e efeitos são atômicos; falha de persistência não vira sucesso. Reinício antes/depois de commit retoma trabalho pendente sem reaplicar efeitos confirmados, com SQLite real.",
+        "Disparo ativo/repetido ou sem elegíveis retorna 409 sem efeitos; revalidar elegibilidade e estado antes de gravar. Requisições não ganham parâmetros de teste.",
+        "Tabelas de transição precedem a implementação; testes HTTP/núcleo/SQLite e manifesto demonstram comportamento e limites, sem inventar enums ou CONs."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nEntregar o caminho de disparo explícito até resultados persistidos dos seis assuntos. O operador controla cenário, latência e modo pelo HTTP administrativo; o integrador envia todos os lotes de um assunto, dispara, consulta até sucesso e repete com a mesma chave. A validação inicial é estrutural, sem regras fiscais.\n\nTipo: **AFK**. Etapa: **E2**. Histórias: H10, H11, H22, H23, H24, H26, H36, H38, H40, H45.\n\nMatriz/aceite: T01, T02, T13, T15. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] POST /v6/tributario/iniciar-processamento agenda trabalhos somente após disparo; consulta usa situacao, com estados observáveis RECEBIDO, EM_PROCESSAMENTO e PROCESSADO_SUCESSO e envelopes contratuais.\n- [ ] Dados recebidos, processados e efetivos permanecem distinguíveis; contagens e resultados derivam dos registros e preservam multiplicidades e referências. Teste percorre os seis assuntos sob uma chave, incluindo múltiplos lotes.\n- [ ] Uma mesma porta atende executor automático e avanço administrativo manual protegido por chave própria; acionamentos são serializados, ordenados por instante e sequência persistida. Modo manual não depende de sono/tempo real e consultas não avançam tarefas.\n- [ ] Trabalho, transição, evento e efeitos são atômicos; falha de persistência não vira sucesso. Reinício antes/depois de commit retoma trabalho pendente sem reaplicar efeitos confirmados, com SQLite real.\n- [ ] Disparo ativo/repetido ou sem elegíveis retorna 409 sem efeitos; revalidar elegibilidade e estado antes de gravar. Requisições não ganham parâmetros de teste.\n- [ ] Tabelas de transição precedem a implementação; testes HTTP/núcleo/SQLite e manifesto demonstram comportamento e limites, sem inventar enums ou CONs.\n\n## Blocked by\n\n- I08 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 9,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/9"
+      }
+    },
+    {
+      "id": "I10",
+      "stage": "E2",
+      "type": "AFK",
+      "title": "[E2][AFK] Finalizar envio com totalizadores dos registros efetivos",
+      "stories": [
+        10,
+        25,
+        26,
+        40,
+        45,
+        46
+      ],
+      "blocked_by": [
+        "I09"
+      ],
+      "matrix": [
+        "T01",
+        "T03",
+        "T15",
+        "T16",
+        "T18"
+      ],
+      "description": "Permitir finalizar um envio após os ciclos dos assuntos, comparando os 17 totalizadores contratuais com os registros efetivos. Verificar pelo HTTP e pelas evidências que a conclusão corresponde ao conteúdo e não somente a status favorável.",
+      "criteria": [
+        "POST /v6/tributario/finalizarEnvio recebe chavePacote e os 17 totalizadores obrigatórios no corpo; são strings de dígitos, e os 11 fora dos seis assuntos exigem zero. Cobertura ausente positiva é 422.",
+        "Finaliza somente com ao menos um lote ativo, todos os ativos em sucesso e totais corretos. Finalização vazia, durante processamento, com pendências ou totais divergentes recebe 409 sem efeitos.",
+        "Contagens efetivas preservam multiplicidades, excluem controles históricos/descartados/abortados e não arredondam nem normalizam registros para forçar coincidência.",
+        "Sucesso retorna 200 com corpo vazio e encerra a chave atomicamente; nova finalização ou mutação em chave encerrada recebe 409. Nova abertura autorizada recebe chave nova, sem impor cota mensal.",
+        "Testes HTTP/SQLite verificam conteúdo, totais, transições, reinício e rejeições; manifesto mantém sem movimento/T17/regras fiscais fora do aceite inicial. Recuperação será integrada em I12–I14."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nPermitir finalizar um envio após os ciclos dos assuntos, comparando os 17 totalizadores contratuais com os registros efetivos. Verificar pelo HTTP e pelas evidências que a conclusão corresponde ao conteúdo e não somente a status favorável.\n\nTipo: **AFK**. Etapa: **E2**. Histórias: H10, H25, H26, H40, H45, H46.\n\nMatriz/aceite: T01, T03, T15, T16, T18. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] POST /v6/tributario/finalizarEnvio recebe chavePacote e os 17 totalizadores obrigatórios no corpo; são strings de dígitos, e os 11 fora dos seis assuntos exigem zero. Cobertura ausente positiva é 422.\n- [ ] Finaliza somente com ao menos um lote ativo, todos os ativos em sucesso e totais corretos. Finalização vazia, durante processamento, com pendências ou totais divergentes recebe 409 sem efeitos.\n- [ ] Contagens efetivas preservam multiplicidades, excluem controles históricos/descartados/abortados e não arredondam nem normalizam registros para forçar coincidência.\n- [ ] Sucesso retorna 200 com corpo vazio e encerra a chave atomicamente; nova finalização ou mutação em chave encerrada recebe 409. Nova abertura autorizada recebe chave nova, sem impor cota mensal.\n- [ ] Testes HTTP/SQLite verificam conteúdo, totais, transições, reinício e rejeições; manifesto mantém sem movimento/T17/regras fiscais fora do aceite inicial. Recuperação será integrada em I12–I14.\n\n## Blocked by\n\n- I09 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 10,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/10"
+      }
+    },
+    {
+      "id": "I11",
+      "stage": "E2",
+      "type": "AFK",
+      "title": "[E2][AFK] Injetar erro assíncrono intermediário com efeitos rastreáveis",
+      "stories": [
+        24,
+        26,
+        27,
+        28,
+        30,
+        38,
+        45
+      ],
+      "blocked_by": [
+        "I09"
+      ],
+      "matrix": [
+        "T04",
+        "T06",
+        "T08"
+      ],
+      "description": "Configurar pelo controle administrativo um erro assíncrono em lote/registro intermediário de um assunto, processar e consultar diagnóstico e efeitos. É falha controlada do simulador; não implementar uma CON nem anunciar validação tributária por causa da injeção.",
+      "criteria": [
+        "Plano de falhas identifica deterministicamente o lote/registro-alvo sem alterar o payload do integrador; a mesma entrada, seed e comandos reproduz o resultado lógico.",
+        "Lote com erro termina em LOTE_DESCARTADO com diagnóstico; seguintes ainda não processados do mesmo assunto ficam ABORTADO_ERRO_LOTE_ANTERIOR; anteriores válidos e outros assuntos são preservados.",
+        "Consulta permanece HTTP 200, com situacao e retornoErros.erros contendo código próprio, mensagem sanitizada e registro zero-based ou null quando não localizado.",
+        "Dados ativos removidos, processados e históricos são distinguíveis por inspeção; contagens e eventos refletem os efeitos atômicos sem apagar controles históricos.",
+        "Tabelas de decisão e testes HTTP/núcleo/SQLite verificam primeiro/intermediário/último lote e reinício; manifesto classifica a injeção como aproximação, mantendo regra fiscal de T04 não implementada."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nConfigurar pelo controle administrativo um erro assíncrono em lote/registro intermediário de um assunto, processar e consultar diagnóstico e efeitos. É falha controlada do simulador; não implementar uma CON nem anunciar validação tributária por causa da injeção.\n\nTipo: **AFK**. Etapa: **E2**. Histórias: H24, H26, H27, H28, H30, H38, H45.\n\nMatriz/aceite: T04, T06, T08. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] Plano de falhas identifica deterministicamente o lote/registro-alvo sem alterar o payload do integrador; a mesma entrada, seed e comandos reproduz o resultado lógico.\n- [ ] Lote com erro termina em LOTE_DESCARTADO com diagnóstico; seguintes ainda não processados do mesmo assunto ficam ABORTADO_ERRO_LOTE_ANTERIOR; anteriores válidos e outros assuntos são preservados.\n- [ ] Consulta permanece HTTP 200, com situacao e retornoErros.erros contendo código próprio, mensagem sanitizada e registro zero-based ou null quando não localizado.\n- [ ] Dados ativos removidos, processados e históricos são distinguíveis por inspeção; contagens e eventos refletem os efeitos atômicos sem apagar controles históricos.\n- [ ] Tabelas de decisão e testes HTTP/núcleo/SQLite verificam primeiro/intermediário/último lote e reinício; manifesto classifica a injeção como aproximação, mantendo regra fiscal de T04 não implementada.\n\n## Blocked by\n\n- I09 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 11,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/11"
+      }
+    },
+    {
+      "id": "I12",
+      "stage": "E2",
+      "type": "AFK",
+      "title": "[E2][AFK] Descartar assunto e reenviar mantendo chave e demais assuntos",
+      "stories": [
+        25,
+        26,
+        28,
+        29,
+        30,
+        45
+      ],
+      "blocked_by": [
+        "I10",
+        "I11"
+      ],
+      "matrix": [
+        "T06",
+        "T07",
+        "T08"
+      ],
+      "description": "Completar a recuperação por descarte de um assunto no envio aberto, reenvio e nova finalização. A remoção alcança seus dados recebidos, processados e efetivos, mantendo chave, outros assuntos e controles históricos.",
+      "criteria": [
+        "POST /v6/tributario/descarteParcialPorAssunto usa chavePacote/assunto na query e corpo vazio; sucesso retorna 200 vazio. Assunto sem suporte recebe 422; descarte durante processamento ou em chave encerrada recebe 409 sem remover dados.",
+        "Remoção/invalidação dos dados e trabalhos do assunto é atômica; controles antigos continuam consultáveis como históricos e não são contados como duplicatas ativas do reenvio.",
+        "Mesmo envio aceita novos lotes do assunto após descarte; outros assuntos, chaves e envios anteriores não mudam.",
+        "Erro intermediário → descarte → reenvio → processamento → finalização usa somente totais efetivos; históricos descartados/abortados não bloqueiam conclusão.",
+        "Testes HTTP/SQLite demonstram recuperação, rollback e alcance da remoção. Manifesto declara a política derivada para RECEBIDO e não cria rota explícita de descarte de lote."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nCompletar a recuperação por descarte de um assunto no envio aberto, reenvio e nova finalização. A remoção alcança seus dados recebidos, processados e efetivos, mantendo chave, outros assuntos e controles históricos.\n\nTipo: **AFK**. Etapa: **E2**. Histórias: H25, H26, H28, H29, H30, H45.\n\nMatriz/aceite: T06, T07, T08. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] POST /v6/tributario/descarteParcialPorAssunto usa chavePacote/assunto na query e corpo vazio; sucesso retorna 200 vazio. Assunto sem suporte recebe 422; descarte durante processamento ou em chave encerrada recebe 409 sem remover dados.\n- [ ] Remoção/invalidação dos dados e trabalhos do assunto é atômica; controles antigos continuam consultáveis como históricos e não são contados como duplicatas ativas do reenvio.\n- [ ] Mesmo envio aceita novos lotes do assunto após descarte; outros assuntos, chaves e envios anteriores não mudam.\n- [ ] Erro intermediário → descarte → reenvio → processamento → finalização usa somente totais efetivos; históricos descartados/abortados não bloqueiam conclusão.\n- [ ] Testes HTTP/SQLite demonstram recuperação, rollback e alcance da remoção. Manifesto declara a política derivada para RECEBIDO e não cria rota explícita de descarte de lote.\n\n## Blocked by\n\n- I10 (identificador local; substituir pela issue publicada).\n- I11 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 12,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/12"
+      }
+    },
+    {
+      "id": "I13",
+      "stage": "E2",
+      "type": "AFK",
+      "title": "[E2][AFK] Cancelar envio aberto e recomeçar com nova chave",
+      "stories": [
+        26,
+        30,
+        31,
+        36,
+        40,
+        45
+      ],
+      "blocked_by": [
+        "I10",
+        "I12"
+      ],
+      "matrix": [
+        "T08",
+        "T13"
+      ],
+      "description": "Permitir cancelamento integral do envio aberto e reenvio completo com chave nova. Distinguir seu alcance do descarte de assunto; a operação não altera os dados no integrador nem cancela envios já concluídos.",
+      "criteria": [
+        "POST /servicosGerais/cancelarEnvioParcial recebe chave na query, corpo vazio e responde 200 vazio para envio aberto autorizado.",
+        "Remove atomicamente recebidos/processados/efetivos do envio atual e invalida seus trabalhos, preservando controles históricos, outros contextos e envios anteriores.",
+        "Trabalho iniciado antes do cancelamento revalida chave/estado antes de gravar efeitos e não modifica o envio cancelado; testar corrida e reinício com SQLite real.",
+        "Nova abertura entrega chave distinta e permite reenvio integral. Repetição de cancelar, mutação em chave encerrada e cancelamento de concluído retornam 409 sem efeitos.",
+        "Evidências e testes HTTP/núcleo/SQLite explicam remoções e contagens; manifesto registra o alcance contratado e as exclusões."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nPermitir cancelamento integral do envio aberto e reenvio completo com chave nova. Distinguir seu alcance do descarte de assunto; a operação não altera os dados no integrador nem cancela envios já concluídos.\n\nTipo: **AFK**. Etapa: **E2**. Histórias: H26, H30, H31, H36, H40, H45.\n\nMatriz/aceite: T08, T13. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] POST /servicosGerais/cancelarEnvioParcial recebe chave na query, corpo vazio e responde 200 vazio para envio aberto autorizado.\n- [ ] Remove atomicamente recebidos/processados/efetivos do envio atual e invalida seus trabalhos, preservando controles históricos, outros contextos e envios anteriores.\n- [ ] Trabalho iniciado antes do cancelamento revalida chave/estado antes de gravar efeitos e não modifica o envio cancelado; testar corrida e reinício com SQLite real.\n- [ ] Nova abertura entrega chave distinta e permite reenvio integral. Repetição de cancelar, mutação em chave encerrada e cancelamento de concluído retornam 409 sem efeitos.\n- [ ] Evidências e testes HTTP/núcleo/SQLite explicam remoções e contagens; manifesto registra o alcance contratado e as exclusões.\n\n## Blocked by\n\n- I10 (identificador local; substituir pela issue publicada).\n- I12 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 13,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/13"
+      }
+    },
+    {
+      "id": "I14",
+      "stage": "E2",
+      "type": "AFK",
+      "title": "[E2][AFK] Reproduzir resposta perdida após commit e recuperação do assunto",
+      "stories": [
+        21,
+        26,
+        29,
+        30,
+        32,
+        33,
+        34,
+        38,
+        45
+      ],
+      "blocked_by": [
+        "I12"
+      ],
+      "matrix": [
+        "T12"
+      ],
+      "description": "Expor duas falhas controladas distintas: interrupção antes de aceitar sem persistir, e resposta perdida depois do commit de um lote em RECEBIDO. Demonstrar no HTTP e na inspeção que o integrador pode recuperar o assunto sob a mesma chave sem deduplicação inventada.",
+      "criteria": [
+        "Plano administrativo seleciona deterministicamente a tentativa afetada. Falha anterior à aceitação não persiste lote/efeitos; perda de resposta posterior conserva payload, lote, vínculos e evento de aceitação.",
+        "Perda da resposta é demonstrada por falha real de transporte observável pelo cliente HTTP, sem retornar confirmação artificial; lote continua RECEBIDO e não inicia processamento.",
+        "Nova tentativa daquele assunto recebe 409 SIM_ENVIO_ABERTO_SEM_PROCESSAMENTO. A marca pertence ao cenário; a simples presença de RECEBIDO não bloqueia múltiplos lotes normais, e hash não deduplica pedidos.",
+        "Descarte de RECEBIDO sem processamento ativo, reenvio sob a mesma chave, processamento e finalização reconciliam conteúdo e totais; controles antigos são históricos.",
+        "Testes de transporte/SQLite verificam o limite antes/depois do commit e repetibilidade; manifesto declara a exceção de descarte divergente do manual. Demora/500 adicionais continuam pendentes de evolução, sem serem contados como cobertos."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nExpor duas falhas controladas distintas: interrupção antes de aceitar sem persistir, e resposta perdida depois do commit de um lote em RECEBIDO. Demonstrar no HTTP e na inspeção que o integrador pode recuperar o assunto sob a mesma chave sem deduplicação inventada.\n\nTipo: **AFK**. Etapa: **E2**. Histórias: H21, H26, H29, H30, H32, H33, H34, H38, H45.\n\nMatriz/aceite: T12. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] Plano administrativo seleciona deterministicamente a tentativa afetada. Falha anterior à aceitação não persiste lote/efeitos; perda de resposta posterior conserva payload, lote, vínculos e evento de aceitação.\n- [ ] Perda da resposta é demonstrada por falha real de transporte observável pelo cliente HTTP, sem retornar confirmação artificial; lote continua RECEBIDO e não inicia processamento.\n- [ ] Nova tentativa daquele assunto recebe 409 SIM_ENVIO_ABERTO_SEM_PROCESSAMENTO. A marca pertence ao cenário; a simples presença de RECEBIDO não bloqueia múltiplos lotes normais, e hash não deduplica pedidos.\n- [ ] Descarte de RECEBIDO sem processamento ativo, reenvio sob a mesma chave, processamento e finalização reconciliam conteúdo e totais; controles antigos são históricos.\n- [ ] Testes de transporte/SQLite verificam o limite antes/depois do commit e repetibilidade; manifesto declara a exceção de descarte divergente do manual. Demora/500 adicionais continuam pendentes de evolução, sem serem contados como cobertos.\n\n## Blocked by\n\n- I12 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 14,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/14"
+      }
+    },
+    {
+      "id": "I15",
+      "stage": "E2",
+      "type": "AFK",
+      "title": "[E2][AFK] Bloquear competência pelo controle administrativo",
+      "stories": [
+        8,
+        35,
+        45
+      ],
+      "blocked_by": [
+        "I09"
+      ],
+      "matrix": [
+        "T09",
+        "T10"
+      ],
+      "description": "Configurar o bloqueio de uma UG/competência por cenário administrativo e observar impedimentos pelas rotas compatíveis já implementadas. Não criar operação fictícia de ratificação na API do integrador.",
+      "criteria": [
+        "Chave administrativa própria permite configurar/consultar bloqueio; sem ela ou usando token compatível o controle administrativo nega acesso.",
+        "Todas as mutações compatíveis cobertas verificam competência bloqueada e retornam 403 antes de efeitos; consultas autorizadas continuam disponíveis sem processar.",
+        "UGs/competências não selecionadas permanecem independentes; tentativa não autorizada não revela nem modifica outro contexto.",
+        "Testes HTTP/SQLite verificam estado e ausência de efeitos, com manifesto e evidências sanitizados. Repetição após reset será demonstrada em I17."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nConfigurar o bloqueio de uma UG/competência por cenário administrativo e observar impedimentos pelas rotas compatíveis já implementadas. Não criar operação fictícia de ratificação na API do integrador.\n\nTipo: **AFK**. Etapa: **E2**. Histórias: H08, H35, H45.\n\nMatriz/aceite: T09, T10. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] Chave administrativa própria permite configurar/consultar bloqueio; sem ela ou usando token compatível o controle administrativo nega acesso.\n- [ ] Todas as mutações compatíveis cobertas verificam competência bloqueada e retornam 403 antes de efeitos; consultas autorizadas continuam disponíveis sem processar.\n- [ ] UGs/competências não selecionadas permanecem independentes; tentativa não autorizada não revela nem modifica outro contexto.\n- [ ] Testes HTTP/SQLite verificam estado e ausência de efeitos, com manifesto e evidências sanitizados. Repetição após reset será demonstrada em I17.\n\n## Blocked by\n\n- I09 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 15,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/15"
+      }
+    },
+    {
+      "id": "I16",
+      "stage": "E2",
+      "type": "AFK",
+      "title": "[E2][AFK] Controlar expiração de tokens e envios com relógio virtual",
+      "stories": [
+        7,
+        23,
+        24,
+        38,
+        39,
+        40,
+        45
+      ],
+      "blocked_by": [
+        "I10"
+      ],
+      "matrix": [
+        "T02",
+        "T11",
+        "T19"
+      ],
+      "description": "Avançar o tempo explicitamente pelo controle administrativo e exercitar a duração do token e as 72 horas de inatividade do envio. Usar o mesmo relógio e processamento de tarefas dos modos manual/automático, sem aguardar horas reais.",
+      "criteria": [
+        "Comando administrativo protegido avança relógio de negócio de modo determinístico; consultas não avançam tarefas nem relógio. Tempo, atividade e trabalhos de expiração sobrevivem ao reinício.",
+        "Token expira após uma hora padrão configurável; chamada com token expirado retorna 401 antes de efeitos. Novo login permite repetir a chamada, preservando lote/envio existentes.",
+        "Envio aberto expira por 72 horas de inatividade; operações compatíveis autorizadas e bem-sucedidas sobre a chave, inclusive consulta, renovam atividade. Login, rejeições e consultas administrativas não renovam essa atividade.",
+        "Expiração encerra chave/invalida trabalhos sem concluir dados de execução expirada; preserva histórico. Consulta histórica não reabre ou renova envio encerrado; recomeço exige chave nova.",
+        "Testes HTTP/núcleo/SQLite cobrem fronteiras imediatamente antes/no prazo/depois, renovação, reinício e gravação de trabalho concorrente; manifesto qualifica as durações e a renovação como política derivada."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nAvançar o tempo explicitamente pelo controle administrativo e exercitar a duração do token e as 72 horas de inatividade do envio. Usar o mesmo relógio e processamento de tarefas dos modos manual/automático, sem aguardar horas reais.\n\nTipo: **AFK**. Etapa: **E2**. Histórias: H07, H23, H24, H38, H39, H40, H45.\n\nMatriz/aceite: T02, T11, T19. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] Comando administrativo protegido avança relógio de negócio de modo determinístico; consultas não avançam tarefas nem relógio. Tempo, atividade e trabalhos de expiração sobrevivem ao reinício.\n- [ ] Token expira após uma hora padrão configurável; chamada com token expirado retorna 401 antes de efeitos. Novo login permite repetir a chamada, preservando lote/envio existentes.\n- [ ] Envio aberto expira por 72 horas de inatividade; operações compatíveis autorizadas e bem-sucedidas sobre a chave, inclusive consulta, renovam atividade. Login, rejeições e consultas administrativas não renovam essa atividade.\n- [ ] Expiração encerra chave/invalida trabalhos sem concluir dados de execução expirada; preserva histórico. Consulta histórica não reabre ou renova envio encerrado; recomeço exige chave nova.\n- [ ] Testes HTTP/núcleo/SQLite cobrem fronteiras imediatamente antes/no prazo/depois, renovação, reinício e gravação de trabalho concorrente; manifesto qualifica as durações e a renovação como política derivada.\n\n## Blocked by\n\n- I10 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 16,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/16"
+      }
+    },
+    {
+      "id": "I17",
+      "stage": "E2",
+      "type": "AFK",
+      "title": "[E2][AFK] Resetar cenário sem aceitar efeitos de trabalhos antigos",
+      "stories": [
+        24,
+        35,
+        36,
+        37,
+        38,
+        39,
+        47,
+        49
+      ],
+      "blocked_by": [
+        "I13",
+        "I14",
+        "I15",
+        "I16"
+      ],
+      "matrix": [
+        "T09",
+        "T13",
+        "T19"
+      ],
+      "description": "Entregar reset administrativo explícito e repetição da execução com a mesma configuração/seed, distinguindo-o do reinício que conserva estado. Validar o ciclo completo com erros, competência bloqueada e trabalhos pendentes, inclusive gravação concorrente ao reset.",
+      "criteria": [
+        "Reset protegido por chave administrativa muda geração e recria o estado do cenário atomicamente, com alcance documentado; trabalhos antigos tornam-se inelegíveis.",
+        "Gravação de efeitos revalida geração e elegibilidade na mesma transação. Trabalho capturado antes do reset não contamina o novo cenário; testar a corrida deterministicamente e reiniciar em limites de commit.",
+        "Reinício conserva dados/trabalhos válidos sem reaplicar efeitos; reset invalida os antigos e permite repetir bloqueio/falhas/expiração com configuração inicial conhecida.",
+        "Mesmas entradas, seed e comandos produzem o mesmo resultado lógico depois do reset; isolamento entre instâncias/bases/volumes é verificável, sem header de teste no integrador.",
+        "Destino dos dados e retenção/limpeza dos payloads são explícitos e restritos à execução local; não apagar arquivos ou dados externos. Testes HTTP/SQLite e manifesto comprovam ausência de efeitos de geração anterior."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nEntregar reset administrativo explícito e repetição da execução com a mesma configuração/seed, distinguindo-o do reinício que conserva estado. Validar o ciclo completo com erros, competência bloqueada e trabalhos pendentes, inclusive gravação concorrente ao reset.\n\nTipo: **AFK**. Etapa: **E2**. Histórias: H24, H35, H36, H37, H38, H39, H47, H49.\n\nMatriz/aceite: T09, T13, T19. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] Reset protegido por chave administrativa muda geração e recria o estado do cenário atomicamente, com alcance documentado; trabalhos antigos tornam-se inelegíveis.\n- [ ] Gravação de efeitos revalida geração e elegibilidade na mesma transação. Trabalho capturado antes do reset não contamina o novo cenário; testar a corrida deterministicamente e reiniciar em limites de commit.\n- [ ] Reinício conserva dados/trabalhos válidos sem reaplicar efeitos; reset invalida os antigos e permite repetir bloqueio/falhas/expiração com configuração inicial conhecida.\n- [ ] Mesmas entradas, seed e comandos produzem o mesmo resultado lógico depois do reset; isolamento entre instâncias/bases/volumes é verificável, sem header de teste no integrador.\n- [ ] Destino dos dados e retenção/limpeza dos payloads são explícitos e restritos à execução local; não apagar arquivos ou dados externos. Testes HTTP/SQLite e manifesto comprovam ausência de efeitos de geração anterior.\n\n## Blocked by\n\n- I13 (identificador local; substituir pela issue publicada).\n- I14 (identificador local; substituir pela issue publicada).\n- I15 (identificador local; substituir pela issue publicada).\n- I16 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 17,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/17"
+      }
+    },
+    {
+      "id": "I18",
+      "stage": "E2",
+      "type": "AFK",
+      "title": "[E2][AFK] Inspecionar execução e emitir evidências locais de conteúdo e cobertura",
+      "stories": [
+        3,
+        4,
+        5,
+        20,
+        26,
+        30,
+        42,
+        44,
+        45,
+        46,
+        48,
+        49,
+        50,
+        55
+      ],
+      "blocked_by": [
+        "I17"
+      ],
+      "matrix": [
+        "T01",
+        "T02",
+        "T18"
+      ],
+      "description": "Completar a inspeção administrativa para reconciliar uma execução e preparar E3 e o futuro painel: listar remessas/lotes com filtros, detalhar estados/erros, paginar registros e emitir relatório local com manifesto. Não criar consulta agregada compatível fictícia nem dashboard nesta etapa.",
+      "criteria": [
+        "API administrativa protegida lista/filtra por cenário, UG, competência e assunto e detalha lote/remessa com ordenação/paginação estável e condições de alteração documentadas. Contratos administrativos concretos e rejeições são especificados e testados antes da tela.",
+        "Inspeção distingue recebidos, processados, descartados, abortados, efetivos e históricos; permite reconciliar multiplicidades, referências, bytes originais, identificadores com zeros e decimais exatos sem coerção.",
+        "Listar/detalhar/atualizar consultas não avança processamento ou relógio nem renova atividade compatível; chave administrativa ausente/inválida nega acesso. Erros não expõem segredos.",
+        "Relatório local identifica versão do artefato/imagem disponível e contrato, seed/configuração, classificação da origem, sequência/correlação, estados, contagens, divergências, regras e limites. Manifesto contém operação/assunto/regra/versão/evidência/teste/situação.",
+        "Relatório compartilhável usa somente síntese sanitizada; payloads/SQL/resultados detalhados permanecem no volume/ambiente local controlado. CI/fixtures usam dados fictícios e não enviam dados originais a serviços externos.",
+        "Testes HTTP/SQLite incluem paginação e filtros em histórico/recuperação, leitura sem efeitos e cobertura estrita; guia local descreve os comandos realmente existentes. Tabelas e suíte dos tickets E2 passam, registrando sua saída no recorte e pendências fiscais sem aprovação implícita."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nCompletar a inspeção administrativa para reconciliar uma execução e preparar E3 e o futuro painel: listar remessas/lotes com filtros, detalhar estados/erros, paginar registros e emitir relatório local com manifesto. Não criar consulta agregada compatível fictícia nem dashboard nesta etapa.\n\nTipo: **AFK**. Etapa: **E2**. Histórias: H03, H04, H05, H20, H26, H30, H42, H44, H45, H46, H48, H49, H50, H55.\n\nMatriz/aceite: T01, T02, T18. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] API administrativa protegida lista/filtra por cenário, UG, competência e assunto e detalha lote/remessa com ordenação/paginação estável e condições de alteração documentadas. Contratos administrativos concretos e rejeições são especificados e testados antes da tela.\n- [ ] Inspeção distingue recebidos, processados, descartados, abortados, efetivos e históricos; permite reconciliar multiplicidades, referências, bytes originais, identificadores com zeros e decimais exatos sem coerção.\n- [ ] Listar/detalhar/atualizar consultas não avança processamento ou relógio nem renova atividade compatível; chave administrativa ausente/inválida nega acesso. Erros não expõem segredos.\n- [ ] Relatório local identifica versão do artefato/imagem disponível e contrato, seed/configuração, classificação da origem, sequência/correlação, estados, contagens, divergências, regras e limites. Manifesto contém operação/assunto/regra/versão/evidência/teste/situação.\n- [ ] Relatório compartilhável usa somente síntese sanitizada; payloads/SQL/resultados detalhados permanecem no volume/ambiente local controlado. CI/fixtures usam dados fictícios e não enviam dados originais a serviços externos.\n- [ ] Testes HTTP/SQLite incluem paginação e filtros em histórico/recuperação, leitura sem efeitos e cobertura estrita; guia local descreve os comandos realmente existentes. Tabelas e suíte dos tickets E2 passam, registrando sua saída no recorte e pendências fiscais sem aprovação implícita.\n\n## Blocked by\n\n- I17 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 18,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/18"
+      }
+    },
+    {
+      "id": "I19",
+      "stage": "E3",
+      "type": "HITL",
+      "title": "[E3][HITL] Executar piloto real e reconciliar referência independente local",
+      "stories": [
+        1,
+        2,
+        10,
+        11,
+        20,
+        25,
+        26,
+        27,
+        29,
+        31,
+        32,
+        33,
+        34,
+        41,
+        42,
+        43,
+        44,
+        49,
+        50
+      ],
+      "blocked_by": [
+        "I18"
+      ],
+      "matrix": [
+        "T01",
+        "T04",
+        "T06",
+        "T07",
+        "T08",
+        "T10",
+        "T11",
+        "T12",
+        "T13"
+      ],
+      "description": "O solicitante prepara a referência independente antes do envio e executa o piloto real no ambiente interno. Conferir obtenção/montagem/envio/acompanhamento/conclusão no cliente sem o simulador acessar a origem. SQL, estrutura interna e resultados detalhados não precisam ser fornecidos ao agente ou publicados.",
+      "criteria": [
+        "Identificar internamente cópia estável do cliente/alias 14 e competência 202609, sem cargas ou alterações concorrentes; o alias não é presumido como código da UG.",
+        "Antes de enviar, gerar SQL independente da montagem de lotes com todos os campos enviados, chaves, contagens e multiplicidades por assunto, preservando nulos, identificadores/zeros e decimal exato.",
+        "Configurar somente destino/credenciais fictícias no integrador real. Registrar fracionamento observado dos 21.770 créditos relatados: previsão de 10.000 + 10.000 + 1.770 a conferir e reconciliar, sem forçar contagens ou impor esse limite ao simulador.",
+        "Demonstrar ciclos por assunto sob a mesma chave, disparo após todos os lotes de cada assunto, consultas até conclusão e finalização no integrador. Comparar conteúdo recebido e efetivo com a referência, explicando perdas/duplicações/descartes e estados.",
+        "Executar e registrar as quatro falhas prioritárias aplicáveis — token inválido/expirado, payload inválido, erro assíncrono controlado e resposta perdida —, a recuperação e repetição após reset; comportamento não acionável pelo cliente fica explicitamente pendente.",
+        "Solicitante registra aceite parcial ou divergências e versões internamente; compartilhar apenas conclusão sanitizada quando permitido. Saldo/prazo ausentes, regras fiscais e parcelas de T01 não demonstradas permanecem pendentes, sem o agente certificar material inacessível."
+      ],
+      "labels": [
+        "ready-for-human"
+      ],
+      "body": "## What to build\n\nO solicitante prepara a referência independente antes do envio e executa o piloto real no ambiente interno. Conferir obtenção/montagem/envio/acompanhamento/conclusão no cliente sem o simulador acessar a origem. SQL, estrutura interna e resultados detalhados não precisam ser fornecidos ao agente ou publicados.\n\nTipo: **HITL**. Etapa: **E3**. Histórias: H01, H02, H10, H11, H20, H25, H26, H27, H29, H31, H32, H33, H34, H41, H42, H43, H44, H49, H50.\n\nMatriz/aceite: T01, T04, T06, T07, T08, T10, T11, T12, T13. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nExige participação e aceite humano; não encerrar por simulação do agente ou evidência que ele não pôde verificar.\n\n## Acceptance criteria\n\n- [ ] Identificar internamente cópia estável do cliente/alias 14 e competência 202609, sem cargas ou alterações concorrentes; o alias não é presumido como código da UG.\n- [ ] Antes de enviar, gerar SQL independente da montagem de lotes com todos os campos enviados, chaves, contagens e multiplicidades por assunto, preservando nulos, identificadores/zeros e decimal exato.\n- [ ] Configurar somente destino/credenciais fictícias no integrador real. Registrar fracionamento observado dos 21.770 créditos relatados: previsão de 10.000 + 10.000 + 1.770 a conferir e reconciliar, sem forçar contagens ou impor esse limite ao simulador.\n- [ ] Demonstrar ciclos por assunto sob a mesma chave, disparo após todos os lotes de cada assunto, consultas até conclusão e finalização no integrador. Comparar conteúdo recebido e efetivo com a referência, explicando perdas/duplicações/descartes e estados.\n- [ ] Executar e registrar as quatro falhas prioritárias aplicáveis — token inválido/expirado, payload inválido, erro assíncrono controlado e resposta perdida —, a recuperação e repetição após reset; comportamento não acionável pelo cliente fica explicitamente pendente.\n- [ ] Solicitante registra aceite parcial ou divergências e versões internamente; compartilhar apenas conclusão sanitizada quando permitido. Saldo/prazo ausentes, regras fiscais e parcelas de T01 não demonstradas permanecem pendentes, sem o agente certificar material inacessível.\n\n## Blocked by\n\n- I18 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 19,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/19"
+      },
+      "public_body_sanitized": true
+    },
+    {
+      "id": "I20",
+      "stage": "E3",
+      "type": "HITL",
+      "title": "[E3][HITL] Aceitar matriz do recorte com seis assuntos e cenário complementar",
+      "stories": [
+        2,
+        10,
+        11,
+        16,
+        17,
+        38,
+        41,
+        42,
+        43,
+        44,
+        45,
+        52
+      ],
+      "blocked_by": [
+        "I19"
+      ],
+      "matrix": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "T07",
+        "T08",
+        "T09",
+        "T10",
+        "T11",
+        "T12",
+        "T13",
+        "T14",
+        "T15",
+        "T16",
+        "T17",
+        "T18",
+        "T19"
+      ],
+      "description": "Fechar a saída de E3 no recorte estrutural/fluxo contratado, com participação do solicitante nos cenários de origem e no integrador real. Complementar os assuntos ausentes no piloto, sem atribuir aceite às regras de domínio e casos expressamente adiados do MVP completo.",
+      "criteria": [
+        "Preparar entrada conhecida e referência independente para os seis assuntos, incluindo janeiro com saldo inicial e prazo prescricional; quantidades e estado anterior são confirmados com o solicitante, sem tratar as quantidades propostas no planejamento como requisito oficial.",
+        "Integrador real percorre os seis assuntos e ao menos um assunto com vários lotes, demonstrando conteúdo, tipos, decimais, multiplicidades, referências preservadas e conclusão; repetir depois de reset.",
+        "Matriz T01–T19 registra por caso/parcela o resultado, versão, evidência e limite: simulador automatizado, integrador real ou não exercitado. T01 completo não é declarado enquanto referências de negócio/regras aplicáveis adiadas não forem validadas.",
+        "T02/T03, T09–T15, T18/T19 e recuperação do recorte têm testes/esperados demonstrados; injeção T04 cobre mecanismo de falha, não regra tributária. T05 automático, sem movimento em T16, T17, demora/500 não demonstrados e descarte explícito de lote continuam exclusões/pendências declaradas.",
+        "Solicitante aprova expressamente a saída E3 do recorte com divergências reconciliadas e retiradas de escopo identificadas; fixtures ou comparação apenas com payload não substituem aceite. Se faltar entrada conhecida ou comprovação obrigatória do recorte, manter ticket aberto e E5 bloqueada.",
+        "SQL/estado de origem/resultados ficam internos; registro compartilhável é sanitizado. MVP completo/homologação permanecem distintos do aceite parcial aprovado."
+      ],
+      "labels": [
+        "ready-for-human"
+      ],
+      "body": "## What to build\n\nFechar a saída de E3 no recorte estrutural/fluxo contratado, com participação do solicitante nos cenários de origem e no integrador real. Complementar os assuntos ausentes no piloto, sem atribuir aceite às regras de domínio e casos expressamente adiados do MVP completo.\n\nTipo: **HITL**. Etapa: **E3**. Histórias: H02, H10, H11, H16, H17, H38, H41, H42, H43, H44, H45, H52.\n\nMatriz/aceite: T01, T02, T03, T04, T05, T06, T07, T08, T09, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nExige participação e aceite humano; não encerrar por simulação do agente ou evidência que ele não pôde verificar.\n\n## Acceptance criteria\n\n- [ ] Preparar entrada conhecida e referência independente para os seis assuntos, incluindo janeiro com saldo inicial e prazo prescricional; quantidades e estado anterior são confirmados com o solicitante, sem tratar as quantidades propostas no planejamento como requisito oficial.\n- [ ] Integrador real percorre os seis assuntos e ao menos um assunto com vários lotes, demonstrando conteúdo, tipos, decimais, multiplicidades, referências preservadas e conclusão; repetir depois de reset.\n- [ ] Matriz T01–T19 registra por caso/parcela o resultado, versão, evidência e limite: simulador automatizado, integrador real ou não exercitado. T01 completo não é declarado enquanto referências de negócio/regras aplicáveis adiadas não forem validadas.\n- [ ] T02/T03, T09–T15, T18/T19 e recuperação do recorte têm testes/esperados demonstrados; injeção T04 cobre mecanismo de falha, não regra tributária. T05 automático, sem movimento em T16, T17, demora/500 não demonstrados e descarte explícito de lote continuam exclusões/pendências declaradas.\n- [ ] Solicitante aprova expressamente a saída E3 do recorte com divergências reconciliadas e retiradas de escopo identificadas; fixtures ou comparação apenas com payload não substituem aceite. Se faltar entrada conhecida ou comprovação obrigatória do recorte, manter ticket aberto e E5 bloqueada.\n- [ ] SQL/estado de origem/resultados ficam internos; registro compartilhável é sanitizado. MVP completo/homologação permanecem distintos do aceite parcial aprovado.\n\n## Blocked by\n\n- I19 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 20,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/20"
+      }
+    },
+    {
+      "id": "I21",
+      "stage": "E4",
+      "type": "AFK",
+      "title": "[E4][AFK] Reproduzir backend em Docker Compose e CI Linux amd64",
+      "stories": [
+        1,
+        3,
+        38,
+        45,
+        47,
+        48,
+        49,
+        50,
+        51
+      ],
+      "blocked_by": [
+        "I20"
+      ],
+      "matrix": [
+        "T01",
+        "T02",
+        "T13",
+        "T18"
+      ],
+      "description": "Consolidar a imagem mínima existente em entrega operacional versionada do backend: Compose, configuração fictícia, saúde, execução da suíte e CI com dados sintéticos. Incorporar as correções validadas em E3; não publicar imagem nem implantar serviço sem autorização específica.",
+      "criteria": [
+        "Imagem Java 21 Linux amd64 identificável e Compose iniciam uma instância por execução com porta/volume próprios e configuração de exemplo sem segredos. arm64/uso compartilhado não são anunciados.",
+        "Comandos de início, saúde, inspeção, teste, reinício, reset e limpeza restrita à execução são implementados e documentados a partir dos artefatos reais; guia distingue reset de migração e de reinício.",
+        "CI usa SQLite real e executa testes comportamentais/arquiteturais e ensaio Docker com fixtures fictícias, demonstrando persistência/reabertura, reset e isolamento; não depende de serviços municipais ou dados internos.",
+        "Após baixar artefatos necessários, backend e ensaio funcionam sem acesso ao TCE, com evidência de ausência de encaminhamento. Nenhuma chamada compatível exige parâmetro/header exclusivo de teste.",
+        "Versões de imagem/contrato, manifesto e relatórios são coerentes; evidências compartilhadas e artefatos CI não contêm payloads originais/SQL/segredos.",
+        "Registrar ambiente, duração e limites observados; metas de 30 segundos/dois minutos e ensaio opcional de 50 mil registros não viram resultados presumidos ou limites oficiais. Build/CI locais não são confundidos com execução remota não realizada."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nConsolidar a imagem mínima existente em entrega operacional versionada do backend: Compose, configuração fictícia, saúde, execução da suíte e CI com dados sintéticos. Incorporar as correções validadas em E3; não publicar imagem nem implantar serviço sem autorização específica.\n\nTipo: **AFK**. Etapa: **E4**. Histórias: H01, H03, H38, H45, H47, H48, H49, H50, H51.\n\nMatriz/aceite: T01, T02, T13, T18. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] Imagem Java 21 Linux amd64 identificável e Compose iniciam uma instância por execução com porta/volume próprios e configuração de exemplo sem segredos. arm64/uso compartilhado não são anunciados.\n- [ ] Comandos de início, saúde, inspeção, teste, reinício, reset e limpeza restrita à execução são implementados e documentados a partir dos artefatos reais; guia distingue reset de migração e de reinício.\n- [ ] CI usa SQLite real e executa testes comportamentais/arquiteturais e ensaio Docker com fixtures fictícias, demonstrando persistência/reabertura, reset e isolamento; não depende de serviços municipais ou dados internos.\n- [ ] Após baixar artefatos necessários, backend e ensaio funcionam sem acesso ao TCE, com evidência de ausência de encaminhamento. Nenhuma chamada compatível exige parâmetro/header exclusivo de teste.\n- [ ] Versões de imagem/contrato, manifesto e relatórios são coerentes; evidências compartilhadas e artefatos CI não contêm payloads originais/SQL/segredos.\n- [ ] Registrar ambiente, duração e limites observados; metas de 30 segundos/dois minutos e ensaio opcional de 50 mil registros não viram resultados presumidos ou limites oficiais. Build/CI locais não são confundidos com execução remota não realizada.\n\n## Blocked by\n\n- I20 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 21,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/21"
+      }
+    },
+    {
+      "id": "I22",
+      "stage": "E4",
+      "type": "HITL",
+      "title": "[E4][HITL] Comprovar instalação teste e reset por outra pessoa",
+      "stories": [
+        44,
+        45,
+        47,
+        48,
+        49,
+        50,
+        51
+      ],
+      "blocked_by": [
+        "I21"
+      ],
+      "matrix": [
+        "T01",
+        "T13",
+        "T18"
+      ],
+      "description": "Outra pessoa reproduz a entrega do backend seguindo o guia e confirma a saída de E4. Esse aceite humano, junto da saída E3 e das consultas administrativas validadas, libera o início do painel E5 no recorte contratado.",
+      "criteria": [
+        "Pessoa diferente de quem implementou instala/inicia a entrega Linux amd64, configura cenário/credenciais fictícias e executa o ensaio disponível seguindo apenas o guia.",
+        "Demonstra inspeção de estados/conteúdo/contagens, reinício com persistência, reset e repetição; não depende do TCE após baixar artefatos.",
+        "Registra versões, ambiente, comandos realmente executados, resultados e eventuais falhas; discrepâncias são corrigidas e a reprodução repetida antes do aceite.",
+        "Saídas E1–E4 do recorte e prontidão das consultas administrativas de I18 são conferidas; pendências do MVP completo são identificadas e não aprovadas silenciosamente.",
+        "Conclusão/relatório compartilhável são sanitizados, sem SQL ou dados originais. Aceite explícito de E4 não equivale à homologação oficial ou a T01 integral."
+      ],
+      "labels": [
+        "ready-for-human"
+      ],
+      "body": "## What to build\n\nOutra pessoa reproduz a entrega do backend seguindo o guia e confirma a saída de E4. Esse aceite humano, junto da saída E3 e das consultas administrativas validadas, libera o início do painel E5 no recorte contratado.\n\nTipo: **HITL**. Etapa: **E4**. Histórias: H44, H45, H47, H48, H49, H50, H51.\n\nMatriz/aceite: T01, T13, T18. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nExige participação e aceite humano; não encerrar por simulação do agente ou evidência que ele não pôde verificar.\n\n## Acceptance criteria\n\n- [ ] Pessoa diferente de quem implementou instala/inicia a entrega Linux amd64, configura cenário/credenciais fictícias e executa o ensaio disponível seguindo apenas o guia.\n- [ ] Demonstra inspeção de estados/conteúdo/contagens, reinício com persistência, reset e repetição; não depende do TCE após baixar artefatos.\n- [ ] Registra versões, ambiente, comandos realmente executados, resultados e eventuais falhas; discrepâncias são corrigidas e a reprodução repetida antes do aceite.\n- [ ] Saídas E1–E4 do recorte e prontidão das consultas administrativas de I18 são conferidas; pendências do MVP completo são identificadas e não aprovadas silenciosamente.\n- [ ] Conclusão/relatório compartilhável são sanitizados, sem SQL ou dados originais. Aceite explícito de E4 não equivale à homologação oficial ou a T01 integral.\n\n## Blocked by\n\n- I21 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 22,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/22"
+      }
+    },
+    {
+      "id": "I23",
+      "stage": "E5",
+      "type": "AFK",
+      "title": "[E5][AFK] Acompanhar remessas lotes e registros no painel local",
+      "stories": [
+        20,
+        26,
+        44,
+        45,
+        49,
+        50,
+        55
+      ],
+      "blocked_by": [
+        "I22"
+      ],
+      "matrix": [
+        "T02",
+        "T10",
+        "T18"
+      ],
+      "description": "Após saídas E1–E4, servir no mesmo aplicativo/Docker a primeira tela de acompanhamento: filtros, estados/erros, contagens e detalhes paginados usando somente a API administrativa já validada. É um caminho visual completo de consulta; não construir portal ou implantação frontend separada.",
+      "criteria": [
+        "Chave administrativa é fornecida em tempo de uso e não embutida nos arquivos; acesso sem chave válida é negado, sem exibir dados remanescentes como se fossem autorizados.",
+        "Filtrar por cenário, UG, competência e assunto; listar/detalhar remessas/lotes e paginar registros reproduz os resultados da API, mantendo identificadores/zeros, nulos e decimais exatos.",
+        "Mostrar estados/erros e contagens recebidas/processadas/descartadas/efetivas e distinguir histórico e cobertura não implementada; indicar que sucesso estrutural não comprova validação tributária/homologação.",
+        "Abrir/atualizar/paginar a página e atualização periódica não disparam processamento nem avançam relógio; erros de consulta ficam visíveis. Reutilizar regras/portas existentes sem acesso direto ao SQLite.",
+        "Operação por teclado, foco, rótulos e paginação são verificados; testes de interface com fixtures fictícias conferem dados e negação de acesso, com suíte backend aprovada.",
+        "Recursos da página e chamadas não transferem dados originais a serviços externos; documentar execução local e reestimar E5 com o backend pronto, sem WebSocket."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nApós saídas E1–E4, servir no mesmo aplicativo/Docker a primeira tela de acompanhamento: filtros, estados/erros, contagens e detalhes paginados usando somente a API administrativa já validada. É um caminho visual completo de consulta; não construir portal ou implantação frontend separada.\n\nTipo: **AFK**. Etapa: **E5**. Histórias: H20, H26, H44, H45, H49, H50, H55.\n\nMatriz/aceite: T02, T10, T18. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] Chave administrativa é fornecida em tempo de uso e não embutida nos arquivos; acesso sem chave válida é negado, sem exibir dados remanescentes como se fossem autorizados.\n- [ ] Filtrar por cenário, UG, competência e assunto; listar/detalhar remessas/lotes e paginar registros reproduz os resultados da API, mantendo identificadores/zeros, nulos e decimais exatos.\n- [ ] Mostrar estados/erros e contagens recebidas/processadas/descartadas/efetivas e distinguir histórico e cobertura não implementada; indicar que sucesso estrutural não comprova validação tributária/homologação.\n- [ ] Abrir/atualizar/paginar a página e atualização periódica não disparam processamento nem avançam relógio; erros de consulta ficam visíveis. Reutilizar regras/portas existentes sem acesso direto ao SQLite.\n- [ ] Operação por teclado, foco, rótulos e paginação são verificados; testes de interface com fixtures fictícias conferem dados e negação de acesso, com suíte backend aprovada.\n- [ ] Recursos da página e chamadas não transferem dados originais a serviços externos; documentar execução local e reestimar E5 com o backend pronto, sem WebSocket.\n\n## Blocked by\n\n- I22 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 23,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/23"
+      }
+    },
+    {
+      "id": "I24",
+      "stage": "E5",
+      "type": "AFK",
+      "title": "[E5][AFK] Selecionar cenário latência e falhas suportados no painel",
+      "stories": [
+        24,
+        38,
+        53
+      ],
+      "blocked_by": [
+        "I23"
+      ],
+      "matrix": [],
+      "description": "Permitir consultar e alterar a configuração suportada pelo backend na tela local, com cenário, latência e plano de falhas. A tela respeita as condições de alteração da API e não cria novos cenários ou semânticas de falha.",
+      "criteria": [
+        "Controles carregam a configuração corrente e oferecem somente valores/modos/falhas já implementados; salvar exige ação explícita e chave administrativa válida.",
+        "A configuração persistida e exibida corresponde à resposta do backend; conflito/rejeição é mostrado sem mensagem de sucesso ou valor fictício aplicado.",
+        "Alterar configuração não envia lotes em lugar do integrador nem avança processamento/tempo implicitamente; restrições de execução ativa seguem a API validada.",
+        "Teclado, foco, rótulos e mensagens de erro são verificados por teste de interface; configuração continua acessível após recarregar a página e suíte backend permanece aprovada."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nPermitir consultar e alterar a configuração suportada pelo backend na tela local, com cenário, latência e plano de falhas. A tela respeita as condições de alteração da API e não cria novos cenários ou semânticas de falha.\n\nTipo: **AFK**. Etapa: **E5**. Histórias: H24, H38, H53.\n\nMatriz/aceite: Aceite RF13; testes da configuração administrativa e interface.. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] Controles carregam a configuração corrente e oferecem somente valores/modos/falhas já implementados; salvar exige ação explícita e chave administrativa válida.\n- [ ] A configuração persistida e exibida corresponde à resposta do backend; conflito/rejeição é mostrado sem mensagem de sucesso ou valor fictício aplicado.\n- [ ] Alterar configuração não envia lotes em lugar do integrador nem avança processamento/tempo implicitamente; restrições de execução ativa seguem a API validada.\n- [ ] Teclado, foco, rótulos e mensagens de erro são verificados por teste de interface; configuração continua acessível após recarregar a página e suíte backend permanece aprovada.\n\n## Blocked by\n\n- I23 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 24,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/24"
+      }
+    },
+    {
+      "id": "I25",
+      "stage": "E5",
+      "type": "AFK",
+      "title": "[E5][AFK] Avançar tarefas relógio e confirmar reset pelo painel",
+      "stories": [
+        24,
+        37,
+        38,
+        39,
+        54
+      ],
+      "blocked_by": [
+        "I24"
+      ],
+      "matrix": [
+        "T02",
+        "T09",
+        "T13",
+        "T19"
+      ],
+      "description": "Completar o controle de execução visual com comandos administrativos explícitos para avançar tarefas, avançar tempo e resetar o cenário. Exibir efeitos e erros reais; o painel reutiliza a proteção de geração e regras existentes.",
+      "criteria": [
+        "Modo manual permite acionar avanço de tarefas e relógio por comandos separados e explícitos conforme API; mostrar resultado e atualizar estado sem disparo automático pela leitura.",
+        "Reset apresenta confirmação com identificação do cenário e alcance/efeitos; cancelar a confirmação não chama o backend e confirmar envia somente o comando administrativo autorizado.",
+        "Negação de autenticação, conflito ou falha de comando é visível e não altera a tela para um sucesso inexistente; repetição segue a semântica do backend, sem idempotência inventada.",
+        "Depois do reset, estados/contagens mostram a nova geração e nenhuma resposta/trabalho antigo reaparece como dado atual; testes de interface cobrem confirmação, cancelamento, erros e avanço controlado.",
+        "Teclado/foco/rótulos e guia de reprodução são verificados; testes backend continuam aprovados e não há lógica de negócio ou acesso a banco na página."
+      ],
+      "labels": [
+        "ready-for-agent"
+      ],
+      "body": "## What to build\n\nCompletar o controle de execução visual com comandos administrativos explícitos para avançar tarefas, avançar tempo e resetar o cenário. Exibir efeitos e erros reais; o painel reutiliza a proteção de geração e regras existentes.\n\nTipo: **AFK**. Etapa: **E5**. Histórias: H24, H37, H38, H39, H54.\n\nMatriz/aceite: T02, T09, T13, T19. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nAplicar TDD por comportamento em uma fatia por vez: falha esperada, implementação mínima e refatoração com testes verdes. Exercitar HTTP e SQLite real quando houver persistência; não concluir por mocks ou estrutura de arquivos.\n\n## Acceptance criteria\n\n- [ ] Modo manual permite acionar avanço de tarefas e relógio por comandos separados e explícitos conforme API; mostrar resultado e atualizar estado sem disparo automático pela leitura.\n- [ ] Reset apresenta confirmação com identificação do cenário e alcance/efeitos; cancelar a confirmação não chama o backend e confirmar envia somente o comando administrativo autorizado.\n- [ ] Negação de autenticação, conflito ou falha de comando é visível e não altera a tela para um sucesso inexistente; repetição segue a semântica do backend, sem idempotência inventada.\n- [ ] Depois do reset, estados/contagens mostram a nova geração e nenhuma resposta/trabalho antigo reaparece como dado atual; testes de interface cobrem confirmação, cancelamento, erros e avanço controlado.\n- [ ] Teclado/foco/rótulos e guia de reprodução são verificados; testes backend continuam aprovados e não há lógica de negócio ou acesso a banco na página.\n\n## Blocked by\n\n- I24 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 25,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/25"
+      }
+    },
+    {
+      "id": "I26",
+      "stage": "E5",
+      "type": "HITL",
+      "title": "[E5][HITL] Aceitar painel observando execução do integrador real",
+      "stories": [
+        43,
+        44,
+        48,
+        53,
+        54,
+        55
+      ],
+      "blocked_by": [
+        "I25"
+      ],
+      "matrix": [
+        "T01",
+        "T02",
+        "T13",
+        "T19"
+      ],
+      "description": "Solicitante valida a primeira fatia RF13 conforme o planejamento: preparar cenário pela tela, observar envio do integrador e conferir consultas/comandos contra a API administrativa. É o aceite específico E5, sem substituir E3 ou reclassificar T01 integral.",
+      "criteria": [
+        "Confirmar que saídas E1–E4 continuam comprovadas e suíte backend está aprovada antes do ensaio visual.",
+        "Preparar cenário suportado no painel, executar envio pelo integrador real e comparar filtros, estados, erros, contagens e detalhes paginados com a API administrativa.",
+        "Demonstrar avanço manual/relógio e reset confirmado; consultas/atualização não avançam processamento/tempo. Conferir falha de comando visível e negação sem chave administrativa.",
+        "Conferir preservação de identificadores/decimais, operação por teclado, foco e rótulos; registrar versão, ambiente, roteiro e resultados reproduzíveis.",
+        "Dados detalhados permanecem locais e conclusão é sanitizada quando compartilhada; limitações fiscais/de contrato permanecem visíveis e aceite RF13 é registrado explicitamente pelo solicitante."
+      ],
+      "labels": [
+        "ready-for-human"
+      ],
+      "body": "## What to build\n\nSolicitante valida a primeira fatia RF13 conforme o planejamento: preparar cenário pela tela, observar envio do integrador e conferir consultas/comandos contra a API administrativa. É o aceite específico E5, sem substituir E3 ou reclassificar T01 integral.\n\nTipo: **HITL**. Etapa: **E5**. Histórias: H43, H44, H48, H53, H54, H55.\n\nMatriz/aceite: T01, T02, T13, T19. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nExige participação e aceite humano; não encerrar por simulação do agente ou evidência que ele não pôde verificar.\n\n## Acceptance criteria\n\n- [ ] Confirmar que saídas E1–E4 continuam comprovadas e suíte backend está aprovada antes do ensaio visual.\n- [ ] Preparar cenário suportado no painel, executar envio pelo integrador real e comparar filtros, estados, erros, contagens e detalhes paginados com a API administrativa.\n- [ ] Demonstrar avanço manual/relógio e reset confirmado; consultas/atualização não avançam processamento/tempo. Conferir falha de comando visível e negação sem chave administrativa.\n- [ ] Conferir preservação de identificadores/decimais, operação por teclado, foco e rótulos; registrar versão, ambiente, roteiro e resultados reproduzíveis.\n- [ ] Dados detalhados permanecem locais e conclusão é sanitizada quando compartilhada; limitações fiscais/de contrato permanecem visíveis e aceite RF13 é registrado explicitamente pelo solicitante.\n\n## Blocked by\n\n- I25 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 26,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/26"
+      }
+    },
+    {
+      "id": "I27",
+      "stage": "Evolução",
+      "type": "HITL",
+      "title": "[Evolução][HITL] Fechar contrato dos casos adiados para o MVP completo",
+      "stories": [
+        4,
+        5,
+        18,
+        19,
+        27,
+        44,
+        45,
+        52
+      ],
+      "blocked_by": [
+        "I20"
+      ],
+      "matrix": [
+        "T01",
+        "T04",
+        "T05",
+        "T08",
+        "T12",
+        "T16",
+        "T17"
+      ],
+      "description": "Com o responsável pelo integrador e especialista tributário, transformar as pendências do MVP completo em comportamentos evidenciados e futuras fatias implementáveis. Este ticket entrega decisões e casos de aceite, não uma implementação genérica de regras. Não bloqueia E5 quando as saídas do recorte inicial estiverem aprovadas.",
+      "criteria": [
+        "Selecionar explicitamente regras de vínculo entre assuntos/envios, cronologia, cálculos, condicionais, catálogos e defaults necessários ao MVP, com fonte/perfil/versão/data e exemplos fictícios; CONs 6.9 não são automaticamente adotadas.",
+        "Definir casos adicionais de janeiro/continuidade mensal e sem movimento com entrada conhecida, estado anterior e esperado independente; distinguir referências preservadas de referências efetivamente validadas.",
+        "Decidir comportamento e aceite de cancelamento automático SIM/omitido, limite mensal 64/65 e parcelas pendentes de demora/HTTP 500; registrar se rota explícita de descarte de lote será incluída ou continuará excluída. Não inventar mensagens oficiais ou idempotência.",
+        "Para cada pendência, registrar escopo aceito/retirado, responsável, dependências e ponto de teste, sem marcar aprovação de regra ausente; T01 integral continua pendente até demonstração dos critérios completos.",
+        "Propor novas fatias verticais específicas e seus casos positivos/negativos para aprovação antes de implementação/publicação. Este ticket não é AFK e não autoriza ampliar o recorte inicial nem acessar dados internos."
+      ],
+      "labels": [
+        "needs-info"
+      ],
+      "body": "## What to build\n\nCom o responsável pelo integrador e especialista tributário, transformar as pendências do MVP completo em comportamentos evidenciados e futuras fatias implementáveis. Este ticket entrega decisões e casos de aceite, não uma implementação genérica de regras. Não bloqueia E5 quando as saídas do recorte inicial estiverem aprovadas.\n\nTipo: **HITL**. Etapa: **Evolução**. Histórias: H04, H05, H18, H19, H27, H44, H45, H52.\n\nMatriz/aceite: T01, T04, T05, T08, T12, T16, T17. As referências indicam contribuição, não conclusão automática de cada cenário.\n\nBase: PRD de 23/10/2026, planejamento v1.6, contrato E0 e arquitetura adotada. Perfil derivado 2026/V6/6.06, sem homologação oficial. Preservar fronteiras hexagonais, isolamento UG/cenário e dados locais; nenhum dado original ou SQL interno vai para GitHub. Atualizar manifesto de cobertura e registro de progresso com evidências e limites.\n\nExige participação e aceite humano; não encerrar por simulação do agente ou evidência que ele não pôde verificar.\n\n## Acceptance criteria\n\n- [ ] Selecionar explicitamente regras de vínculo entre assuntos/envios, cronologia, cálculos, condicionais, catálogos e defaults necessários ao MVP, com fonte/perfil/versão/data e exemplos fictícios; CONs 6.9 não são automaticamente adotadas.\n- [ ] Definir casos adicionais de janeiro/continuidade mensal e sem movimento com entrada conhecida, estado anterior e esperado independente; distinguir referências preservadas de referências efetivamente validadas.\n- [ ] Decidir comportamento e aceite de cancelamento automático SIM/omitido, limite mensal 64/65 e parcelas pendentes de demora/HTTP 500; registrar se rota explícita de descarte de lote será incluída ou continuará excluída. Não inventar mensagens oficiais ou idempotência.\n- [ ] Para cada pendência, registrar escopo aceito/retirado, responsável, dependências e ponto de teste, sem marcar aprovação de regra ausente; T01 integral continua pendente até demonstração dos critérios completos.\n- [ ] Propor novas fatias verticais específicas e seus casos positivos/negativos para aprovação antes de implementação/publicação. Este ticket não é AFK e não autoriza ampliar o recorte inicial nem acessar dados internos.\n\n## Blocked by\n\n- I20 (identificador local; substituir pela issue publicada).\n",
+      "github": {
+        "issue_number": 27,
+        "url": "https://github.com/lukadev08/fake-esfinge/issues/27"
+      }
+    }
+  ],
+  "approved_on": "2026-10-23",
+  "body_role": "Versão local aprovada anterior à publicação; corpos públicos finais em publication.json."
+}

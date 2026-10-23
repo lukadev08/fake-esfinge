@@ -253,3 +253,140 @@ ou reexecução da validação semântica de schemas.
 
 Corrigir o estado E0 no README em tarefa própria. Push depende de autorização
 específica; não foi realizado.
+
+## 2026-10-23 — Incluir primeira fatia do painel web após o backend
+
+Referência: solicitação do usuário para adicionar a primeira fatia funcional da
+interface ao escopo, com implementação somente após o backend concluído.
+Situação: concluída para a atualização documental.
+
+### O que foi feito
+
+- Incluído RF13 no planejamento v1.6, com cenário/latência/falhas suportados,
+  avanço manual/reset confirmado, remessas/lotes, estados/erros/contagens e
+  inspeção paginada. Definidos limites e critérios de aceite da fatia.
+- Acrescentada E5, bloqueada até saídas E1–E4 do backend no recorte contratado
+  e consultas administrativas necessárias validadas. Mantidos E3/T01 e regras
+  tributárias adiadas com seus limites, sem antecipar aceite.
+- Alinhados arquitetura e PRD, com histórias 53–55: página na mesma aplicação e
+  Docker, API administrativa com chave própria e consultas sem processamento.
+- Conferidos links locais, âncora da seção 4.4, sequência de 55 histórias,
+  referências RF13/E5 e whitespace; `git diff --check` sem erros.
+
+### O que deu errado
+
+Nenhuma falha documental observada. Faixa adicional de 2–4 dias é preliminar,
+sem protótipo, a reestimar após o backend. Não houve implementação, testes de
+aplicação ou regeneração das apresentações HTML/PDF/DOCX; nenhuma publicação.
+
+### Próximo passo
+
+Concluir e validar o backend no recorte contratado antes de iniciar E5. Na
+preparação de E5, reestimar com as consultas administrativas disponíveis e
+executar o aceite específico da seção 4.4; esta tarefa não inicia implementação.
+
+## 2026-10-23 — Preparar tickets de implementação a partir do PRD
+
+Referência: solicitação do usuário com a skill `to-issues`, usando PRD,
+planejamento e documentos complementares do simulador.
+Situação: parcial; divisão aguardando aprovação antes de publicar.
+
+### O que foi feito
+
+- Preparados [27 rascunhos completos](.scratch/implementation-issues/README.md)
+  e [dados para publicação](.scratch/implementation-issues/issues.json), com
+  títulos, critérios de aceite, rótulos previstos, dependências e histórias.
+- Consultados planejamento v1.6, PRD com 55 histórias, contrato E0, arquitetura,
+  pacote contratual, orientações do rastreador e mapa histórico E0. Preservados
+  os documentos e rascunhos anteriores, inclusive alterações já na worktree.
+- Separados 21 tickets AFK e seis HITL: cinco aceites humanos e fechamento das
+  pendências de evolução. E1 exige payload real; E3 mantém conferência interna
+  independente; E4 exige reprodução por outra pessoa; E5 depende dessas saídas.
+- Verificados remoto e repositório público `lukadev08/fake-esfinge`. A consulta
+  de issues não retornou tickets existentes. Os rótulos `ready-for-agent`,
+  `ready-for-human` e `needs-info` ainda não existem; nenhuma mutação no GitHub.
+- Validados 27 IDs/títulos únicos, template, critérios, referências e dependências
+  sem ciclos em ordem de publicação; mapeadas H01–H55 e T01–T19. Registrados hashes
+  de seis fontes para detectar mudanças antes da publicação. Mapeamento indica
+  contribuição planejada, sem declarar histórias ou cenários implementados.
+
+### O que deu errado
+
+Nenhuma falha na geração dos rascunhos. A skill exige aprovação da divisão antes
+da publicação; nenhuma issue, rótulo ou dependência externa foi criada. Regras
+fiscais e demais casos adiados não têm contrato suficiente para tickets AFK;
+ficaram em decisão HITL, sem bloquear E5 após aceite do recorte. Não há aplicação
+para build/testes de runtime; a validação desta tarefa é documental.
+
+### Próximo passo
+
+O solicitante deve revisar granularidade, dependências e classificação AFK/HITL
+e aprovar ou ajustar a divisão. Após aprovação, conferir alterações nas fontes
+e duplicatas no rastreador, criar somente os rótulos necessários e publicar os
+tickets aprovados em ordem de dependência, substituindo IDs locais por issues
+reais em todas as referências. Esta tarefa não autoriza implementar o simulador.
+
+## 2026-10-23 — Publicar os tickets de implementação aprovados
+
+Referência: aprovação explícita do solicitante à divisão em 27 tickets da skill
+`to-issues`, em continuidade à entrada anterior.
+Situação: concluída.
+
+### O que foi feito
+
+- Conferidos os hashes das seis fontes: sem alteração desde a proposta aprovada.
+  Consulta prévia por conector e CLI confirmou ausência de issues no rastreador.
+- Criados e aplicados somente os rótulos necessários: `ready-for-agent`,
+  `ready-for-human` e `needs-info`.
+- Publicadas as [issues #1–#27](https://github.com/lukadev08/fake-esfinge/issues),
+  em ordem de dependência: 21 AFK, cinco aceites HITL e uma decisão HITL de evolução.
+  Bloqueios documentados no corpo com IDs reais, conforme proposta aprovada;
+  não foram criadas dependências nativas, issue pai ou alterações nos tickets E0.
+- Substituídas também as referências cruzadas futuras nos critérios de #1,
+  #10 e #15. Releitura remota das 27 issues confirmou títulos, corpos, rótulos,
+  estado aberto e ausência de referências locais pendentes/metadados do piloto.
+- Criados [índice publicado](.scratch/implementation-issues/PUBLISHED.md) e
+  [registro dos corpos finais](.scratch/implementation-issues/publication.json).
+  Atualizados índice e payload originais com os IDs reais, preservando a versão
+  aprovada anterior à publicação e identificando a sanitização de #19.
+
+### O que deu errado
+
+A revisão automática de aprovação rejeitou a tentativa inicial de publicar I19
+por conter metadados internos de cliente, competência e volumes em repositório
+público. A tentativa não criou issue. Publicada alternativa sanitizada em #19,
+sem esses detalhes e mantendo referência independente, comparação de conteúdo/
+multiplicidades e demonstração de múltiplos lotes. SQL, estrutura do banco,
+payloads originais e resultados internos não foram enviados. Não restou bloqueio
+de publicação. Não houve implementação, build, teste de aplicação, piloto,
+commit ou push de código.
+
+### Próximo passo
+
+Nenhum para a publicação dos tickets. Quando solicitada a implementação, a
+primeira fatia sem bloqueios é [#1](https://github.com/lukadev08/fake-esfinge/issues/1).
+Preservar os aceites humanos e as saídas E1–E4 antes de iniciar E5; #27 acompanha
+evolução não contratada para execução AFK e não bloqueia o painel no recorte.
+
+## 2026-10-23 — Segunda rodada de commits e envio à branch remota
+
+Referência: solicitação do usuário para agrupar alterações e realizar push.
+Situação: parcial; commits e envio em execução.
+
+### O que foi feito
+
+- Inspecionadas alterações, histórico e remoto origin de lukadev08/fake-esfinge;
+  branch main acompanha origin/main, com três commits anteriores ainda locais.
+- Separados os temas: remoção dos agentes locais, escopo RF13/E5 e registros
+  da divisão/publicação de 27 tickets. Arquivos .DS_Store excluídos.
+- Conferida sintaxe dos dois JSONs novos; validação documental, sem aplicação.
+
+### O que deu errado
+
+Nenhuma falha observada até este registro. Não houve build ou teste de aplicação.
+A divergência anterior do README sobre E0 permanece fora desta tarefa.
+
+### Próximo passo
+
+Concluir os commits, enviar main para origin/main e verificar sincronização;
+registrar o resultado no relato final.
