@@ -1,7 +1,7 @@
 ---
 title: "Simulador e-Sfinge Tributário"
 subtitle: "Planejamento do escopo de desenvolvimento"
-date: "23 de outubro de 2026 · versão 1.5"
+date: "23 de outubro de 2026 · versão 1.6"
 lang: pt-BR
 ---
 
@@ -20,6 +20,11 @@ Este documento entrega o planejamento de desenvolvimento. Não contém uma imple
 **Recorte funcional confirmado:** seis assuntos, em lotes com uma única lista não vazia, omitindo as demais. Um envio pertence a uma UG/competência; a UG vem da autenticação e a `chavePacote` é retornada pela abertura, sem geração/transformação no cliente. Envia todos os lotes do assunto, dispara e consulta cada um até `PROCESSADO_SUCESSO` antes do próximo assunto; finaliza uma vez ao término. `situacao_lote` é campo interno; o JSON usa `situacao`. A premissa de um assunto por remessa foi retirada em 22/10. A equivalência operacional remessa/envio/chave está definida para este contrato derivado por relato em 23/10; comprovação independente pertence aos ensaios futuros. Cancelamento integral do envio aberto exige nova chave; descarte de assunto preserva chave e outros assuntos. Descarte explícito de lote fica fora do contrato inicial, preservado o descarte automático em erro.
 
 **Perfil selecionado:** exercício 2026, endpoints V6 e leiaute 6.06 foram confirmados pelo usuário em 22/10, sem execução independente do integrador. CONs 6.9 continuam referência proposta, ainda sem confirmação. O manual do perfil selecionado prevalece; diferenças necessárias ao cliente serão aproximações explícitas. O contrato será derivado enquanto não houver export oficial. As publicações de 2027 não devem ser misturadas ao perfil 2026. [F06](https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/2154922045), [F07](https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/1517223937), [F16](https://jira-tcesc.atlassian.net/wiki/spaces/SD/pages/2310539061).
+
+**Revisão de escopo de 23/10/2026, versão 1.6:** incluída a primeira fatia do
+painel web local (RF13, seção 4.4 e E5), por solicitação do usuário. Sua
+implementação depende da conclusão do backend no recorte contratado, com saídas
+E1–E4 comprovadas. A inclusão é documental; não inicia implementação.
 
 # 2. Problema e evidências verificadas
 
@@ -137,6 +142,45 @@ Um assunto sem suporte deverá provocar um erro identificável no relatório de 
 - Espelhamento de produção, importação automática de dados municipais ou encaminhamento de requisições ao TCE.
 - Portal administrativo completo, infraestrutura de mensageria externa e operação de serviço público.
 - Webhooks e relatórios oficiais, salvo se o inventário do integrador demonstrar dependência; nesse caso, reavaliar antes de construir o MVP.
+
+## 4.4 Painel web local — primeira fatia após o backend
+
+**RF13 — incluído no escopo do projeto, para E5.** Página local servida pelo
+próprio simulador, no mesmo Docker, consumindo exclusivamente o controle
+administrativo sob `/__simulator`. Não integra o aceite do backend E1–E4 nem
+substitui o integrador real ou a conferência independente em E3.
+
+| Área | Escopo da primeira fatia |
+|---|---|
+| Cenário | Consultar configuração e selecionar cenário, latência e falhas já suportados pelo backend, respeitando suas condições de alteração |
+| Execução | Avançar tarefas e relógio no modo manual; resetar com confirmação explícita do cenário e dos efeitos |
+| Acompanhamento | Listar remessas e lotes, com filtros por cenário, UG, competência e assunto; mostrar estados e erros |
+| Resultados | Exibir contagens recebidas, processadas, descartadas e efetivas, distinguindo histórico e cobertura não implementada |
+| Inspeção | Consultar detalhes e registros de um lote com paginação, preservando identificadores e decimais exatos |
+
+Reutilizar casos de uso e regras do backend, sem acesso direto ao SQLite,
+duplicação de validações de negócio ou alteração da API compatível. Consultas
+administrativas de listagem/detalhe necessárias devem estar disponíveis e
+validadas antes de iniciar a tela; não são novas rotas compatíveis do TCE.
+Atualização periódica é suficiente; abrir ou atualizar a página não dispara
+processamento nem avança relógio. Comandos exigem ação explícita e exibem seu
+resultado ou erro, sem sucesso aparente quando rejeitados pelo backend.
+
+O acesso usa a chave administrativa própria; ela não pode estar embutida nos
+arquivos da página. Dados originais permanecem no ambiente local controlado,
+sem recursos externos que os transmitam. O painel evidencia que sucesso
+estrutural não comprova validação tributária ou homologação.
+
+Ficam fora desta fatia: portal completo, gestão multiusuário, edição genérica de
+dados, montagem/envio de lotes em lugar do integrador, relatórios elaborados,
+WebSocket e aplicação frontend com implantação separada.
+
+Aceite E5: preparar um cenário suportado pela tela, observar um envio do
+integrador, conferir estados/erros/contagens/detalhes contra a API administrativa,
+executar avanço manual e reset confirmado. Verificar consultas sem efeitos,
+negação sem chave administrativa, falha de comando visível, paginação,
+preservação de identificadores/decimais, uso por teclado e rótulos dos controles.
+Documentar a reprodução local e manter os testes do backend aprovados.
 
 # 5. Contratos e superfície de API
 
@@ -358,14 +402,25 @@ Metas de engenharia propostas, a calibrar com o hardware real: inicialização e
 | E2 — Ciclo e recuperação | Executor, finalização, cancelamento/descarte, relógio e regras selecionadas | Tabelas de decisão e testes dos efeitos sobre os dados | 5–8 dias úteis |
 | E3 — Piloto ponta a ponta | Referência independente preparada internamente antes do envio; execução e conferência local pelo solicitante, sem compartilhar SQL/estrutura/resultados | T01 e casos prioritários demonstrados com evidências | 3–5 dias úteis |
 | E4 — Empacotar e documentar | Imagem, Compose, CI, guia, cobertura e relatório de aceite | Outra pessoa reproduz instalação, teste e reset | 2–3 dias úteis |
+| E5 — Painel web local | Primeira fatia RF13, conforme seção 4.4 | E1–E4 concluídas no recorte contratado e consultas administrativas necessárias validadas antes de iniciar; aceite da seção 4.4 demonstrado ao concluir | Reestimar após o backend |
 
-Estimativa preliminar total: 15–25 dias úteis de trabalho técnico, para uma pessoa com apoio de QA e acesso ao responsável pelo integrador, após disponibilidade dos insumos. Trata-se de faixa de planejamento baseada nas entregas propostas, sem análise do código do cliente. Prazo de calendário dependerá da equipe e dos tempos de resposta.
+Estimativa preliminar original de E0–E4: 15–25 dias úteis de trabalho técnico, para uma pessoa com apoio de QA e acesso ao responsável pelo integrador, após disponibilidade dos insumos. Trata-se de faixa de planejamento baseada nas entregas propostas, sem análise do código do cliente. Prazo de calendário dependerá da equipe e dos tempos de resposta.
 
 Reestimar ao concluir E0. NFS-e, compatibilidade legada, autenticação adicional, interface visual, grandes volumes e regras tributárias extensas são itens que podem ampliar materialmente essa faixa. Bloqueios de contrato não devem ser consumidos como implementação baseada em suposição.
+
+E5 é posterior ao backend e não entra na faixa original de 15–25 dias. A faixa
+preliminar de 2–4 dias úteis adicionais para RF13 é julgamento sem protótipo,
+condicionado à prontidão das consultas administrativas; reestimar com o backend
+concluído. Evoluções tributárias explicitamente adiadas não bloqueiam E5, desde
+que não sejam requisitos do recorte contratado e estejam identificadas como
+não implementadas. E3 pendente ou saída E4 não demonstrada mantém E5 bloqueada.
 
 O solicitante confirmou que gerará o esperado por SQL, executará o piloto e conferirá os resultados. Permanecem sugeridas: desenvolvimento cuida do simulador e contrato; responsável pelo integrador esclarece chamadas; especialista tributário seleciona regras na evolução. O preparo da entrada continua externo ao simulador. As estimativas acima são do MVP completo original e devem ser revistas após fechar E0 para o recorte inicial; não são prazo atualizado desta revisão.
 
 Situação atual: contrato derivado inicial consolidado, fontes/schemas reproduzíveis e nenhum ensaio executado. E0 está concluído documentalmente no recorte aprovado após revisão autorizada do critério de saída; preparação concreta da referência e conferência local continuam pendentes de E3. E1–E4 não foram implementados. Guias operacionais, imagem/Compose, CI e relatórios reais serão produzidos nas etapas correspondentes, a partir dos comandos e artefatos que existirem.
+
+RF13/E5 está incluído e não implementado; sua dependência de conclusão do backend
+permanece aberta. O painel não antecipa nem encerra aceite E3/T01.
 
 # 14. Critérios de conclusão do MVP
 

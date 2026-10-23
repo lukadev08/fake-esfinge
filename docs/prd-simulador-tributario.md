@@ -51,6 +51,7 @@ A prova de execução pertence ao piloto futuro.
 | Entrega inicial aprovada | Recepção dos seis assuntos; validação estrutural, sequência, conteúdo e contagens; estados, persistência, falhas e recuperação definidos | Não comprova regras tributárias ou integridade de negócio entre assuntos |
 | Piloto inicial | Cliente/alias 14, 202609, cópia local sem alterações e esperado SQL independente a preparar | Pode não conter saldo inicial ou prazo prescricional; cobertura ausente permanece pendente |
 | MVP completo do planejamento | Fluxo dos seis assuntos, múltiplos lotes, matriz aplicável e regras de domínio selecionadas e evidenciadas | Depende de novos fechamentos de contrato e seleção das regras adiadas; não é homologação oficial |
+| Painel web local RF13/E5 | Primeira fatia de cenário, avanço manual/reset, acompanhamento, contagens e inspeção paginada | Implementar somente após saídas E1–E4 do backend no recorte contratado; não substitui aceite E3/T01 |
 
 Os seis assuntos são cadastro de contribuinte, lançamento de crédito tributário,
 diário de arrecadação, baixa de crédito tributário, saldo inicial e início do
@@ -111,6 +112,16 @@ vínculos de negócio e cálculos tributários fica para evolução.
 50. Como responsável pelos dados, quero logs e relatórios compartilháveis sanitizados, para investigar falhas sem divulgar senhas, tokens ou dados pessoais.
 51. Como operador de testes, quero executar sem acesso ao TCE após baixar os artefatos, para ensaiar sem chamadas ao destino real.
 52. Como responsável pelo aceite do MVP completo, quero cenários adicionais de janeiro, mês sem movimento e sequência mensal com expectativas fechadas, para cobrir os casos não demonstrados pelo primeiro piloto.
+53. Como operador de testes, quero selecionar cenário, latência e falhas suportadas em um painel local, para configurar ensaios após a conclusão do backend.
+54. Como operador de testes, quero avançar tarefas/relógio e confirmar reset pelo painel, para controlar a execução por comandos explícitos.
+55. Como operador de testes, quero filtrar remessas/lotes e consultar estados, erros, contagens e detalhes paginados, para inspecionar resultados sem avançar processamento.
+
+As histórias 53–55 compõem somente RF13/E5. Escopo, exclusões e aceite estão na
+[seção 4.4 do planejamento](planejamento-simulador-tributario.md#44-painel-web-local--primeira-fatia-após-o-backend).
+A página será servida no mesmo Docker e usará a API administrativa com chave
+própria, sem duplicar regras, embutir a chave nos arquivos ou transferir dados
+originais a serviços externos. Consultas administrativas necessárias devem
+estar validadas antes da tela. Portal completo permanece excluído.
 
 ## Decisões de implementação
 
@@ -367,7 +378,7 @@ Regras de domínio adiadas exigem seleção e evidência próprias para o MVP co
 
 | Fonte | Papel nesta síntese |
 |---|---|
-| [Planejamento v1.5](planejamento-simulador-tributario.md) | Autoridade de escopo, invariantes, RF01–RF12, E0–E4, T01–T19 e critérios do MVP |
+| [Planejamento v1.6](planejamento-simulador-tributario.md) | Autoridade de escopo, invariantes, RF01–RF13, E0–E5, T01–T19 e critérios do MVP |
 | [Contrato E0](contrato-e0.md) | Inventário relatado, comportamento selecionado, manifesto e lacunas |
 | [Arquitetura adotada](../ARCHITECTURE.md) | Stack, portas/adaptadores, transações, SQLite, relógio e testes |
 | [Mapa E0 e oito tickets locais](../.scratch/wayfinder-e0/map.md) | Origem das respostas de 21–23/10, restrições e escolhas do usuário |
@@ -420,8 +431,12 @@ oficial. Divergências restantes devem ser resolvidas antes da implementação a
 | E2 | Executor, finalização, descarte/cancelamento, relógio e regras do recorte; tabelas de decisão e testes dos efeitos |
 | E3 | Referência preparada internamente antes do envio e comparação local pelo solicitante; integrador real e cenários com evidências internas; distinguir piloto parcial de T01 integral |
 | E4 | Imagem, Compose, CI, guia, manifesto e relatório; reprodução de instalação, teste e reset por outra pessoa |
+| E5 | Painel RF13, somente após saídas E1–E4 do backend no recorte contratado e consultas administrativas validadas; aceite específico na seção 4.4 do planejamento |
 
 E0 está concluído documentalmente no recorte inicial; E1–E4 não implementados.
+RF13/E5 está incluído no projeto por solicitação de 23/10/2026 e não implementado.
+E3 pendente ou saída E4 não demonstrada bloqueia seu início; regras tributárias
+adiadas fora do recorte não bloqueiam E5, com cobertura ausente explícita.
 Não houve build, teste de aplicação ou ensaio de compatibilidade. O SQL interno
 não é bloqueio de implementação; a conferência independente permanece bloqueante
 do aceite E3/T01. Esta atualização não inicia implementação nem publica o PRD.
@@ -432,6 +447,10 @@ As estimativas de 15–25 dias úteis pertencem ao MVP original e dependem dos
 insumos; reestimar após E0 para o recorte atual. Inicialização em 30 segundos,
 suíte pequena em dois minutos e ensaio opcional de 50 mil registros/lote são
 metas propostas, a calibrar no hardware; não são limites oficiais nem resultados.
+
+A faixa preliminar adicional de 2–4 dias úteis para RF13 não integra a estimativa
+original; é julgamento sem protótipo, condicionado às consultas administrativas,
+e deve ser revista após concluir o backend.
 
 Os pontos de teste estão confirmados. Esta consolidação atualiza documentos e
 tickets locais, preservando seu histórico; não cria issues ou rótulos. Publicar

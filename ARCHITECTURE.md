@@ -51,7 +51,16 @@ não reescreve o planejamento nem reconstrói o contrato.
 | Distribuição | Docker e volume local | Uma instância por execução local/CI |
 
 Não adicionar Kafka, Redis, microsserviços, ORM ou portal administrativo ao
-recorte inicial. O simulador não compartilha classes ou dependências internas do
+recorte inicial do backend. O painel web local RF13 está incluído somente em E5,
+após as saídas E1–E4 do recorte contratado; escopo e aceite na
+[seção 4.4 do planejamento](docs/planejamento-simulador-tributario.md#44-painel-web-local--primeira-fatia-após-o-backend).
+Será servido pela mesma aplicação e imagem Docker, usando o HTTP administrativo
+com chave própria, sem chave embutida nos arquivos, acesso direto ao banco ou
+regras de negócio duplicadas. Listagens/detalhes administrativos necessários
+devem estar validados antes da tela. Atualização periódica não avança tarefas
+ou relógio; dados originais permanecem locais. Não exige frontend com implantação
+separada ou WebSocket. Portal completo continua fora do escopo.
+O simulador não compartilha classes ou dependências internas do
 integrador. Versões corretivas e comandos serão registrados no build quando ele
 existir; este guia não apresenta comandos de aplicação ainda inexistentes.
 
