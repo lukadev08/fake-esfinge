@@ -1,0 +1,174 @@
+    # Propriedades do contribuinte mapeadas para JSON
+
+    @JsonProperty("numeroMatriculaContribuinte")
+    String numeroMatriculaContribuinte,
+
+    @JsonProperty("dataAtualizacaoCadastral")
+    String dataAtualizacaoCadastral,
+
+    @JsonProperty("tipoContribuinte")
+    String tipoContribuinte,
+
+    @JsonProperty("numeroDocumentoContribuinte")
+    String numeroDocumentoContribuinte,
+
+    @JsonProperty("nomeCompletoContribuinte")
+    String nomeCompletoContribuinte,
+
+    @JsonProperty("indicativoCadastroAtivo")
+    String indicativoCadastroAtivo,
+
+    @JsonProperty("numeroMatriculaContribuinteNovo")
+    String numeroMatriculaContribuinteNovo,
+
+    @JsonProperty("indicativoEspolio")
+    String indicativoEspolio,
+
+    @JsonProperty("nomeRepresentante")
+    String nomeRepresentante,
+
+    @JsonProperty("tipoRepresentante")
+    String tipoRepresentante,
+
+    @JsonProperty("numeroCpfRepresentante")
+    String numeroCpfRepresentante
+
+    # Propriedades do lançamento de crédito tributário mapeadas para JSON
+
+    @JsonProperty("anoLancamentoCreditoTributario")
+    Integer anoLancamentoCreditoTributario,
+
+    @JsonProperty("codigoLancamentoCreditoTributario")
+    String codigoLancamentoCreditoTributario,
+
+    @JsonProperty("tipoOperacao")
+    Integer tipoOperacao,
+
+    @JsonProperty("observacaoLancamentoCreditoTributario")
+    String observacaoLancamentoCreditoTributario,
+
+    @JsonProperty("tipoCredito")
+    Integer tipoCredito,
+
+    @JsonProperty("detalhamentoTipoCredito")
+    String detalhamentoTipoCredito,
+
+    @JsonProperty("numeroMatriculaContribuinte")
+    String numeroMatriculaContribuinte,
+
+    @JsonProperty("anoMesCompetencia")
+    Integer anoMesCompetenciaCreditoTributario,
+
+    @JsonProperty("dataLancamento")
+    String dataLancamentoTributario,
+
+    @JsonProperty("dataVencimento")
+    String dataVencimento,
+
+    @JsonProperty("dataImportacaoSimplesNacional")
+    String dataImportacaoSimplesNacional,
+
+    @JsonProperty("valorLancamentoCreditoTributario") 
+    BigDecimal valorLancamentoCreditoTributario,
+
+    @JsonProperty("numeroCpfResponsavelOperacao")
+    String cpfResponsavelOperacao,
+
+    @JsonProperty("codigoEspecificacaoNaturezaReceita")
+    Integer codigoEspecificacaoReceita,
+
+    @JsonProperty("numeroInscricaoImobiliaria")
+    String numeroInscricaoImobiliaria,
+
+    @JsonProperty("lancamentoCreditoTributarioTransferencia")
+    String lancamentoCreditoTributarioTransferencia
+
+    # Propriedades da operação de arrecadação mapeadas para JSON
+
+    @JsonProperty("anoCodigoSequencialOperacaoArrecadacao")
+    int anoCodigoSequencialOperacaoArrecadacao,
+
+    @JsonProperty("codigoSequencialOperacaoArrecadacao")
+    String codigoSequencialOperacaoArrecadacao,
+
+    @JsonProperty("tipoArrecadacao")
+    int tipoArrecadacao,
+
+    @JsonProperty("dataOperacao")
+    String dataOperacao,
+
+    @JsonProperty("codigoEspecificacaoReceita")
+    int codigoEspecificacaoReceitaNaturezaReceita,
+
+    @JsonProperty("anoLancamentoCreditoTributario")
+    int anoLancamentoCreditoTributarioDividaAtiva,
+
+    @JsonProperty("codigoLancamentoCreditoTributario")
+    String codigoLancamentoCreditoTributarioDividaAtiva,
+
+    @JsonProperty("valorCreditoTributario")
+    BigDecimal valorCreditoTributarioArrecadado,
+
+    @JsonProperty("numeroAnoTipoCobranca")
+    String numeroAnoTipoCobranca,
+
+    @JsonProperty("numeroParcela")
+    Integer numeroParcela
+
+    # Propriedades da baixa de operação mapeadas para JSON
+
+    @JsonProperty("anoLancamentoCreditoTributario")
+    Integer anoLancamento,
+
+    @JsonProperty("codigoLancamentoCreditoTributario")
+    String codigoLancamento,
+
+    @JsonProperty("codigoSequencialOperacaoBaixa")
+    Long codigoBaixa,
+
+    @JsonProperty("tipoBaixa")
+    Short tipoBaixa,
+
+    @JsonProperty("dataBaixa")
+    String dataBaixa,
+
+    @JsonProperty("valorOperacaoBaixa") 
+    BigDecimal valorOperacaoBaixa,
+
+    @JsonProperty("indicativoEstornoBaixa")
+    String indicativoEstorno,
+
+    @JsonProperty("motivoBaixa")
+    String motivoBaixa,
+
+    @JsonProperty("anoLancamentoCreditoTributarioDividaAtiva")
+    Integer novoAnoLancamento,
+
+    @JsonProperty("codigoLancamentoCreditoTributarioDividaAtiva")
+    String novoCodigoLancamento,
+
+    @JsonProperty("numeroCpfResponsavelOperacao")
+    String cpfResponsavel
+
+    # Propriedades do saldo inicial mapeadas para JSON
+
+    @JsonProperty("anoLancamentoCreditoTributario")
+    Integer anoLancamento,
+
+    @JsonProperty("codigoLancamentoCreditoTributario")
+    String codigoLancamento,
+
+    @JsonProperty("tipoSaldoInicial")
+    Integer tipoSaldoInicial,
+
+    @JsonProperty("saldoPrincipal") 
+    BigDecimal saldoPrincipal,
+
+    @JsonProperty("saldoMulta")
+    BigDecimal saldoMulta,
+
+    @JsonProperty("saldoJuros")
+    BigDecimal saldoJuros,
+
+    @JsonProperty("saldoAtualizacaoMonetaria")
+    BigDecimal saldoAtualizacaoMonetaria

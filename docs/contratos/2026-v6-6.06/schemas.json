@@ -1,0 +1,818 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Contrato derivado 2026/V6/6.06 — recorte inicial",
+  "description": "Artefato contratual, sem aplicação implementada. A raiz valida lote; outras operações usam $defs. Cabeçalhos/query são projeções decodificadas dos campos de contrato, não todos os headers HTTP.",
+  "$ref": "#/$defs/lote",
+  "$defs": {
+    "contribuinte": {
+      "type": "object",
+      "properties": {
+        "numeroMatriculaContribuinte": {
+          "type": "string",
+          "maxLength": 16
+        },
+        "dataAtualizacaoCadastral": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "tipoContribuinte": {
+          "type": "string",
+          "maxLength": 2
+        },
+        "numeroDocumentoContribuinte": {
+          "type": "string",
+          "maxLength": 14
+        },
+        "nomeCompletoContribuinte": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "indicativoCadastroAtivo": {
+          "type": "string",
+          "maxLength": 1
+        },
+        "numeroMatriculaContribuinteNovo": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 16
+        },
+        "indicativoEspolio": {
+          "type": "string",
+          "maxLength": 1
+        },
+        "nomeRepresentante": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 512
+        },
+        "tipoRepresentante": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2
+        },
+        "numeroCpfRepresentante": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 11
+        }
+      },
+      "required": [
+        "numeroMatriculaContribuinte",
+        "dataAtualizacaoCadastral",
+        "tipoContribuinte",
+        "numeroDocumentoContribuinte",
+        "nomeCompletoContribuinte",
+        "indicativoCadastroAtivo",
+        "indicativoEspolio"
+      ],
+      "additionalProperties": false,
+      "description": "Tipos da extração de DTOs, com ajustes relatados em 23/10; obrigatórios incondicionais do leiaute. Condições tributárias adiadas."
+    },
+    "credito": {
+      "type": "object",
+      "properties": {
+        "anoLancamentoCreditoTributario": {
+          "type": "integer"
+        },
+        "codigoLancamentoCreditoTributario": {
+          "type": "string",
+          "maxLength": 16
+        },
+        "tipoOperacao": {
+          "type": "integer"
+        },
+        "observacaoLancamentoCreditoTributario": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 512
+        },
+        "tipoCredito": {
+          "type": "integer"
+        },
+        "detalhamentoTipoCredito": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 50
+        },
+        "numeroMatriculaContribuinte": {
+          "type": "string",
+          "maxLength": 16
+        },
+        "anoMesCompetencia": {
+          "type": "integer"
+        },
+        "dataLancamento": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "dataVencimento": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "dataImportacaoSimplesNacional": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "valorLancamentoCreditoTributario": {
+          "type": "number",
+          "multipleOf": 0.01
+        },
+        "numeroCpfResponsavelOperacao": {
+          "type": "string",
+          "maxLength": 11
+        },
+        "codigoEspecificacaoNaturezaReceita": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "anoLancamentoCreditoTributario",
+        "codigoLancamentoCreditoTributario",
+        "tipoOperacao",
+        "tipoCredito",
+        "numeroMatriculaContribuinte",
+        "anoMesCompetencia",
+        "dataLancamento",
+        "dataVencimento",
+        "valorLancamentoCreditoTributario",
+        "numeroCpfResponsavelOperacao",
+        "codigoEspecificacaoNaturezaReceita"
+      ],
+      "additionalProperties": false,
+      "description": "Tipos da extração de DTOs, com ajustes relatados em 23/10; obrigatórios incondicionais do leiaute. Condições tributárias adiadas."
+    },
+    "arrecadacao": {
+      "type": "object",
+      "properties": {
+        "anoCodigoSequencialOperacaoArrecadacao": {
+          "type": "integer"
+        },
+        "codigoSequencialOperacaoArrecadacao": {
+          "type": "string",
+          "maxLength": 16
+        },
+        "tipoArrecadacao": {
+          "type": "integer"
+        },
+        "dataOperacao": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "codigoEspecificacaoReceita": {
+          "type": "integer"
+        },
+        "anoLancamentoCreditoTributario": {
+          "type": "integer"
+        },
+        "codigoLancamentoCreditoTributario": {
+          "type": "string",
+          "maxLength": 16
+        },
+        "valorCreditoTributario": {
+          "type": "number",
+          "multipleOf": 0.01
+        },
+        "numeroAnoTipoCobranca": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 50
+        },
+        "numeroParcelas": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "anoCodigoSequencialOperacaoArrecadacao",
+        "codigoSequencialOperacaoArrecadacao",
+        "tipoArrecadacao",
+        "dataOperacao",
+        "codigoEspecificacaoReceita",
+        "anoLancamentoCreditoTributario",
+        "codigoLancamentoCreditoTributario",
+        "valorCreditoTributario"
+      ],
+      "additionalProperties": false,
+      "description": "Tipos da extração de DTOs, com ajustes relatados em 23/10; obrigatórios incondicionais do leiaute. Condições tributárias adiadas."
+    },
+    "baixa": {
+      "type": "object",
+      "properties": {
+        "anoLancamentoCreditoTributario": {
+          "type": "integer"
+        },
+        "codigoLancamentoCreditoTributario": {
+          "type": "string",
+          "maxLength": 16
+        },
+        "codigoSequencialOperacaoBaixa": {
+          "type": "integer"
+        },
+        "tipoBaixa": {
+          "type": "integer"
+        },
+        "dataBaixa": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "valorOperacaoBaixa": {
+          "type": "number",
+          "multipleOf": 0.01
+        },
+        "indicativoEstornoBaixa": {
+          "type": "string",
+          "maxLength": 1
+        },
+        "motivoBaixa": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "anoLancamentoCreditoTributarioDividaAtiva": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "codigoLancamentoCreditoTributarioDividaAtiva": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 16
+        },
+        "numeroCpfResponsavelOperacao": {
+          "type": "string",
+          "maxLength": 11
+        }
+      },
+      "required": [
+        "anoLancamentoCreditoTributario",
+        "codigoLancamentoCreditoTributario",
+        "codigoSequencialOperacaoBaixa",
+        "tipoBaixa",
+        "dataBaixa",
+        "valorOperacaoBaixa",
+        "indicativoEstornoBaixa",
+        "motivoBaixa",
+        "numeroCpfResponsavelOperacao"
+      ],
+      "additionalProperties": false,
+      "description": "Tipos da extração de DTOs, com ajustes relatados em 23/10; obrigatórios incondicionais do leiaute. Condições tributárias adiadas."
+    },
+    "saldo": {
+      "type": "object",
+      "properties": {
+        "anoLancamentoCreditoTributario": {
+          "type": "integer"
+        },
+        "codigoLancamentoCreditoTributario": {
+          "type": "string",
+          "maxLength": 16
+        },
+        "tipoSaldoInicial": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "saldoPrincipal": {
+          "type": "number",
+          "multipleOf": 0.01
+        },
+        "saldoMulta": {
+          "type": "number",
+          "multipleOf": 0.01
+        },
+        "saldoJuros": {
+          "type": "number",
+          "multipleOf": 0.01
+        },
+        "saldoAtualizacaoMonetaria": {
+          "type": "number",
+          "multipleOf": 0.01
+        }
+      },
+      "required": [
+        "anoLancamentoCreditoTributario",
+        "codigoLancamentoCreditoTributario",
+        "saldoPrincipal",
+        "saldoMulta",
+        "saldoJuros",
+        "saldoAtualizacaoMonetaria"
+      ],
+      "additionalProperties": false,
+      "description": "Tipos da extração de DTOs, com ajustes relatados em 23/10; obrigatórios incondicionais do leiaute. Condições tributárias adiadas."
+    },
+    "prazo": {
+      "type": "object",
+      "properties": {
+        "anoLancamentoCreditoTributarioOuDividaAtiva": {
+          "type": "integer"
+        },
+        "codigoLancamentoCreditoTributarioOuNumeroInscricaoDividaAtiva": {
+          "type": "string",
+          "maxLength": 16
+        },
+        "dataInicioPrazoPrescricional": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "dataAtualizacaoPrazoPrescricional": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        }
+      },
+      "required": [
+        "anoLancamentoCreditoTributarioOuDividaAtiva",
+        "codigoLancamentoCreditoTributarioOuNumeroInscricaoDividaAtiva",
+        "dataInicioPrazoPrescricional",
+        "dataAtualizacaoPrazoPrescricional"
+      ],
+      "additionalProperties": false,
+      "description": "Schema derivado aprovado pelo usuário; os quatro campos são obrigatórios no leiaute; ausente na extração de DTOs."
+    },
+    "lote": {
+      "type": "object",
+      "properties": {
+        "cadastrosContribuintes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/contribuinte"
+          }
+        },
+        "lancamentosCreditosTributarios": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/credito"
+          }
+        },
+        "diarioGeralArrecadacao": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/arrecadacao"
+          }
+        },
+        "baixasCreditosTributarios": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/baixa"
+          }
+        },
+        "saldosIniciaisCreditoTributario": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/saldo"
+          }
+        },
+        "inicioPrazoPrescricional": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/prazo"
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "minProperties": 1,
+      "maxProperties": 1
+    },
+    "chave": {
+      "type": "string",
+      "minLength": 1
+    },
+    "token": {
+      "type": "string",
+      "minLength": 1
+    },
+    "loginHeaders": {
+      "type": "object",
+      "properties": {
+        "codigoAcesso": {
+          "type": "string",
+          "minLength": 1
+        },
+        "senha": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "codigoAcesso",
+        "senha"
+      ],
+      "additionalProperties": false
+    },
+    "loginQuery": {
+      "type": "object",
+      "properties": {
+        "codigoUg": {
+          "type": "string",
+          "minLength": 1
+        },
+        "descricaoEmpresaTI": {
+          "type": "string",
+          "minLength": 1
+        },
+        "descritivoSoftware": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "codigoUg",
+        "descricaoEmpresaTI",
+        "descritivoSoftware"
+      ],
+      "additionalProperties": false
+    },
+    "tokenHeader": {
+      "type": "object",
+      "properties": {
+        "auth_token": {
+          "$ref": "#/$defs/token"
+        }
+      },
+      "required": [
+        "auth_token"
+      ],
+      "additionalProperties": false
+    },
+    "loginResposta": {
+      "type": "object",
+      "properties": {
+        "chave": {
+          "$ref": "#/$defs/token"
+        }
+      },
+      "required": [
+        "chave"
+      ],
+      "additionalProperties": false
+    },
+    "abrirQuery": {
+      "type": "object",
+      "properties": {
+        "anoMes": {
+          "type": "integer",
+          "enum": [
+            202601,
+            202602,
+            202603,
+            202604,
+            202605,
+            202606,
+            202607,
+            202608,
+            202609,
+            202610,
+            202611,
+            202612
+          ]
+        },
+        "cancelamentoAutomatico": {
+          "const": "NAO"
+        }
+      },
+      "required": [
+        "anoMes",
+        "cancelamentoAutomatico"
+      ],
+      "additionalProperties": false
+    },
+    "chaveQuery": {
+      "type": "object",
+      "properties": {
+        "chavePacote": {
+          "$ref": "#/$defs/chave"
+        }
+      },
+      "required": [
+        "chavePacote"
+      ],
+      "additionalProperties": false
+    },
+    "abrirResposta": {
+      "type": "object",
+      "properties": {
+        "chavePacote": {
+          "$ref": "#/$defs/chave"
+        }
+      },
+      "required": [
+        "chavePacote"
+      ],
+      "additionalProperties": false
+    },
+    "descarteQuery": {
+      "type": "object",
+      "properties": {
+        "chavePacote": {
+          "$ref": "#/$defs/chave"
+        },
+        "assunto": {
+          "enum": [
+            "CADASTRO_CONTRIBUINTE",
+            "LANCAMENTO_CREDITO_TRIBUTARIO",
+            "DIARIO_ARRECADACAO",
+            "BAIXA_CREDITO_TRIBUTARIO",
+            "SALDO_INICIAL_CREDITO_TRIBUTARIO",
+            "INICIO_PRAZO_PRESCRICIONAL"
+          ]
+        }
+      },
+      "required": [
+        "chavePacote",
+        "assunto"
+      ],
+      "additionalProperties": false
+    },
+    "finalizar": {
+      "type": "object",
+      "properties": {
+        "chavePacote": {
+          "$ref": "#/$defs/chave"
+        },
+        "quantidadeCadastroContribuinte": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "quantidadeCadastroImobiliario": {
+          "const": "0"
+        },
+        "quantidadeCadastroPropriedadeImobiliaria": {
+          "const": "0"
+        },
+        "quantidadeLancamentoCreditosTributarios": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "quantidadeRevisaoValorLancamentoCreditos": {
+          "const": "0"
+        },
+        "quantidadeBaixaCreditosTributarios": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "quantidadeDiarioGeralArrecadacao": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "quantidadeEstornoReceitaDiarioGeralArrecadacao": {
+          "const": "0"
+        },
+        "quantidadeCertidaoDividaAtiva": {
+          "const": "0"
+        },
+        "quantidadeCobrancaDividaAtiva": {
+          "const": "0"
+        },
+        "quantidadeSituacaoCobrancaDividaAtiva": {
+          "const": "0"
+        },
+        "quantidadeInicioPrazoPrescricional": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "quantidadeSaldoInicialCreditosTributarios": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "quantidadeNovoNumeroInscricaoImobiliaria": {
+          "const": "0"
+        },
+        "quantidadeLancamentoCreditosTributariosOriginal": {
+          "const": "0"
+        },
+        "quantidadeNumeroCadastroImobiliarioLancamento": {
+          "const": "0"
+        },
+        "quantidadeRevisaoTipoCreditoTributario": {
+          "const": "0"
+        }
+      },
+      "required": [
+        "chavePacote",
+        "quantidadeCadastroContribuinte",
+        "quantidadeCadastroImobiliario",
+        "quantidadeCadastroPropriedadeImobiliaria",
+        "quantidadeLancamentoCreditosTributarios",
+        "quantidadeRevisaoValorLancamentoCreditos",
+        "quantidadeBaixaCreditosTributarios",
+        "quantidadeDiarioGeralArrecadacao",
+        "quantidadeEstornoReceitaDiarioGeralArrecadacao",
+        "quantidadeCertidaoDividaAtiva",
+        "quantidadeCobrancaDividaAtiva",
+        "quantidadeSituacaoCobrancaDividaAtiva",
+        "quantidadeInicioPrazoPrescricional",
+        "quantidadeSaldoInicialCreditosTributarios",
+        "quantidadeNovoNumeroInscricaoImobiliaria",
+        "quantidadeLancamentoCreditosTributariosOriginal",
+        "quantidadeNumeroCadastroImobiliarioLancamento",
+        "quantidadeRevisaoTipoCreditoTributario"
+      ],
+      "additionalProperties": false
+    },
+    "recepcaoResposta": {
+      "type": "object",
+      "properties": {
+        "situacao": {
+          "const": "RECEBIDO"
+        },
+        "numeroLote": {
+          "type": "integer"
+        },
+        "dataEnvio": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "identificadorRemessaOnline": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "situacao",
+        "numeroLote",
+        "dataEnvio",
+        "identificadorRemessaOnline"
+      ],
+      "additionalProperties": false
+    },
+    "processamentoResposta": {
+      "type": "object",
+      "properties": {
+        "situacao": {
+          "const": "RECEBIDO"
+        },
+        "dataEnvio": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "identificadorRemessaOnline": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "situacao",
+        "dataEnvio",
+        "identificadorRemessaOnline"
+      ],
+      "additionalProperties": false
+    },
+    "erro": {
+      "type": "object",
+      "properties": {
+        "codigo": {
+          "type": "string",
+          "pattern": "^SIM_[A-Z_]+$"
+        },
+        "mensagem": {
+          "type": "string"
+        },
+        "correlacao": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "codigo",
+        "mensagem",
+        "correlacao"
+      ],
+      "additionalProperties": false
+    },
+    "erroLote": {
+      "type": "object",
+      "properties": {
+        "codigo": {
+          "type": "string",
+          "pattern": "^SIM_[A-Z_]+$"
+        },
+        "mensagem": {
+          "type": "string"
+        },
+        "registro": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "required": [
+        "codigo",
+        "mensagem",
+        "registro"
+      ],
+      "additionalProperties": false
+    },
+    "consultaResposta": {
+      "type": "object",
+      "properties": {
+        "situacao": {
+          "enum": [
+            "RECEBIDO",
+            "EM_PROCESSAMENTO",
+            "PROCESSADO_SUCESSO",
+            "PROCESSADO_ERRO_NEGOCIO",
+            "PROCESSADO_ERRO_INTERNO",
+            "LOTE_DESCARTADO",
+            "ABORTADO_ERRO_LOTE_ANTERIOR",
+            "ABORTADO"
+          ]
+        },
+        "identificadorRemessa": {
+          "type": "integer"
+        },
+        "numeroLote": {
+          "type": "integer"
+        },
+        "dataEnvio": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "retornoErros": {
+          "type": "object",
+          "properties": {
+            "erros": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/erroLote"
+              }
+            }
+          },
+          "required": [
+            "erros"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "situacao",
+        "identificadorRemessa",
+        "numeroLote",
+        "dataEnvio"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "situacao": {
+                "enum": [
+                  "RECEBIDO",
+                  "EM_PROCESSAMENTO",
+                  "PROCESSADO_SUCESSO"
+                ]
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "retornoErros"
+              ]
+            }
+          },
+          "else": {
+            "required": [
+              "retornoErros"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

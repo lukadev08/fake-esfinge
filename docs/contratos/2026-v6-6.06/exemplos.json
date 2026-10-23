@@ -1,0 +1,230 @@
+{
+  "contribuinte": {
+    "schema": "lote",
+    "valor": {
+      "cadastrosContribuintes": [
+        {
+          "numeroMatriculaContribuinte": "EXEMPLO",
+          "dataAtualizacaoCadastral": "2026-09-01",
+          "tipoContribuinte": "1",
+          "numeroDocumentoContribuinte": "00000000000",
+          "nomeCompletoContribuinte": "EXEMPLO",
+          "indicativoCadastroAtivo": "S",
+          "indicativoEspolio": "S"
+        }
+      ]
+    }
+  },
+  "credito": {
+    "schema": "lote",
+    "valor": {
+      "lancamentosCreditosTributarios": [
+        {
+          "anoLancamentoCreditoTributario": 2026,
+          "codigoLancamentoCreditoTributario": "EXEMPLO",
+          "tipoOperacao": 1,
+          "tipoCredito": 1,
+          "numeroMatriculaContribuinte": "EXEMPLO",
+          "anoMesCompetencia": 202609,
+          "dataLancamento": "2026-09-01",
+          "dataVencimento": "2026-09-01",
+          "valorLancamentoCreditoTributario": 100.25,
+          "numeroCpfResponsavelOperacao": "00000000000",
+          "codigoEspecificacaoNaturezaReceita": 1
+        }
+      ]
+    }
+  },
+  "arrecadacao": {
+    "schema": "lote",
+    "valor": {
+      "diarioGeralArrecadacao": [
+        {
+          "anoCodigoSequencialOperacaoArrecadacao": 2026,
+          "codigoSequencialOperacaoArrecadacao": "EXEMPLO",
+          "tipoArrecadacao": 1,
+          "dataOperacao": "2026-09-01",
+          "codigoEspecificacaoReceita": 1,
+          "anoLancamentoCreditoTributario": 2026,
+          "codigoLancamentoCreditoTributario": "EXEMPLO",
+          "valorCreditoTributario": 100.25,
+          "numeroParcelas": 1
+        }
+      ]
+    }
+  },
+  "baixa": {
+    "schema": "lote",
+    "valor": {
+      "baixasCreditosTributarios": [
+        {
+          "anoLancamentoCreditoTributario": 2026,
+          "codigoLancamentoCreditoTributario": "EXEMPLO",
+          "codigoSequencialOperacaoBaixa": 1,
+          "tipoBaixa": 1,
+          "dataBaixa": "2026-09-01",
+          "valorOperacaoBaixa": 100.25,
+          "indicativoEstornoBaixa": "S",
+          "motivoBaixa": "EXEMPLO",
+          "numeroCpfResponsavelOperacao": "00000000000"
+        }
+      ]
+    }
+  },
+  "saldo": {
+    "schema": "lote",
+    "valor": {
+      "saldosIniciaisCreditoTributario": [
+        {
+          "anoLancamentoCreditoTributario": 2026,
+          "codigoLancamentoCreditoTributario": "EXEMPLO",
+          "saldoPrincipal": 100.25,
+          "saldoMulta": 100.25,
+          "saldoJuros": 100.25,
+          "saldoAtualizacaoMonetaria": 100.25
+        }
+      ]
+    }
+  },
+  "prazo": {
+    "schema": "lote",
+    "valor": {
+      "inicioPrazoPrescricional": [
+        {
+          "anoLancamentoCreditoTributarioOuDividaAtiva": 2026,
+          "codigoLancamentoCreditoTributarioOuNumeroInscricaoDividaAtiva": "EXEMPLO",
+          "dataInicioPrazoPrescricional": "2026-09-01",
+          "dataAtualizacaoPrazoPrescricional": "2026-09-01"
+        }
+      ]
+    }
+  },
+  "loginHeaders": {
+    "schema": "loginHeaders",
+    "valor": {
+      "codigoAcesso": "sim-acesso",
+      "senha": "sim-senha-ficticia"
+    }
+  },
+  "loginQuery": {
+    "schema": "loginQuery",
+    "valor": {
+      "codigoUg": "UG-FICTICIA",
+      "descricaoEmpresaTI": "Exemplo",
+      "descritivoSoftware": "Integrador de teste"
+    }
+  },
+  "tokenHeader": {
+    "schema": "tokenHeader",
+    "valor": {
+      "auth_token": "sim-token-ficticio"
+    }
+  },
+  "login": {
+    "schema": "loginResposta",
+    "valor": {
+      "chave": "sim-token-ficticio"
+    }
+  },
+  "aberturaQuery": {
+    "schema": "abrirQuery",
+    "valor": {
+      "anoMes": 202609,
+      "cancelamentoAutomatico": "NAO"
+    }
+  },
+  "chaveQuery": {
+    "schema": "chaveQuery",
+    "valor": {
+      "chavePacote": "sim-chave-ficticia"
+    }
+  },
+  "abertura": {
+    "schema": "abrirResposta",
+    "valor": {
+      "chavePacote": "sim-chave-ficticia"
+    }
+  },
+  "descarte": {
+    "schema": "descarteQuery",
+    "valor": {
+      "chavePacote": "sim-chave-ficticia",
+      "assunto": "CADASTRO_CONTRIBUINTE"
+    }
+  },
+  "finalizacao": {
+    "schema": "finalizar",
+    "valor": {
+      "chavePacote": "sim-chave-ficticia",
+      "quantidadeCadastroContribuinte": "1",
+      "quantidadeCadastroImobiliario": "0",
+      "quantidadeCadastroPropriedadeImobiliaria": "0",
+      "quantidadeLancamentoCreditosTributarios": "1",
+      "quantidadeRevisaoValorLancamentoCreditos": "0",
+      "quantidadeBaixaCreditosTributarios": "1",
+      "quantidadeDiarioGeralArrecadacao": "1",
+      "quantidadeEstornoReceitaDiarioGeralArrecadacao": "0",
+      "quantidadeCertidaoDividaAtiva": "0",
+      "quantidadeCobrancaDividaAtiva": "0",
+      "quantidadeSituacaoCobrancaDividaAtiva": "0",
+      "quantidadeInicioPrazoPrescricional": "1",
+      "quantidadeSaldoInicialCreditosTributarios": "1",
+      "quantidadeNovoNumeroInscricaoImobiliaria": "0",
+      "quantidadeLancamentoCreditosTributariosOriginal": "0",
+      "quantidadeNumeroCadastroImobiliarioLancamento": "0",
+      "quantidadeRevisaoTipoCreditoTributario": "0"
+    }
+  },
+  "recepcao": {
+    "schema": "recepcaoResposta",
+    "valor": {
+      "situacao": "RECEBIDO",
+      "numeroLote": 1,
+      "dataEnvio": "2026-09-01T00:00:00Z",
+      "identificadorRemessaOnline": 1
+    }
+  },
+  "disparo": {
+    "schema": "processamentoResposta",
+    "valor": {
+      "situacao": "RECEBIDO",
+      "dataEnvio": "2026-09-01T00:00:00Z",
+      "identificadorRemessaOnline": 1
+    }
+  },
+  "consulta": {
+    "schema": "consultaResposta",
+    "valor": {
+      "situacao": "PROCESSADO_SUCESSO",
+      "identificadorRemessa": 1,
+      "numeroLote": 1,
+      "dataEnvio": "2026-09-01T00:00:00Z"
+    }
+  },
+  "consultaErro": {
+    "schema": "consultaResposta",
+    "valor": {
+      "situacao": "LOTE_DESCARTADO",
+      "identificadorRemessa": 1,
+      "numeroLote": 2,
+      "dataEnvio": "2026-09-01T00:00:00Z",
+      "retornoErros": {
+        "erros": [
+          {
+            "codigo": "SIM_ERRO_INJETADO",
+            "mensagem": "Falha controlada do cenário",
+            "registro": 0
+          }
+        ]
+      }
+    }
+  },
+  "erro": {
+    "schema": "erro",
+    "valor": {
+      "codigo": "SIM_ESTADO_INVALIDO",
+      "mensagem": "Operação incompatível com o estado atual",
+      "correlacao": "sim-evento-1"
+    }
+  }
+}
