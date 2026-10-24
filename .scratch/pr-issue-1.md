@@ -1,6 +1,7 @@
 # PR preparado — issue #1
 
-Situação: rascunho local; push bloqueado por revisão automática de autorização.
+Situação: publicação autorizada expressamente pelo solicitante em 24/10/2026;
+push e criação do PR em preparação.
 Destino: `lukadev08/fake-esfinge`; base `main`; head `issue-1-autenticacao`.
 Commit de implementação: `c7b2bd5`. Nenhum PR criado.
 
@@ -31,6 +32,7 @@ Closes #1
 
 ## Limite de autorização
 
-Autorizar somente push da branch acima para `origin` e criação deste PR em
-`lukadev08/fake-esfinge`, base `main`. Merge, implantação e publicação de imagem
-não estão incluídos nesta solicitação. A próxima issue é #2, dependente da #1.
+O solicitante autorizou push da branch acima para `origin` e criação deste PR em
+`lukadev08/fake-esfinge`, base `main`, ao responder “autorizo a publicação,
+continue a meta”. Merge, implantação e publicação de imagem não estão incluídos
+na autorização solicitada. A próxima issue é #2, dependente da #1.

@@ -525,3 +525,88 @@ O solicitante deve autorizar explicitamente push de `issue-1-autenticacao` para
 `origin` e criação do PR preparado em `lukadev08/fake-esfinge`, base `main`.
 Após autorização, verificar branch/remoto e critérios, publicar e registrar o PR.
 Merge e aceites humanos continuam sujeitos aos seus limites específicos.
+
+## 2026-10-24 — Revalidar autorização pendente para publicar a #1
+
+Referência: objetivo ativo de orquestração e bloqueio de publicação registrado acima.
+Situação: bloqueada para publicação; segunda constatação consecutiva do impedimento.
+
+### O que foi feito
+
+- Revalidados branch e histórico locais: `issue-1-autenticacao`, commits
+  `c7b2bd5` e `fa22e25`; somente os dois `.DS_Store` estavam fora do versionamento.
+- Consulta remota confirmou `main` em `a757dd5`, ausência da branch de trabalho
+  e de PR correspondente. A issue #1 continua sem comentários; não apareceu
+  autorização humana nova nesta retomada automática.
+- Conferido o rascunho exato do PR, preservado em `.scratch/pr-issue-1.md`.
+  Nenhum teste foi repetido: o código não mudou desde a validação registrada.
+
+### O que deu errado
+
+Permanece a rejeição automática do push por ausência de autorização específica
+para publicar no destino externo. A retomada do objetivo não responde à pergunta
+de autorização pendente. Não houve nova tentativa de push, criação de PR ou
+início da #2. Não há processo de publicação ativo a aguardar.
+
+### Próximo passo
+
+O solicitante deve responder à autorização já solicitada: push de
+`issue-1-autenticacao` para `origin` e criação do PR em
+`lukadev08/fake-esfinge`, base `main`. Até lá, preservar os commits locais e as
+dependências da sequência; merge e aceites humanos não estão autorizados.
+
+## 2026-10-24 — Confirmar bloqueio persistente da orquestração
+
+Referência: objetivo de orquestração e duas constatações anteriores do bloqueio
+de publicação da #1.
+Situação: bloqueada; terceira constatação consecutiva do mesmo impedimento.
+
+### O que foi feito
+
+- Revalidados checkout e remoto: código da #1 preservado; somente este histórico
+  mudou desde o último commit. `main` remoto segue em `a757dd5`; branch da #1
+  e PR correspondente continuam ausentes.
+- A retomada anterior não avançou a implementação ou publicação; confirmou a
+  mesma pendência de autorização. Não existe processo ativo de publicação.
+- Conferido que nenhuma correção obrigatória da #1 resta após revisão e testes;
+  a #2 permanece dependente da integração da #1. Não há próxima ação executável
+  nesta sequência sem resolver o limite externo.
+
+### O que deu errado
+
+Não houve resposta humana à autorização de push e criação do PR. A rejeição
+automática anterior continua válida e não será contornada. A continuação
+automática do objetivo não fornece essa autorização.
+
+### Próximo passo
+
+Solicitante autorizar explicitamente push de `issue-1-autenticacao` para
+`origin` e criação do PR preparado em `lukadev08/fake-esfinge`, base `main`.
+Retomar a orquestração após essa decisão, preservando os limites de merge,
+implantação e aceites humanos. Objetivo não concluído.
+
+## 2026-10-24 — Retomar publicação autorizada da #1
+
+Referência: resposta explícita do solicitante “autorizo a publicação, continue a
+meta”, em resposta ao pedido de push e criação do PR da #1.
+Situação: parcial; autorização recebida, publicação em preparação.
+
+### O que foi feito
+
+- Registrada autorização específica para enviar `issue-1-autenticacao` ao
+  `origin` e criar o PR em `lukadev08/fake-esfinge`, base `main`.
+- Conferidos os commits e o diff: somente registros documentais mudaram desde
+  a implementação revisada `c7b2bd5`; as evidências de 30 testes e 93 verificações
+  Docker continuam associadas ao mesmo código. Testes não repetidos sem mudança.
+- Atualizado o rascunho do PR com a autorização; histórico do bloqueio preservado.
+
+### O que deu errado
+
+O bloqueio anterior de publicação foi resolvido pela autorização humana. Nenhuma
+nova falha local observada nesta retomada. Merge, implantação e publicação de
+imagem continuam fora desta autorização.
+
+### Próximo passo
+
+Commitar os registros, enviar a branch, criar e anexar o PR; verificar estado
+remoto e registrar a revisão da #1 antes de avançar na sequência de dependências.
