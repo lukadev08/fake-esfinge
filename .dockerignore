@@ -1,0 +1,4 @@
+**
+!target/
+target/*
+!target/fake-esfinge-0.1.0.jar

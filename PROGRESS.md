@@ -412,3 +412,83 @@ Sem testes de aplicação; permanecem os limites documentais registrados acima.
 
 Enviar este registro de conclusão e verificar sincronização. Nenhuma
 implementação foi iniciada.
+
+## 2026-10-24 — Implementar autenticação fictícia da issue #1
+
+Referência: [issue #1](https://github.com/lukadev08/fake-esfinge/issues/1) e solicitação
+de orquestração com explorer → executor → reviewer.
+Situação: parcial; implementação local pronta, revisão e repetição final Docker pendentes.
+
+### O que foi feito
+
+- Criado monomódulo Maven/Java21/SpringBoot3.5.10, wrapper oficial com Maven3.9.9
+  e checksum, autenticação por portas/adaptadores e inspeção administrativa separada.
+- Persistidos contexto, identidades/UGs fictícias e sessões SQLite com migração
+  SQL versionada, checksum, FK por conexão e reabertura sem recriar dados incompatíveis.
+- Implementados login derivado, negações, token vinculado ao contexto e validade
+  configurável com relógio substituível; senha PBKDF2/salt e token persistido por hash.
+- Criados Dockerfile mínimo Linux amd64/non-root, guia real de execução,
+  [manifesto atual](docs/cobertura.md) e [evidência TDD](docs/evidencias/issue-1.md).
+- Verificação do executor: `./mvnw verify`, 30 testes aprovados, zero falhas/erros/
+  ignorados; jar empacotado. Testes cobrem núcleo, HTTP/SQLite real, configuração,
+  sanitização de falha SQLite e dependências de classes; `git diff --check` sem erros.
+- Supervisor informou Docker Linux amd64/non-root com rede desabilitada e 93
+  assertions HTTP/reinício aprovadas na imagem inicial identificada na evidência.
+  Após correção da leitura de identidades por porta pública da autenticação,
+  repetirá a checagem no jar final antes do PR.
+
+### O que deu errado
+
+- Maven não estava instalado; usada distribuição temporária validada e criado
+  wrapper oficial versionado, sem instalação global. JDK21 existe no SDKMAN,
+  embora não apareça em `java_home` do macOS; build executado com caminho explícito.
+- Ciclos RED falharam pelos comportamentos ausentes esperados e passaram após
+  implementação. Avisos de autoanexação Mockito/ByteBuddy não falharam a suíte.
+- Download limpo do wrapper revelou `sha256sum -c` incompatível com stdin no
+  macOS; corrigido para `sha256sum -c -`, checksum e download limpo aprovados.
+- Docker, revisão independente e integrador real não foram validados pelo executor.
+  Esta fatia não conclui E1/T01 ou as capacidades posteriores.
+
+### Próximo passo
+
+Supervisor validar imagem Linux amd64, persistência e HTTP em execução real;
+reviewer independente confrontar #1 e corrigir achados por agente próprio antes
+de permitir PR. Permanecem as dependências #1 → #2 → #3–#7 → aceite humano #8.
+
+## 2026-10-24 — Revisar e validar a fatia #1 sob supervisão
+
+Referência: [issue #1](https://github.com/lukadev08/fake-esfinge/issues/1), continuidade
+da implementação acima e objetivo de orquestração solicitado pelo usuário.
+Situação: concluída para implementação, revisão e validação locais; publicação do PR em preparação.
+
+### O que foi feito
+
+- Grupo exclusivo da #1: explorer GPT-6 Luna/médio, executor GPT-6.1 Sol/baixo e
+  reviewer GPT-6.1 Sol/médio, identificados ao iniciar. Ciclo explorar → implementar
+  → revisar concluído; reviewer aprovou sem achados materiais ou correções obrigatórias.
+- Supervisor executou `clean verify`: 30 testes, zero falhas/erros/ignorados, build
+  aprovado em 5,387 segundos. Conferidos efeitos locais dos comandos e testes.
+- Construída a imagem final Linux amd64 por digest, como usuário `10001:10001`.
+  Ensaio com volume exclusivo e `--network none`: 85 verificações HTTP e oito
+  após reinício aprovadas; sessão e contexto persistidos. TTL malformado impediu
+  inicialização com exit code 1 e mensagem sanitizada. Resultados e imagem em
+  [evidência da #1](docs/evidencias/issue-1.md); manifesto atualizado.
+- Reconsultada a issue: aberta, sem alteração de critérios; nenhum PR duplicado
+  para a branch `issue-1-autenticacao`.
+
+### O que deu errado
+
+- Escritas de branch/index e cache Docker exigiram execução fora do sandbox;
+  as operações locais foram autorizadas pela revisão automática e concluídas.
+  OrbStack estava parado e foi iniciado para o ensaio; Maven ficou em cache temporário.
+- Na autoinspeção, o executor encontrou acesso de cenários à tabela de identidades
+  de outra capacidade; corrigiu por porta pública antes da revisão. Suíte limpa
+  e imagem final foram verificadas após a correção.
+- Não houve integrador real, T01, aceite da saída E1 ou CI remoto. Nenhuma dessas
+  verificações é inferida dos testes locais. Não houve merge ou implantação.
+
+### Próximo passo
+
+Criar o PR da #1 com os testes verificados e registrar seu estado. A #2 depende
+da integração da #1; cada issue seguinte terá grupo independente. Seguir #1 →
+#2 → #3–#7 → aceite humano #8; não iniciar E2 sem essa saída de E1.
