@@ -610,3 +610,39 @@ imagem continuam fora desta autorização.
 
 Commitar os registros, enviar a branch, criar e anexar o PR; verificar estado
 remoto e registrar a revisão da #1 antes de avançar na sequência de dependências.
+
+## 2026-10-24 — Publicar PR #28 e conferir conteúdo remoto
+
+Referência: [issue #1](https://github.com/lukadev08/fake-esfinge/issues/1) e
+autorização explícita de publicação registrada acima.
+Situação: concluída para publicação; aprovação formal e integração pendentes.
+
+### O que foi feito
+
+- Criado commit documental `aff307b` e enviado `issue-1-autenticacao` para
+  `origin`, com exit code 0. Criado [PR #28](https://github.com/lukadev08/fake-esfinge/pull/28)
+  aberto contra `main` (`a757dd5`) e anexado à tarefa. Não é rascunho; conector
+  confirmou ausência de conflitos.
+- `grupo1_reviewer` manteve a aprovação técnica no head publicado `aff307b`:
+  comparação remota com `c7b2bd5` mostrou somente os documentos de progresso e
+  do PR, com código/testes/dependências/wrapper/Docker iguais aos revisados.
+  Nenhum achado material novo. Não houve repetição desnecessária da suíte.
+- Consulta de status remoto não retornou statuses; CI remoto continua sem
+  comprovação. Validação local preservada: 30 testes e 93 verificações Docker.
+- Preparado o parecer formal no registro local do PR. A #2 continua dependente
+  da integração da #1, sem iniciar grupo novo ou antecipar seu escopo.
+
+### O que deu errado
+
+A revisão automática de autorização rejeitou a tentativa de submeter `APPROVE`
+no PR #28: classificou a aprovação formal como mensagem externa distinta da
+publicação autorizada. Nenhum review foi publicado; não foi tentado comentário
+ou outro caminho alternativo. Merge não foi executado e continua fora da
+autorização recebida para push/criação do PR.
+
+### Próximo passo
+
+Solicitante decidir se autoriza submissão da aprovação formal e merge do PR #28
+em `main`. Após autorização, conferir o head atual e os critérios antes das ações;
+registrar eventual limitação do GitHub sem contorná-la e avançar à #2 somente
+após resolver sua dependência. Sem integrador real ou aceite E1/T01 nesta fatia.

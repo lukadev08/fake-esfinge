@@ -1,9 +1,9 @@
-# PR preparado — issue #1
+# PR da issue #1
 
-Situação: publicação autorizada expressamente pelo solicitante em 24/10/2026;
-push e criação do PR em preparação.
+Situação: publicado em 24/10/2026 após autorização expressa do solicitante.
+PR: https://github.com/lukadev08/fake-esfinge/pull/28 — aberto, sem merge.
 Destino: `lukadev08/fake-esfinge`; base `main`; head `issue-1-autenticacao`.
-Commit de implementação: `c7b2bd5`. Nenhum PR criado.
+Commit de implementação: `c7b2bd5`. Head inicial publicado: `aff307b`.
 
 ## Título
 
@@ -36,3 +36,16 @@ O solicitante autorizou push da branch acima para `origin` e criação deste PR 
 `lukadev08/fake-esfinge`, base `main`, ao responder “autorizo a publicação,
 continue a meta”. Merge, implantação e publicação de imagem não estão incluídos
 na autorização solicitada. A próxima issue é #2, dependente da #1.
+
+## Aprovação formal preparada
+
+Revisão técnica independente do grupo 1 aprovada para a issue #1, sem achados
+materiais. O conteúdo publicado foi conferido contra o código revisado: alterações
+posteriores somente documentais. Supervisão confirmou clean verify com 30 testes
+sem falhas/erros/ignorados e 93 verificações HTTP/reinício no Docker Linux amd64
+sem rede externa. Integrador real, aceite E1/T01 e CI remoto não estão comprovados
+nesta fatia.
+
+A submissão `APPROVE` desse parecer no PR #28 foi rejeitada pela revisão automática
+de autorização antes de publicar qualquer review. Aprovação formal e merge em
+`main` dependem de autorização específica; nenhuma dessas ações foi executada.
