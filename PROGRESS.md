@@ -646,3 +646,37 @@ Solicitante decidir se autoriza submissão da aprovação formal e merge do PR #
 em `main`. Após autorização, conferir o head atual e os critérios antes das ações;
 registrar eventual limitação do GitHub sem contorná-la e avançar à #2 somente
 após resolver sua dependência. Sem integrador real ou aceite E1/T01 nesta fatia.
+
+## 2026-10-24 — Integrar PR #28 e liberar a #2
+
+Referência: autorização explícita do solicitante “Autorizar aprovação e merge”
+para [PR #28](https://github.com/lukadev08/fake-esfinge/pull/28).
+Situação: concluída para integração da #1; #2 iniciada em exploração.
+
+### O que foi feito
+
+- Conferido head `63ec6a4`, com código igual ao revisado/testado. Submetido merge
+  com esse SHA esperado; GitHub confirmou `merged=true`, commit `a36c7bf`.
+  Releitura confirmou PR integrado e issue #1 fechada como concluída.
+- Sincronizado `main` local por fast-forward e criada branch independente
+  `issue-2-recepcao-contribuintes` a partir de `a36c7bf`. Nenhum dado de usuário
+  alterado; os dois `.DS_Store` continuam fora do versionamento.
+- Reconsultada #2: aberta, `ready-for-agent`, sem comentários e dependência #1
+  encerrada. Iniciado `grupo2_explorer`, exclusivo da #2, com pedido de identidade
+  e exploração somente leitura antes do desenho/implementação.
+
+### O que deu errado
+
+Após autorização, a submissão de aprovação formal chegou ao GitHub, mas foi
+recusada com HTTP 422: `Review Can not approve your own pull request`. Nenhuma
+aprovação formal ou comentário alternativo foi publicado. A revisão técnica
+independente permaneceu aprovada; o GitHub permitiu o merge autorizado.
+Não houve contorno de proteção, implantação ou publicação de imagem.
+
+### Próximo passo
+
+Executar #2 com grupo próprio: explorar → implementar por TDD → revisar, com
+correção delegada se necessária. Recorte: abertura, recepção de contribuintes,
+consulta RECEBIDO e inspeção administrativa persistida. Outros assuntos ficam
+em #3–#7; processamento em E2, após aceite humano #8. Publicação e merge de PRs
+futuros exigem seus limites de autorização; E1/T01 continuam pendentes.
