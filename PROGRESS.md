@@ -492,3 +492,36 @@ Situação: concluída para implementação, revisão e validação locais; publ
 Criar o PR da #1 com os testes verificados e registrar seu estado. A #2 depende
 da integração da #1; cada issue seguinte terá grupo independente. Seguir #1 →
 #2 → #3–#7 → aceite humano #8; não iniciar E2 sem essa saída de E1.
+
+## 2026-10-24 — Preparar PR da #1 e registrar bloqueio de publicação
+
+Referência: [issue #1](https://github.com/lukadev08/fake-esfinge/issues/1), continuidade
+da revisão e validação sob supervisão acima.
+Situação: bloqueada para publicação; implementação local revisada e verificada.
+
+### O que foi feito
+
+- Criado commit local `c7b2bd5` na branch `issue-1-autenticacao`, com 41 arquivos
+  restritos à #1. Fontes e schemas contratuais intactos; `.DS_Store` fora do commit.
+- Preparado [rascunho exato do PR](.scratch/pr-issue-1.md), com título, corpo,
+  destino `lukadev08/fake-esfinge`, base `main`, branch e validações comprovadas.
+- Mantidos os limites da sequência: #2 depende da #1; os demais grupos ainda não
+  foram iniciados. O objetivo de orquestração permanece ativo.
+- `git ls-remote` confirmou ausência da branch de trabalho no remoto. Removidos
+  somente o container e o volume temporários criados para o ensaio da #1;
+  a imagem local e os arquivos de checagem temporários foram preservados.
+
+### O que deu errado
+
+A revisão automática de aprovação rejeitou `git push -u origin issue-1-autenticacao`
+antes da execução: publicar código em destino externo exige autorização confiável
+e específica para a ação e o repositório. Nenhum PR foi criado. A operação não foi
+repetida por outro caminho. Testes e revisão locais continuam válidos; não houve
+merge, implantação ou publicação de imagem.
+
+### Próximo passo
+
+O solicitante deve autorizar explicitamente push de `issue-1-autenticacao` para
+`origin` e criação do PR preparado em `lukadev08/fake-esfinge`, base `main`.
+Após autorização, verificar branch/remoto e critérios, publicar e registrar o PR.
+Merge e aceites humanos continuam sujeitos aos seus limites específicos.
