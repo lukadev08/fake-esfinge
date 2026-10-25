@@ -4,6 +4,10 @@ Referência: [issue #4](https://github.com/lukadev08/fake-esfinge/issues/4).
 Base funcional: `e0b4852`, após integração da #3 no PR #30.
 Branch: `issue-4-recepcao-arrecadacao`. Exploração concluída por
 `grupo4_explorer`, GPT-6 Luna/médio conforme o papel, somente leitura.
+Executor `grupo4_executor`, GPT-6.1 Sol/baixo, e reviewer `grupo4_reviewer`,
+GPT-6.1 Sol/médio conforme os papéis, concluídos. Implementação e supervisão
+locais aprovadas: 71 testes, revisão sem achados e 853 verificações na imagem V4,
+além de 704 de preparação em V3. [PR local preparado](pr-issue-4.md).
 Publicação/merge da #4 ainda não autorizados.
 
 ## Contrato verificado

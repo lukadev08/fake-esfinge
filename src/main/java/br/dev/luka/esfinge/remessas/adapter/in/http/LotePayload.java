@@ -20,8 +20,7 @@ public final class LotePayload {
         Map.entry("tipoRepresentante",2),Map.entry("numeroCpfRepresentante",11));
     private static final Set<String> REQUIRED=Set.of("numeroMatriculaContribuinte","dataAtualizacaoCadastral","tipoContribuinte",
             "numeroDocumentoContribuinte","nomeCompletoContribuinte","indicativoCadastroAtivo","indicativoEspolio");
-    private static final Set<String> UNSUPPORTED_SUBJECTS=Set.of("diarioGeralArrecadacao",
-            "baixasCreditosTributarios","saldosIniciaisCreditoTributario","inicioPrazoPrescricional");
+    private static final Set<String> UNSUPPORTED_SUBJECTS=Set.of("baixasCreditosTributarios","saldosIniciaisCreditoTributario","inicioPrazoPrescricional");
     public ReceivedContent read(byte[] bytes) {
         JsonNode root;
         try {
@@ -33,13 +32,13 @@ public final class LotePayload {
         if (!root.isObject() || root.size()!=1) throw invalid();
         String subject=root.fieldNames().next();
         if (UNSUPPORTED_SUBJECTS.contains(subject)) throw new RemessaFailure(UNSUPPORTED);
-        if (!subject.equals("cadastrosContribuintes") && !subject.equals("lancamentosCreditosTributarios")) throw invalid();
+        if (!subject.equals("cadastrosContribuintes") && !subject.equals("lancamentosCreditosTributarios") && !subject.equals("diarioGeralArrecadacao")) throw invalid();
         JsonNode records=root.get(subject);
         if (!records.isArray() || records.isEmpty()) throw invalid();
-        if (subject.equals("lancamentosCreditosTributarios")) {
+        if (!subject.equals("cadastrosContribuintes")) {
             var values=new ArrayList<java.math.BigDecimal>();
-            for (JsonNode record:records) values.add(credit(record));
-            return new ReceivedContent(bytes,records.size(),Assunto.LANCAMENTO_CREDITO_TRIBUTARIO,values);
+            for (JsonNode record:records) values.add(subject.equals("lancamentosCreditosTributarios")?credit(record):collection(record));
+            return new ReceivedContent(bytes,records.size(),subject.equals("lancamentosCreditosTributarios")?Assunto.LANCAMENTO_CREDITO_TRIBUTARIO:Assunto.DIARIO_ARRECADACAO,values);
         }
         for (JsonNode record:records) {
             if (!record.isObject()) throw invalid();
@@ -90,6 +89,28 @@ public final class LotePayload {
             } else if (!value.isNumber() || value.decimalValue().stripTrailingZeros().scale()>2) throw invalid();
         }
         return record.get("valorLancamentoCreditoTributario").decimalValue();
+    }
+    private static final Set<String> COLLECTION_REQUIRED=Set.of("anoCodigoSequencialOperacaoArrecadacao","codigoSequencialOperacaoArrecadacao","tipoArrecadacao","dataOperacao",
+            "codigoEspecificacaoReceita","anoLancamentoCreditoTributario","codigoLancamentoCreditoTributario","valorCreditoTributario");
+    private static final Set<String> COLLECTION_INTEGERS=Set.of("anoCodigoSequencialOperacaoArrecadacao","tipoArrecadacao","codigoEspecificacaoReceita","anoLancamentoCreditoTributario","numeroParcelas");
+    private static final Map<String,Integer> COLLECTION_STRINGS=Map.of("codigoSequencialOperacaoArrecadacao",16,"codigoLancamentoCreditoTributario",16,"numeroAnoTipoCobranca",50);
+    private static java.math.BigDecimal collection(JsonNode record) {
+        if (!record.isObject()) throw invalid();
+        for (String name:COLLECTION_REQUIRED) if (!record.hasNonNull(name)) throw invalid();
+        for (var field:record.properties()) {
+            String name=field.getKey();JsonNode value=field.getValue();
+            if (!COLLECTION_REQUIRED.contains(name) && !COLLECTION_STRINGS.containsKey(name) && !COLLECTION_INTEGERS.contains(name)) throw invalid();
+            if (value.isNull() && !COLLECTION_REQUIRED.contains(name)) continue;
+            if (COLLECTION_INTEGERS.contains(name)) {
+                if (!value.isNumber() || value.decimalValue().stripTrailingZeros().scale()>0) throw invalid();
+            } else if (name.equals("dataOperacao")) {
+                if (!value.isTextual() || !value.textValue().matches("[0-9]{4}-[0-9]{2}-[0-9]{2}")) throw invalid();
+                try { LocalDate.parse(value.textValue()); } catch (DateTimeParseException e) { throw invalid(); }
+            } else if (COLLECTION_STRINGS.containsKey(name)) {
+                if (!value.isTextual() || value.textValue().codePointCount(0,value.textValue().length())>COLLECTION_STRINGS.get(name)) throw invalid();
+            } else if (!value.isNumber() || value.decimalValue().stripTrailingZeros().scale()>2) throw invalid();
+        }
+        return record.get("valorCreditoTributario").decimalValue();
     }
     private static RemessaFailure invalid() { return new RemessaFailure(INVALID_STRUCTURE); }
 }
