@@ -139,7 +139,7 @@ class JdbcRemessaTest {
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM sqlite_master WHERE name='remessas'",Integer.class));
         jdbc.update("UPDATE schema_migrations SET checksum=?",CredentialHash.token(v1.getContentAsString(StandardCharsets.UTF_8)));
         var migrated=SqliteDatabase.open(settings("cenario-a"));assertEquals(original,new JdbcAuthenticationRepository(migrated).findSession("preservado","cenario-a").orElseThrow());
-        assertEquals(5,new JdbcTemplate(migrated).queryForObject("PRAGMA user_version",Integer.class));
+        assertEquals(6,new JdbcTemplate(migrated).queryForObject("PRAGMA user_version",Integer.class));
         assertNotNull(fixture("cenario-a").service.open("preservado",202601,"NAO"));
     }
     ReceivedContent creditContent() {
@@ -167,8 +167,8 @@ class JdbcRemessaTest {
             assertEquals(0,new java.math.BigDecimal(jdbc.queryForObject("SELECT valor FROM valores_recebidos WHERE lote_id=?",String.class,lote.number())).compareTo(java.math.BigDecimal.ONE));
             assertArrayEquals(original,fixture("cenario-a").service.inspect("admin-ficticio",lote.number()).lote().bytes());
         }
-        assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},1,Assunto.LANCAMENTO_CREDITO_TRIBUTARIO,List.of(new java.math.BigDecimal("1.001"))));
-        assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},2,Assunto.LANCAMENTO_CREDITO_TRIBUTARIO,List.of(java.math.BigDecimal.ONE)));
+        assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},1,Assunto.LANCAMENTO_CREDITO_TRIBUTARIO,List.of(Map.of("valorLancamentoCreditoTributario",new java.math.BigDecimal("1.001")))));
+        assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},2,Assunto.LANCAMENTO_CREDITO_TRIBUTARIO,List.of(Map.of("valorLancamentoCreditoTributario",java.math.BigDecimal.ONE))));
     }
     DataSource versionTwo() throws Exception {
         var config=new SQLiteConfig();config.enforceForeignKeys(true);var raw=new SQLiteDataSource(config);raw.setUrl("jdbc:sqlite:"+settings("cenario-a").database);
@@ -191,7 +191,7 @@ class JdbcRemessaTest {
         assertEquals(2,jdbc.queryForObject("PRAGMA user_version",Integer.class));jdbc.update("UPDATE schema_migrations SET checksum=? WHERE version=2",checksum);
         var migrated=fixture("cenario-a");var state=migrated.service.inspect("admin-ficticio",lote.number());
         assertEquals(events,state.events());assertArrayEquals(content().bytes(),state.lote().bytes());assertEquals(lote.number(),state.lote().number());assertEquals(lote.hash(),state.lote().hash());
-        assertEquals(5,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(5,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));
+        assertEquals(6,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(6,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));
         assertTrue(jdbc.queryForList("PRAGMA foreign_key_check").isEmpty());
         var credit=migrated.service.receive(token,key,creditContent());assertEquals(43,credit.number());assertEquals(2,credit.order());
         assertEquals(78,migrated.service.inspect("admin-ficticio",credit.number()).events().getLast().id());
@@ -234,8 +234,8 @@ class JdbcRemessaTest {
         }
         var credit=reopened.service.receive(token,key,creditContent());assertEquals(6,credit.order());
         assertEquals(6,jdbc.queryForObject("SELECT COUNT(*) FROM valores_recebidos",Integer.class));
-        assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},1,Assunto.DIARIO_ARRECADACAO,List.of(new java.math.BigDecimal("1.001"))));
-        assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},2,Assunto.DIARIO_ARRECADACAO,List.of(java.math.BigDecimal.ONE)));
+        assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},1,Assunto.DIARIO_ARRECADACAO,List.of(Map.of("valorCreditoTributario",new java.math.BigDecimal("1.001")))));
+        assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},2,Assunto.DIARIO_ARRECADACAO,List.of(Map.of("valorCreditoTributario",java.math.BigDecimal.ONE))));
     }
     record Legacy(DataSource source,String token,String key,Lote contributor,Lote credit,List<RemessaEvent> events) {}
     Legacy versionThreePopulated() throws Exception {
@@ -263,7 +263,7 @@ class JdbcRemessaTest {
         assertEquals("123456789012345678901234567890.12",jdbc.queryForObject("SELECT valor FROM valores_recebidos WHERE lote_id=?",String.class,old.credit().number()));
         assertEquals("text",jdbc.queryForObject("SELECT typeof(valor) FROM valores_recebidos",String.class));
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM sqlite_master WHERE name='valores_creditos'",Integer.class));
-        assertEquals(5,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(5,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));
+        assertEquals(6,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(6,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));
         assertTrue(jdbc.queryForList("PRAGMA foreign_key_check").isEmpty());
         var collection=migrated.service.receive(old.token(),old.key(),collectionContent());assertEquals(43,collection.number());assertEquals(3,collection.order());
         assertEquals(78,migrated.service.inspect("admin-ficticio",collection.number()).events().getLast().id());
@@ -308,8 +308,8 @@ class JdbcRemessaTest {
         }
         assertEquals(6,reopened.service.receive(token,key,creditContent()).order());assertEquals(7,reopened.service.receive(token,key,collectionContent()).order());
         assertEquals(7,jdbc.queryForObject("SELECT COUNT(*) FROM valores_recebidos",Integer.class));
-        assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},1,Assunto.BAIXA_CREDITO_TRIBUTARIO,List.of(new java.math.BigDecimal("1.001"))));
-        assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},2,Assunto.BAIXA_CREDITO_TRIBUTARIO,List.of(java.math.BigDecimal.ONE)));
+        assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},1,Assunto.BAIXA_CREDITO_TRIBUTARIO,List.of(Map.of("valorOperacaoBaixa",new java.math.BigDecimal("1.001")))));
+        assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},2,Assunto.BAIXA_CREDITO_TRIBUTARIO,List.of(Map.of("valorOperacaoBaixa",java.math.BigDecimal.ONE))));
     }
     record LegacyFour(Legacy old,Lote collection,List<RemessaEvent> events) {}
     LegacyFour versionFourPopulated() throws Exception {
@@ -317,7 +317,7 @@ class JdbcRemessaTest {
         try(var c=old.source().getConnection()){ScriptUtils.executeSqlScript(c,resource);}
         var jdbc=new JdbcTemplate(old.source());jdbc.update("INSERT INTO schema_migrations VALUES(4,?)",CredentialHash.token(resource.getContentAsString(StandardCharsets.UTF_8)));
         var service=fixture(old.source(),"cenario-a",Clock.fixed(INITIAL,ZoneOffset.UTC)).service;
-        var collection=service.receive(old.token(),old.key(),collectionContent());
+        var collection=legacyReceive(old.source(),old.key(),collectionContent());
         return new LegacyFour(old,collection,service.inspect("admin-ficticio",collection.number()).events());
     }
     @Test void migracaoV4PreservaCreditoArrecadacaoSessaoEFks() throws Exception {
@@ -334,7 +334,7 @@ class JdbcRemessaTest {
         }
         assertEquals(List.of("123456789012345678901234567890.12","123456789012345678901234567890.12"),jdbc.queryForList("SELECT valor FROM valores_recebidos ORDER BY lote_id",String.class));
         assertEquals(List.of("text","text"),jdbc.queryForList("SELECT typeof(valor) FROM valores_recebidos ORDER BY lote_id",String.class));
-        assertEquals(5,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(5,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));
+        assertEquals(6,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(6,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));
         assertTrue(jdbc.queryForList("PRAGMA foreign_key_check").isEmpty());
         var baixa=migrated.service.receive(old.old().token(),old.old().key(),writeOffContent());assertEquals(43,baixa.number());assertEquals(4,baixa.order());
         assertEquals(78,migrated.service.inspect("admin-ficticio",baixa.number()).events().getLast().id());
@@ -354,5 +354,77 @@ class JdbcRemessaTest {
         assertEquals(old.events(),fixture(old.old().source(),"cenario-a",Clock.fixed(INITIAL,ZoneOffset.UTC)).service.inspect("admin-ficticio",old.collection().number()).events());
         assertTrue(jdbc.queryForList("PRAGMA foreign_key_check").isEmpty());
         jdbc.execute("DROP VIEW valores_recebidos_v5");assertNotNull(fixture("cenario-a").service.receive(old.old().token(),old.old().key(),writeOffContent()));
+    }
+    Lote legacyReceive(DataSource source,String key,ReceivedContent content) {
+        var jdbc=new JdbcTemplate(source);long remessa=jdbc.queryForObject("SELECT id FROM remessas WHERE chave=?",Long.class,key);
+        int order=jdbc.queryForObject("SELECT COALESCE(MAX(ordem),0)+1 FROM lotes WHERE remessa_id=?",Integer.class,remessa);
+        long number=jdbc.queryForObject("INSERT INTO lotes(remessa_id,cenario,ug,ordem,assunto,payload,hash,registros,recebimento) VALUES (?,?,?,?,?,?,?,?,?) RETURNING numero",Long.class,
+                remessa,"cenario-a","0001",order,content.subject().name(),content.bytes(),CredentialHash.token(new String(content.bytes(),StandardCharsets.UTF_8)),content.records(),INITIAL.toString());
+        jdbc.update("INSERT INTO valores_recebidos VALUES(?,?,?,?,?,?)",number,remessa,"cenario-a","0001",0,content.monetaryValues().getFirst().values().iterator().next().toString());
+        jdbc.update("INSERT INTO remessa_eventos(remessa_id,cenario,ug,lote_id,tipo,instante) VALUES (?,?,?,?,?,?)",remessa,"cenario-a","0001",number,"LOTE_RECEBIDO",INITIAL.toString());
+        return fixture(source,"cenario-a",Clock.fixed(INITIAL,ZoneOffset.UTC)).service.inspect("admin-ficticio",number).lote();
+    }
+    ReceivedContent balanceContent() { return new br.dev.luka.esfinge.remessas.adapter.in.http.LotePayload().read(SaldoHttpTest.PAYLOAD.getBytes(StandardCharsets.UTF_8)); }
+    @Test void saldoQuatroCamposTextuaisReabreSemDeduplicarEIsolaVinculos() {
+        var f=fixture("cenario-a");String token=f.token("0001"),key=f.service.open(token,202601,"NAO").key();
+        byte[] doubled=("{\"saldosIniciaisCreditoTributario\":["+SaldoHttpTest.RECORD+","+SaldoHttpTest.RECORD+"]}").getBytes(StandardCharsets.UTF_8);
+        var content=new br.dev.luka.esfinge.remessas.adapter.in.http.LotePayload().read(doubled);
+        var first=f.service.receive(token,key,content);var second=f.service.receive(token,key,balanceContent());assertNotEquals(first.number(),second.number());
+        var jdbc=new JdbcTemplate(f.source);assertEquals(12,jdbc.queryForObject("SELECT COUNT(*) FROM valores_recebidos",Integer.class));
+        var expected=balanceContent().monetaryValues().getFirst();
+        var rows=jdbc.queryForList("SELECT indice,campo,valor,typeof(valor) AS tipo FROM valores_recebidos WHERE lote_id=? ORDER BY indice,campo",first.number());
+        assertEquals(8,rows.size());
+        for(var row:rows) {assertEquals("text",row.get("tipo"));assertEquals(0,expected.get(row.get("campo")).compareTo(new java.math.BigDecimal((String)row.get("valor"))));}
+        assertEquals(4,jdbc.queryForObject("SELECT COUNT(DISTINCT campo) FROM valores_recebidos WHERE lote_id=?",Integer.class,first.number()));
+        var reopened=fixture("cenario-a");assertArrayEquals(doubled,reopened.service.inspect("admin-ficticio",first.number()).lote().bytes());
+        assertEquals(Assunto.SALDO_INICIAL_CREDITO_TRIBUTARIO,reopened.service.consult(token,first.number()).subject());assertEquals(2,second.order());
+        assertThrows(org.springframework.dao.DataAccessException.class,()->jdbc.update("UPDATE valores_recebidos SET ug='0002' WHERE lote_id=?",first.number()));
+        var other=fixture("cenario-b");String otherToken=other.token("0001");
+        assertEquals(RemessaFailure.Kind.NOT_FOUND,assertThrows(RemessaFailure.class,()->other.service.receive(otherToken,key,balanceContent())).kind());
+        assertEquals(RemessaFailure.Kind.NOT_FOUND,assertThrows(RemessaFailure.class,()->other.service.inspect("admin-ficticio",first.number())).kind());
+        for(String spelling:List.of("1","1.0","1.00")) {
+            byte[] original=SaldoHttpTest.PAYLOAD.replace("123456789012345678901234567890.12",spelling).getBytes(StandardCharsets.UTF_8);
+            var lote=reopened.service.receive(token,key,new br.dev.luka.esfinge.remessas.adapter.in.http.LotePayload().read(original));
+            assertEquals(0,java.math.BigDecimal.ONE.compareTo(new java.math.BigDecimal(jdbc.queryForObject("SELECT valor FROM valores_recebidos WHERE lote_id=? AND campo='saldoPrincipal'",String.class,lote.number()))));
+            assertArrayEquals(original,fixture("cenario-a").service.inspect("admin-ficticio",lote.number()).lote().bytes());
+        }
+    }
+    record LegacyFive(LegacyFour old,Lote baixa,List<RemessaEvent> events) {}
+    LegacyFive versionFivePopulated() throws Exception {
+        var old=versionFourPopulated();var resource=new ClassPathResource("db/migration/V5__baixas.sql");
+        try(var c=old.old().source().getConnection()){ScriptUtils.executeSqlScript(c,resource);}
+        new JdbcTemplate(old.old().source()).update("INSERT INTO schema_migrations VALUES(5,?)",CredentialHash.token(resource.getContentAsString(StandardCharsets.UTF_8)));
+        var baixa=legacyReceive(old.old().source(),old.old().key(),writeOffContent());
+        return new LegacyFive(old,baixa,fixture(old.old().source(),"cenario-a",Clock.fixed(INITIAL,ZoneOffset.UTC)).service.inspect("admin-ficticio",baixa.number()).events());
+    }
+    @Test void migracaoV5NomeiaCamposAntigosEPreservaDadosSessaoEFks() throws Exception {
+        var old=versionFivePopulated();var jdbc=new JdbcTemplate(old.old().old().source());
+        jdbc.update("UPDATE sqlite_sequence SET seq=42 WHERE name='lotes'");jdbc.update("UPDATE sqlite_sequence SET seq=77 WHERE name='remessa_eventos'");
+        String checksum=jdbc.queryForObject("SELECT checksum FROM schema_migrations WHERE version=5",String.class);
+        jdbc.update("UPDATE schema_migrations SET checksum='adulterado' WHERE version=5");assertThrows(IllegalStateException.class,()->SqliteDatabase.open(settings("cenario-a")));
+        assertEquals(5,jdbc.queryForObject("PRAGMA user_version",Integer.class));jdbc.update("UPDATE schema_migrations SET checksum=? WHERE version=5",checksum);
+        var migrated=fixture("cenario-a");assertEquals(old.events(),migrated.service.inspect("admin-ficticio",old.baixa().number()).events());
+        for(var lote:List.of(old.old().old().contributor(),old.old().old().credit(),old.old().collection(),old.baixa())) {
+            var preserved=migrated.service.inspect("admin-ficticio",lote.number()).lote();assertEquals(lote.number(),preserved.number());assertEquals(lote.hash(),preserved.hash());assertArrayEquals(lote.bytes(),preserved.bytes());
+        }
+        assertEquals(List.of("valorLancamentoCreditoTributario","valorCreditoTributario","valorOperacaoBaixa"),jdbc.queryForList("SELECT campo FROM valores_recebidos ORDER BY lote_id",String.class));
+        assertEquals(List.of("123456789012345678901234567890.12","123456789012345678901234567890.12","123456789012345678901234567890.12"),jdbc.queryForList("SELECT valor FROM valores_recebidos ORDER BY lote_id",String.class));
+        assertEquals(List.of("text","text","text"),jdbc.queryForList("SELECT typeof(valor) FROM valores_recebidos ORDER BY lote_id",String.class));
+        assertEquals(6,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(6,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));assertTrue(jdbc.queryForList("PRAGMA foreign_key_check").isEmpty());
+        var saldo=migrated.service.receive(old.old().old().token(),old.old().old().key(),balanceContent());assertEquals(43,saldo.number());assertEquals(5,saldo.order());
+        assertEquals(78,migrated.service.inspect("admin-ficticio",saldo.number()).events().getLast().id());assertEquals(7,jdbc.queryForObject("SELECT COUNT(*) FROM valores_recebidos",Integer.class));
+        assertThrows(org.springframework.dao.DataAccessException.class,()->jdbc.update("UPDATE valores_recebidos SET ug='0002' WHERE lote_id=?",saldo.number()));
+        assertThrows(org.springframework.dao.DataAccessException.class,()->jdbc.update("UPDATE lotes SET ug='0002' WHERE numero=?",old.baixa().number()));
+    }
+    @Test void falhaV6ReverteInclusiveDinheiroEscalarDaV5() throws Exception {
+        var old=versionFivePopulated();var jdbc=new JdbcTemplate(old.old().old().source());jdbc.execute("CREATE VIEW valores_recebidos_v6 AS SELECT 1 AS conflito");
+        assertThrows(IllegalStateException.class,()->SqliteDatabase.open(settings("cenario-a")));
+        assertEquals(5,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(5,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));
+        assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM sqlite_master WHERE name IN ('lotes_v6','remessa_eventos_v6','sequencias_v6')",Integer.class));
+        assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM pragma_table_info('valores_recebidos') WHERE name='campo'",Integer.class));
+        assertEquals(3,jdbc.queryForObject("SELECT COUNT(*) FROM valores_recebidos",Integer.class));
+        for(var lote:List.of(old.old().old().contributor(),old.old().old().credit(),old.old().collection(),old.baixa())) assertArrayEquals(lote.bytes(),jdbc.queryForObject("SELECT payload FROM lotes WHERE numero=?",byte[].class,lote.number()));
+        assertEquals(old.events(),fixture(old.old().old().source(),"cenario-a",Clock.fixed(INITIAL,ZoneOffset.UTC)).service.inspect("admin-ficticio",old.baixa().number()).events());assertTrue(jdbc.queryForList("PRAGMA foreign_key_check").isEmpty());
+        jdbc.execute("DROP VIEW valores_recebidos_v6");assertNotNull(fixture("cenario-a").service.receive(old.old().old().token(),old.old().old().key(),balanceContent()));
     }
 }

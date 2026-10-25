@@ -20,7 +20,7 @@ public final class LotePayload {
         Map.entry("tipoRepresentante",2),Map.entry("numeroCpfRepresentante",11));
     private static final Set<String> REQUIRED=Set.of("numeroMatriculaContribuinte","dataAtualizacaoCadastral","tipoContribuinte",
             "numeroDocumentoContribuinte","nomeCompletoContribuinte","indicativoCadastroAtivo","indicativoEspolio");
-    private static final Set<String> UNSUPPORTED_SUBJECTS=Set.of("saldosIniciaisCreditoTributario","inicioPrazoPrescricional");
+    private static final Set<String> UNSUPPORTED_SUBJECTS=Set.of("inicioPrazoPrescricional");
     public ReceivedContent read(byte[] bytes) {
         JsonNode root;
         try {
@@ -32,13 +32,13 @@ public final class LotePayload {
         if (!root.isObject() || root.size()!=1) throw invalid();
         String subject=root.fieldNames().next();
         if (UNSUPPORTED_SUBJECTS.contains(subject)) throw new RemessaFailure(UNSUPPORTED);
-        if (!subject.equals("cadastrosContribuintes") && !subject.equals("lancamentosCreditosTributarios") && !subject.equals("diarioGeralArrecadacao") && !subject.equals("baixasCreditosTributarios")) throw invalid();
+        if (!subject.equals("cadastrosContribuintes") && !subject.equals("lancamentosCreditosTributarios") && !subject.equals("diarioGeralArrecadacao") && !subject.equals("baixasCreditosTributarios") && !subject.equals("saldosIniciaisCreditoTributario")) throw invalid();
         JsonNode records=root.get(subject);
         if (!records.isArray() || records.isEmpty()) throw invalid();
         if (!subject.equals("cadastrosContribuintes")) {
-            var values=new ArrayList<java.math.BigDecimal>();
-            for (JsonNode record:records) values.add(switch(subject) { case "lancamentosCreditosTributarios" -> credit(record); case "diarioGeralArrecadacao" -> collection(record); default -> writeOff(record); });
-            return new ReceivedContent(bytes,records.size(),switch(subject) { case "lancamentosCreditosTributarios" -> Assunto.LANCAMENTO_CREDITO_TRIBUTARIO; case "diarioGeralArrecadacao" -> Assunto.DIARIO_ARRECADACAO; default -> Assunto.BAIXA_CREDITO_TRIBUTARIO; },values);
+            var values=new ArrayList<Map<String,java.math.BigDecimal>>();
+            for (JsonNode record:records) values.add(switch(subject) { case "lancamentosCreditosTributarios" -> Map.of("valorLancamentoCreditoTributario",credit(record)); case "diarioGeralArrecadacao" -> Map.of("valorCreditoTributario",collection(record)); case "baixasCreditosTributarios" -> Map.of("valorOperacaoBaixa",writeOff(record)); default -> initialBalance(record); });
+            return new ReceivedContent(bytes,records.size(),switch(subject) { case "lancamentosCreditosTributarios" -> Assunto.LANCAMENTO_CREDITO_TRIBUTARIO; case "diarioGeralArrecadacao" -> Assunto.DIARIO_ARRECADACAO; case "baixasCreditosTributarios" -> Assunto.BAIXA_CREDITO_TRIBUTARIO; default -> Assunto.SALDO_INICIAL_CREDITO_TRIBUTARIO; },values);
         }
         for (JsonNode record:records) {
             if (!record.isObject()) throw invalid();
@@ -132,6 +132,25 @@ public final class LotePayload {
             } else if (!value.isNumber() || value.decimalValue().stripTrailingZeros().scale()>2) throw invalid();
         }
         return record.get("valorOperacaoBaixa").decimalValue();
+    }
+    private static final Set<String> BALANCE_MONEY=Set.of("saldoPrincipal","saldoMulta","saldoJuros","saldoAtualizacaoMonetaria");
+    private static final Set<String> BALANCE_REQUIRED=Set.of("anoLancamentoCreditoTributario","codigoLancamentoCreditoTributario","saldoPrincipal","saldoMulta","saldoJuros","saldoAtualizacaoMonetaria");
+    private static Map<String,java.math.BigDecimal> initialBalance(JsonNode record) {
+        if (!record.isObject()) throw invalid();
+        for (String name:BALANCE_REQUIRED) if (!record.hasNonNull(name)) throw invalid();
+        var values=new HashMap<String,java.math.BigDecimal>();
+        for (var field:record.properties()) {
+            String name=field.getKey();JsonNode value=field.getValue();
+            if (!BALANCE_REQUIRED.contains(name) && !name.equals("tipoSaldoInicial")) throw invalid();
+            if (value.isNull() && name.equals("tipoSaldoInicial")) continue;
+            if (BALANCE_MONEY.contains(name)) {
+                if (!value.isNumber() || value.decimalValue().stripTrailingZeros().scale()>2) throw invalid();
+                values.put(name,value.decimalValue());
+            } else if (name.equals("codigoLancamentoCreditoTributario")) {
+                if (!value.isTextual() || value.textValue().codePointCount(0,value.textValue().length())>16) throw invalid();
+            } else if (!value.isNumber() || value.decimalValue().stripTrailingZeros().scale()>0) throw invalid();
+        }
+        return values;
     }
     private static RemessaFailure invalid() { return new RemessaFailure(INVALID_STRUCTURE); }
 }

@@ -30,11 +30,11 @@ class RemessaFailureHttpTest {
         registry.add("simulator.database",()->{try{return Files.createTempDirectory("esfinge-commit-").resolve("state.sqlite").toString();}catch(Exception e){throw new IllegalStateException();}});
     }
     static java.util.stream.Stream<Arguments> failures() {
-        return java.util.stream.IntStream.range(0,4).boxed().flatMap(subject->java.util.stream.Stream.of(Arguments.of(false,subject),Arguments.of(true,subject)));
+        return java.util.stream.IntStream.range(0,5).boxed().flatMap(subject->java.util.stream.Stream.of(Arguments.of(false,subject),Arguments.of(true,subject)));
     }
     @ParameterizedTest @MethodSource("failures")
     void falhaStatementOuCommitNaoConfirmaESanitiza(boolean commit,int subject,CapturedOutput logs) throws Exception {
-        String payload=switch(subject) {case 0 -> RemessaHttpTest.PAYLOAD;case 1 -> CreditoHttpTest.PAYLOAD;case 2 -> ArrecadacaoHttpTest.PAYLOAD;default -> BaixaHttpTest.PAYLOAD;};
+        String payload=switch(subject) {case 0 -> RemessaHttpTest.PAYLOAD;case 1 -> CreditoHttpTest.PAYLOAD;case 2 -> ArrecadacaoHttpTest.PAYLOAD;case 3 -> BaixaHttpTest.PAYLOAD;default -> SaldoHttpTest.PAYLOAD;};
         String token=json.readTree(http.perform(post("/autenticacao/login").header("codigoAcesso","acesso-ficticio-a").header("senha","senha-ficticia-a")
                 .param("codigoUg","0001").param("descricaoEmpresaTI","Empresa").param("descritivoSoftware","Software"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString()).get("chave").asText();
@@ -57,7 +57,7 @@ class RemessaFailureHttpTest {
         }
         long number=json.readTree(http.perform(post("/v6/tributario/enviarParcialLote").header("auth_token",token).param("chavePacote",key)
                 .contentType("application/json").content(payload)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()).get("numeroLote").asLong();
-        assertEquals(valuesBefore+(subject==0?0:1),jdbc.queryForObject("SELECT COUNT(*) FROM valores_recebidos",Integer.class));
+        assertEquals(valuesBefore+(subject==0?0:subject==4?4:1),jdbc.queryForObject("SELECT COUNT(*) FROM valores_recebidos",Integer.class));
         http.perform(get("/__simulator/lotes/"+number).header("X-Simulator-Key","admin-local-ficticio")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.ordem").value(1)).andExpect(jsonPath("$.eventos.length()").value(2)).andExpect(jsonPath("$.recebidos").value(1));
     }

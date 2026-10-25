@@ -8,9 +8,10 @@ E0 está concluído documentalmente no recorte inicial. As fatias E1
 [#2](https://github.com/lukadev08/fake-esfinge/issues/2) e
 [#3](https://github.com/lukadev08/fake-esfinge/issues/3) e
 [#4](https://github.com/lukadev08/fake-esfinge/issues/4) e
-[#5](https://github.com/lukadev08/fake-esfinge/issues/5) implementam autenticação
-fictícia, abertura de envio, recepção de contribuintes, créditos, arrecadação e baixas, consulta `RECEBIDO` e
-inspeção administrativa com persistência SQLite. Os outros dois assuntos,
+[#5](https://github.com/lukadev08/fake-esfinge/issues/5) e
+[#6](https://github.com/lukadev08/fake-esfinge/issues/6) implementam autenticação
+fictícia, abertura de envio, recepção de contribuintes, créditos, arrecadação, baixas e saldo inicial, consulta `RECEBIDO` e
+inspeção administrativa com persistência SQLite. O prazo prescricional,
 processamento, finalização, reset e painel ainda não estão implementados.
 A saída E1 depende do aceite humano da #8; testes locais não comprovam T01.
 
@@ -42,7 +43,7 @@ Dados originais do piloto permanecem no ambiente local controlado, fora do Git
 e de serviços externos. Exemplos e evidências compartilhadas exigem sanitização;
 credenciais e tokens do simulador serão fictícios.
 
-## Executar e validar as fatias #1–#5
+## Executar e validar as fatias #1–#6
 
 Requer JDK 21. O wrapper oficial fixa Maven 3.9.9; o primeiro uso baixa Maven e
 as dependências do Maven Central. O build fixa Spring Boot 3.5.10, SQLite JDBC
@@ -60,7 +61,9 @@ lotes e eventos sem alterar a V1; versões/checksums anteriores são conferidos 
 da atualização. A V3 conserva lotes, eventos, sessões e sequências existentes,
 permite crédito e acrescenta os valores monetários em TEXT. A V4 conserva esses
 dados ao permitir arrecadação e reunir os valores na tabela `valores_recebidos`.
-A V5 permite baixa, preservando lotes, eventos e dinheiro dos assuntos anteriores. Schema, migração ou configuração persistida incompatíveis
+A V5 permite baixa, preservando lotes, eventos e dinheiro dos assuntos anteriores.
+A V6 permite saldo inicial com quatro valores por registro e nomeia os valores
+antigos pelo assunto, mantendo TEXT e todos os dados. Schema, migração ou configuração persistida incompatíveis
 interrompem a inicialização sem recriar dados. Não há reset nesta
 fatia. Para outra execução, use outro arquivo/volume; preserve o anterior.
 
@@ -132,7 +135,8 @@ Consulte [cobertura atual](docs/cobertura.md),
 [evidência da #2](docs/evidencias/issue-2.md) e
 [evidência da #3](docs/evidencias/issue-3.md) e
 [evidência da #4](docs/evidencias/issue-4.md) e
-[evidência da #5](docs/evidencias/issue-5.md) para resultados e limites.
+[evidência da #5](docs/evidencias/issue-5.md) e
+[evidência da #6](docs/evidencias/issue-6.md) para resultados e limites.
 
 ## Abrir, receber e consultar contribuintes — #2
 
@@ -268,3 +272,35 @@ Cronologia (inclusive baixa anterior ao crédito), existência do crédito/dívi
 catálogos, CPF e cálculos tributários não são validados. O exemplo demonstra
 aceitação estrutural de uma data anterior ao ano do crédito, sem aprovação fiscal.
 Reinício conserva o recebido; testes locais não encerram E1/T01.
+
+## Receber e inspecionar saldo inicial em janeiro — #6
+
+Abra o envio de uma UG fictícia com `anoMes=202601`, usando a mesma autenticação,
+chave e rota de recepção. O corpo tem lista direta `saldosIniciaisCreditoTributario`.
+Exemplo fictício com referência histórica e quatro valores distintos:
+
+```json
+{"saldosIniciaisCreditoTributario":[{"anoLancamentoCreditoTributario":2015,"codigoLancamentoCreditoTributario":"000007","saldoPrincipal":123456789012345678901234567890.12,"saldoMulta":2.30,"saldoJuros":4.56,"saldoAtualizacaoMonetaria":7.89}]}
+```
+
+O schema `saldo` exige ano inteiro, código string de até 16 caracteres e os quatro
+números monetários. Ausência/null de qualquer um deles recebe 422; não há default
+zero. `tipoSaldoInicial` é inteiro opcional/nulo e permanece ausente ou nulo quando
+assim enviado. Sem catálogo de tipos, condição/default fiscal, existência de crédito
+ou regra de abertura de exercício inferidos. Janeiro demonstra a recepção; não se
+acrescenta proibição de outros meses sem contrato que a determine.
+
+Todos os valores usam BigDecimal e múltiplo exato de 0,01, sem coerção ou
+arredondamento. O núcleo carrega mapas imutáveis por registro, com campos exatos
+por assunto. A V6 acrescenta `campo` a `valores_recebidos`, com chave
+`(lote_id,indice,campo)` e `valor TEXT`: são quatro linhas nomeadas por registro de
+saldo, preservando os valores escalares anteriores com o nome correto de cada
+assunto. Bytes/hash, valores, vínculos, atividade e evento persistem atomicamente.
+A migração conserva IDs, eventos, sessões, FKs e sequências; falha reverte a atualização.
+
+Consulta continua RECEBIDO e a inspeção protegida mostra
+`SALDO_INICIAL_CREDITO_TRIBUTARIO`, valores exatos, bytes e contagens, com
+processados/efetivos zero. Reinício conserva o recebido; duplicatas não são
+eliminadas. O cenário fictício de janeiro não substitui o integrador real nem
+encerra T01/T16/E1. Se saldo faltar no piloto inicial, o cenário complementar
+continua necessário; prazo prescricional permanece não implementado.

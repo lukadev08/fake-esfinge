@@ -1057,3 +1057,163 @@ integrador real, CI remoto ou aceite E1/T01.
 Solicitante decidir sobre push de `issue-5-recepcao-baixas`, criação do PR em
 `lukadev08/fake-esfinge` contra `main` e integração da mudança revisada.
 #6 é a próxima tarefa; E1 continua sujeito ao aceite humano #8.
+
+## 2026-10-25 — Publicar/integrar a #5 e iniciar a #6
+
+Referência: [issue #5](https://github.com/lukadev08/fake-esfinge/issues/5),
+[PR #32](https://github.com/lukadev08/fake-esfinge/pull/32) e autorização do usuário
+para publicação/merge, seguindo a sequência da meta.
+Situação: #5 integrada; exploração da #6 iniciada em grupo independente.
+
+### O que foi feito
+
+- Reconfirmados head `b7aa32b`, árvore limpa exceto `.DS_Store`, destino remoto,
+  ausência de branch/PR anteriores e `main` em `cc2d12d`. Publicada a branch e
+  aberto PR #32 com título/corpo preparados; PR anexado à tarefa.
+- Conferidos head e integração possível. Merge autorizado com SHA esperado
+  gerou `25dcbd662c3bcfb91253554a644503929a31fa0b`, sem contorno de proteção.
+  Confirmados PR merged e issue #5 completed. Não havia status de CI publicados;
+  evidência continua local: 82 testes e 794 verificações na imagem V5.
+- Atualizado `main` local por fast-forward e criada `issue-6-recepcao-saldo`.
+  #6 aberta, `ready-for-agent`, sem comentários, dependência #2 concluída.
+  Iniciado `grupo6_explorer`, exclusivo e somente leitura, com identificação
+  solicitada nome/modelo/raciocínio; papel GPT-6 Luna/médio.
+- Atualizados registros da #5. Nenhum código/teste/fonte alterado nesta integração.
+
+### O que deu errado
+
+Nenhuma falha na publicação/integração. Sem nova tentativa de aprovação formal
+da própria conta, implantação, publicação de imagem, integrador real ou CI remoto.
+Aceite E1/T01 permanece pendente.
+
+### Próximo passo
+
+Concluir desenho da #6 com quatro valores monetários nomeados por registro;
+implementar por executor próprio em TDD e revisar com reviewer independente.
+Delegar eventual correção e supervisor verificar testes/Docker antes do PR.
+Publicação/merge da #6 exigem autorização específica; cenário janeiro não encerra T16/E1/T01.
+
+## 2026-10-25 — Retomar e validar localmente a #6; Docker pendente
+
+Referência: [issue #6](https://github.com/lukadev08/fake-esfinge/issues/6) e pedido
+do usuário “retome de onde parou”, após interrupção do executor por quota.
+Situação: implementação/revisão/suíte e jar local aprovados; Docker V6 pendente.
+
+### O que foi feito
+
+- Grupo6 exclusivo: explorer GPT-6 Luna/médio, executor GPT-6.1 Sol/baixo,
+  reviewer GPT-6.1 Sol/médio conforme papéis, com identificação solicitada.
+  Executor implementou saldo estrutural, mapas nomeados imutáveis e V6 com
+  campo/valor TEXT, preservando valores V5, bytes/IDs/eventos/sessões/FKs/high-water.
+- RED inicial 200/422, exit1/3,533s; mesma fatia GREEN, exit0/3,535s. Regressões
+  focalizadas: 39 verdes/6,329s. Quota interrompeu antes dos documentos/verify.
+  Retomado o mesmo executor/árvore após uso normal confirmado, sem consumir reset.
+- Executor confirmou ausência de verify pendente, terminou documentos e iniciou
+  uma única execução completa, handle83479: 95 testes, zero falhas/erros/ignorados,
+  exit0/14,398s. Reviewer aprovou diff staged sobre `50558ee` sem achados materiais;
+  nenhuma correção obrigatória. Supervisor `clean verify`: 95 verdes, exit0/15,182s.
+- Sem Docker responsivo, preparado ensaio independente pelo jar em macOS arm64,
+  Corretto 21.0.2, vinculado a 127.0.0.1 e SQLite temporário fictício. Código V5
+  exportado de `25dcbd6` e construído offline só para fixture; 714 verificações
+  prepararam seus dados. Na V6 passaram 34 de upgrade/regressão, 636 de saldo,
+  46 após reinício e 13 de SQLite somente leitura: **729 no total**, incluindo
+  10.001 saldos e mais de 50.000 valores TEXT, com campos distintos e exatos.
+- Encerrados somente os servidores locais do ensaio; fontes, base e clientes
+  temporários preservados fora do Git. Código/testes congelados após revisão e
+  validação; atualizados README, manifesto, [evidência](docs/evidencias/issue-6.md),
+  plano e [rascunho de PR](.scratch/pr-issue-6.md), com Docker pendente explícito.
+
+### O que deu errado
+
+- Interrupção por quota resolvida na retomada. Um import ausente no cliente SQL
+  auxiliar foi corrigido antes de sua execução, sem alterar a aplicação.
+- API Docker não responde, inclusive fora do sandbox e com CLI do OrbStack;
+  `/_ping` no socket local expirou após 5s. OrbStack informou Running, mas o macOS
+  não abriu o app (`kLSNoExecutableErr`). Diagnóstico somente leitura apontou
+  CLI Homebrew; não houve fix/reinstalação/restart global. Consultas presas canceladas.
+- V5 Docker havia passado 714 verificações de preparação antes da interrupção;
+  container/volume `fake-esfinge-issue6-supervisao` não puderam ser conferidos ou
+  limpos depois. Nenhuma imagem V6 construída/validada. Aviso SLF4J do cliente
+  SQLite não falhou o ensaio local. Sem publicação da #6 ou aceite E1/T01/T16.
+
+### Próximo passo
+
+Solicitante restaurar Docker/OrbStack ou decidir explicitamente manter somente
+a validação local. Executar ensaio V6 quando disponível e limpar apenas os
+recursos temporários da #6. Depois decidir publicação/merge com autorização
+específica; #7 segue na sequência, antes do aceite humano #8.
+
+## 2026-10-25 — Conferir restauração do Docker da #6
+
+Referência: issue #6 e resposta do usuário “Restaurar Docker e avisar”.
+Situação: implementação/revisão/validação local preservadas; Docker V6 pendente.
+
+### O que foi feito
+
+- Salvo commit local `9853f08`, com 95 testes e 729 verificações pelo jar aprovados,
+  sem publicação. Executável do OrbStack confirmado no disco; o erro de abertura
+  observado dentro do sandbox não comprovava ausência física. App abriu fora do
+  sandbox com exit0, sem restart, reinstalação ou mudança de configuração.
+- API respondeu `OK` e inventário confirmou o container temporário da #6 ainda
+  na imagem V5, ativo havia cinco horas, com volume e imagem conhecidos preservados.
+  Mantido contexto explícito `orbstack`; somente recursos da #6 foram selecionados.
+
+### O que deu errado
+
+A parada do container, inclusive com timeout curto fora do sandbox, não concluiu;
+a consulta seguinte também ficou sem resposta. Clientes CLI cancelados. Não houve
+remoção do volume ou construção da imagem V6. A inspeção da interface retornou
+Mac bloqueado e exigiu desbloqueio manual; causa da instabilidade Docker não confirmada.
+
+### Próximo passo
+
+Solicitante desbloquear o Mac e confirmar a área de trabalho acessível. Retomar
+diagnóstico/ensaio Docker sem repetir testes verdes nem alterar o código revisado;
+conferir estado do container antes de agir. Publicação da #6 continua não autorizada.
+
+## 2026-10-25 — Concluir ensaio Docker V6 da #6
+
+Referência: [issue #6](https://github.com/lukadev08/fake-esfinge/issues/6) e resposta
+do usuário “Mac desbloqueado”, dando continuidade à recuperação do Docker.
+Situação: implementação, revisão, 95 testes e ensaios macOS/Docker aprovados;
+publicação da #6 e remoção do volume temporário aguardam autorização específica.
+
+### O que foi feito
+
+- Após desbloqueio manual, interface do OrbStack confirmou apenas nossa instância
+  temporária em execução. Parada pela interface concluiu com Exited143, preservando
+  volume V5; API respondeu novamente. Removido container V5 e construída imagem
+  local V6 `46d3d07e84c0`, Linux amd64/Temurin21.0.10+7, com o mesmo jar aprovado.
+- V6 executada no volume V5 como UID10001, sem rede/portas publicadas e com clientes
+  somente leitura. Passaram 47 verificações de upgrade/expiração/novo login, 636
+  de saldo, 46 após reinício e 13 de SQLite: **742**, todas exit0, além de 714 de
+  preparação Docker V5. Conservados 10.001 saldos e mais de 50.000 valores TEXT
+  exatos por campo/índice/vínculo; logs comuns somente de inicialização.
+- Mantidas evidências separadas: 95 testes da suíte limpa e 729 verificações no
+  jar macOS continuam aprovados, sem mudança de código/testes após revisão.
+  Atualizados [evidência](docs/evidencias/issue-6.md), manifesto, plano e
+  [corpo exato de PR local](.scratch/pr-issue-6.md).
+- Container V6 parado e removido. Volume fictício, imagem e clientes preservados.
+  GitHub reconferido: #6 aberta sem comentários, nenhum PR dessa branch e `main`
+  ainda em `25dcbd6`. Nenhuma publicação da #6 realizada.
+
+### O que deu errado
+
+- O primeiro cliente de upgrade esperava sessão V5 ainda válida; recebeu401
+  após mais de cinco horas de interrupção ambiental. Conferência SQLite confirmou
+  sessão/UG/validade de uma hora preservadas e expiração anterior ao instante atual.
+  Cliente auxiliar testou a rejeição e fez novo login; sem mudar aplicação, relógio
+  ou dados antigos. O ensaio corrigido passou; a falha inicial fica registrada.
+- Causa da instabilidade Docker não confirmada. Sem restart global/reinstalação
+  ou alteração de configuração. Avisos SLF4J dos clientes não falharam o ensaio.
+- Revisão automática rejeitou excluir o volume temporário por exigir autorização
+  específica para destruir seus dados. Nenhuma tentativa alternativa de exclusão;
+  volume `fake-esfinge-issue6-supervisao` mantido. Sem CI remoto/integrador real ou
+  aceite humano #8/E1/T01/T16 integral.
+
+### Próximo passo
+
+Solicitante decidir sobre push de `issue-6-recepcao-saldo`, criação de PR contra
+`main` e merge em `lukadev08/fake-esfinge`; decidir separadamente sobre exclusão do
+volume fictício temporário. Após integração autorizada, #7 segue na sequência,
+antes do aceite humano #8.
