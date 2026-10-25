@@ -1092,3 +1092,53 @@ Concluir desenho da #6 com quatro valores monetários nomeados por registro;
 implementar por executor próprio em TDD e revisar com reviewer independente.
 Delegar eventual correção e supervisor verificar testes/Docker antes do PR.
 Publicação/merge da #6 exigem autorização específica; cenário janeiro não encerra T16/E1/T01.
+
+## 2026-10-25 — Retomar e validar localmente a #6; Docker pendente
+
+Referência: [issue #6](https://github.com/lukadev08/fake-esfinge/issues/6) e pedido
+do usuário “retome de onde parou”, após interrupção do executor por quota.
+Situação: implementação/revisão/suíte e jar local aprovados; Docker V6 pendente.
+
+### O que foi feito
+
+- Grupo6 exclusivo: explorer GPT-6 Luna/médio, executor GPT-6.1 Sol/baixo,
+  reviewer GPT-6.1 Sol/médio conforme papéis, com identificação solicitada.
+  Executor implementou saldo estrutural, mapas nomeados imutáveis e V6 com
+  campo/valor TEXT, preservando valores V5, bytes/IDs/eventos/sessões/FKs/high-water.
+- RED inicial 200/422, exit1/3,533s; mesma fatia GREEN, exit0/3,535s. Regressões
+  focalizadas: 39 verdes/6,329s. Quota interrompeu antes dos documentos/verify.
+  Retomado o mesmo executor/árvore após uso normal confirmado, sem consumir reset.
+- Executor confirmou ausência de verify pendente, terminou documentos e iniciou
+  uma única execução completa, handle83479: 95 testes, zero falhas/erros/ignorados,
+  exit0/14,398s. Reviewer aprovou diff staged sobre `50558ee` sem achados materiais;
+  nenhuma correção obrigatória. Supervisor `clean verify`: 95 verdes, exit0/15,182s.
+- Sem Docker responsivo, preparado ensaio independente pelo jar em macOS arm64,
+  Corretto 21.0.2, vinculado a 127.0.0.1 e SQLite temporário fictício. Código V5
+  exportado de `25dcbd6` e construído offline só para fixture; 714 verificações
+  prepararam seus dados. Na V6 passaram 34 de upgrade/regressão, 636 de saldo,
+  46 após reinício e 13 de SQLite somente leitura: **729 no total**, incluindo
+  10.001 saldos e mais de 50.000 valores TEXT, com campos distintos e exatos.
+- Encerrados somente os servidores locais do ensaio; fontes, base e clientes
+  temporários preservados fora do Git. Código/testes congelados após revisão e
+  validação; atualizados README, manifesto, [evidência](docs/evidencias/issue-6.md),
+  plano e [rascunho de PR](.scratch/pr-issue-6.md), com Docker pendente explícito.
+
+### O que deu errado
+
+- Interrupção por quota resolvida na retomada. Um import ausente no cliente SQL
+  auxiliar foi corrigido antes de sua execução, sem alterar a aplicação.
+- API Docker não responde, inclusive fora do sandbox e com CLI do OrbStack;
+  `/_ping` no socket local expirou após 5s. OrbStack informou Running, mas o macOS
+  não abriu o app (`kLSNoExecutableErr`). Diagnóstico somente leitura apontou
+  CLI Homebrew; não houve fix/reinstalação/restart global. Consultas presas canceladas.
+- V5 Docker havia passado 714 verificações de preparação antes da interrupção;
+  container/volume `fake-esfinge-issue6-supervisao` não puderam ser conferidos ou
+  limpos depois. Nenhuma imagem V6 construída/validada. Aviso SLF4J do cliente
+  SQLite não falhou o ensaio local. Sem publicação da #6 ou aceite E1/T01/T16.
+
+### Próximo passo
+
+Solicitante restaurar Docker/OrbStack ou decidir explicitamente manter somente
+a validação local. Executar ensaio V6 quando disponível e limpar apenas os
+recursos temporários da #6. Depois decidir publicação/merge com autorização
+específica; #7 segue na sequência, antes do aceite humano #8.

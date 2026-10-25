@@ -5,6 +5,10 @@ Base funcional `25dcbd6`, após integração da #5 no PR #32.
 Branch `issue-6-recepcao-saldo`. Exploração concluída em leitura somente por
 `grupo6_explorer`, GPT-6 Luna/médio conforme o papel.
 Publicação/merge da #6 ainda não autorizados.
+Implementação e revisão concluídas por `grupo6_executor`, GPT-6.1 Sol/baixo, e
+`grupo6_reviewer`, GPT-6.1 Sol/médio conforme os papéis. Suíte limpa de 95 testes
+e 729 verificações pelo jar local aprovadas; Docker V6 pendente porque o runtime
+não responde. [Rascunho de PR](pr-issue-6.md), com esse limite explícito.
 
 ## Contrato verificado
 

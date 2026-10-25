@@ -33,9 +33,9 @@ public final class JdbcRemessaRepository implements RemessaRepository {
         int order=jdbc.queryForObject("SELECT COALESCE(MAX(ordem),0)+1 FROM lotes WHERE remessa_id=?",Integer.class,remessa.id());
         long number=jdbc.queryForObject("INSERT INTO lotes(remessa_id,cenario,ug,ordem,assunto,payload,hash,registros,recebimento) VALUES (?,?,?,?,?,?,?,?,?) RETURNING numero",Long.class,
                 remessa.id(),remessa.scenario(),remessa.ug(),order,content.subject().name(),content.bytes(),hash,content.records(),now.toString());
-        for (int i=0;i<content.monetaryValues().size();i++) jdbc.update(
-                "INSERT INTO valores_recebidos(lote_id,remessa_id,cenario,ug,indice,valor) VALUES (?,?,?,?,?,?)",
-                number,remessa.id(),remessa.scenario(),remessa.ug(),i,content.monetaryValues().get(i).toString());
+        for (int i=0;i<content.monetaryValues().size();i++) for (var value:content.monetaryValues().get(i).entrySet()) jdbc.update(
+                "INSERT INTO valores_recebidos(lote_id,remessa_id,cenario,ug,indice,campo,valor) VALUES (?,?,?,?,?,?,?)",
+                number,remessa.id(),remessa.scenario(),remessa.ug(),i,value.getKey(),value.getValue().toString());
         jdbc.update("UPDATE remessas SET atividade=? WHERE id=?",now.toString(),remessa.id());
         jdbc.update("INSERT INTO remessa_eventos(remessa_id,cenario,ug,lote_id,tipo,instante) VALUES (?,?,?,?,?,?)",remessa.id(),remessa.scenario(),remessa.ug(),number,"LOTE_RECEBIDO",now.toString());
         return new Lote(number,remessa.id(),remessa.key(),remessa.scenario(),remessa.ug(),remessa.yearMonth(),order,content.records(),content.subject(),hash,content.bytes(),now);
