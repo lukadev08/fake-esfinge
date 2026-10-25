@@ -1,7 +1,8 @@
 # PR da issue #1
 
 Situação: publicado em 24/10/2026 após autorização expressa do solicitante.
-PR: https://github.com/lukadev08/fake-esfinge/pull/28 — aberto, sem merge.
+PR: https://github.com/lukadev08/fake-esfinge/pull/28 — integrado em `main`.
+Merge confirmado: `a36c7bf87e039170a81f642b0da4cee51237005c`; issue #1 fechada.
 Destino: `lukadev08/fake-esfinge`; base `main`; head `issue-1-autenticacao`.
 Commit de implementação: `c7b2bd5`. Head inicial publicado: `aff307b`.
 
@@ -46,6 +47,8 @@ sem falhas/erros/ignorados e 93 verificações HTTP/reinício no Docker Linux am
 sem rede externa. Integrador real, aceite E1/T01 e CI remoto não estão comprovados
 nesta fatia.
 
-A submissão `APPROVE` desse parecer no PR #28 foi rejeitada pela revisão automática
-de autorização antes de publicar qualquer review. Aprovação formal e merge em
-`main` dependem de autorização específica; nenhuma dessas ações foi executada.
+A primeira submissão `APPROVE` foi rejeitada pela revisão automática de autorização.
+O solicitante então autorizou expressamente aprovação e merge. A segunda tentativa
+chegou ao GitHub, que retornou 422: `Review Can not approve your own pull request`.
+Nenhum review foi publicado; a aprovação técnica independente está registrada.
+O merge autorizado foi aceito pelo GitHub, conferido no PR e na issue #1.

@@ -3,11 +3,13 @@
 Simulador HTTP local do e-Sfinge Tributário do TCE/SC,
 independente da origem dos dados e sem encaminhar chamadas ao TCE.
 
-E0 está concluído documentalmente no recorte inicial. A primeira fatia E1
-([#1](https://github.com/lukadev08/fake-esfinge/issues/1)) implementa autenticação
-fictícia, contexto configurável e persistência SQLite. Remessas, lotes,
-processamento, reset e painel ainda não estão implementados. A saída E1 depende
-do aceite humano da #8; login isolado não comprova compatibilidade ou T01.
+E0 está concluído documentalmente no recorte inicial. As fatias E1
+[#1](https://github.com/lukadev08/fake-esfinge/issues/1) e
+[#2](https://github.com/lukadev08/fake-esfinge/issues/2) implementam autenticação
+fictícia, abertura de envio, recepção de contribuintes, consulta `RECEBIDO` e
+inspeção administrativa com persistência SQLite. Os outros cinco assuntos,
+processamento, finalização, reset e painel ainda não estão implementados.
+A saída E1 depende do aceite humano da #8; testes locais não comprovam T01.
 
 ## Documentação
 
@@ -37,7 +39,7 @@ Dados originais do piloto permanecem no ambiente local controlado, fora do Git
 e de serviços externos. Exemplos e evidências compartilhadas exigem sanitização;
 credenciais e tokens do simulador serão fictícios.
 
-## Executar e validar a fatia #1
+## Executar e validar as fatias #1–#2
 
 Requer JDK 21. O wrapper oficial fixa Maven 3.9.9; o primeiro uso baixa Maven e
 as dependências do Maven Central. O build fixa Spring Boot 3.5.10, SQLite JDBC
@@ -50,8 +52,10 @@ java -jar target/fake-esfinge-0.1.0.jar
 
 A suíte cobre núcleo, HTTP, SQLite temporário e dependências de classes. A base
 padrão fica em `data/simulator.sqlite`, ignorada pelo Git. Reiniciar conserva
-configuração, vínculos e sessões; schema, migração ou configuração persistida
-incompatíveis interrompem a inicialização sem recriar dados. Não há reset nesta
+configuração, vínculos, sessões e lotes recebidos. A migração V2 acrescenta remessas,
+lotes e eventos sem alterar a V1; versões/checksums anteriores são conferidos antes
+da atualização. Schema, migração ou configuração persistida incompatíveis
+interrompem a inicialização sem recriar dados. Não há reset nesta
 fatia. Para outra execução, use outro arquivo/volume; preserve o anterior.
 
 Exemplo inteiramente fictício, sem corpo na requisição:
@@ -66,8 +70,8 @@ curl -i 'http://localhost:8080/__simulator/configuracao' \
 O login devolve `{"chave":"sim-..."}`; use esse valor em `auth_token`. Credenciais
 inválidas retornam 401; UG não autorizada, 403; parâmetros/corpo inválidos, 400.
 As rotas contratuais conhecidas ainda indisponíveis validam o token e retornam
-422 `SIM_COBERTURA_AUSENTE`; não abrem remessas nem aprovam dados. Recurso
-inexistente retorna 404. Erros têm `codigo`, `mensagem` sanitizada e `correlacao`.
+422 `SIM_COBERTURA_AUSENTE`; não processam ou finalizam remessas nem aprovam dados.
+Recurso inexistente retorna 404. Erros têm `codigo`, `mensagem` sanitizada e `correlacao`.
 
 A inspeção administrativa usa exclusivamente `X-Simulator-Key`; não aceita o
 token compatível e não retorna senhas, códigos de acesso ou tokens. Mostra perfil,
@@ -117,5 +121,59 @@ docker restart fake-esfinge-execucao
 
 O volume conserva o estado entre reinícios. Compose, CI e guia operacional
 completo pertencem à #21. O runtime não contém cliente/proxy para o TCE.
-Consulte [cobertura atual](docs/cobertura.md) e
-[evidência da implementação](docs/evidencias/issue-1.md) para resultados e limites.
+Consulte [cobertura atual](docs/cobertura.md),
+[evidência da #1](docs/evidencias/issue-1.md) e
+[evidência da #2](docs/evidencias/issue-2.md) para resultados e limites.
+
+## Abrir, receber e consultar contribuintes — #2
+
+Use o token fictício do login em `auth_token`. A abertura pertence à UG do token,
+a um cenário e a um mês de 2026; `cancelamentoAutomatico=NAO` é obrigatório para
+esta capacidade. Ausência ou outro valor retorna 422. Parâmetros malformados
+retornam 400; abertura repetida/concorrente para a mesma UG/competência retorna
+409. Outras UGs, competências ou cenários têm aberturas independentes.
+
+```sh
+curl -i 'http://localhost:8080/v6/tributario/iniciarEnvio?anoMes=202601&cancelamentoAutomatico=NAO' \
+  -H 'auth_token: <chave-do-login>'
+curl -i -X POST 'http://localhost:8080/v6/tributario/enviarParcialLote?chavePacote=<chave-do-envio>' \
+  -H 'auth_token: <chave-do-login>' -H 'Content-Type: application/json' --data-binary @- <<'JSON'
+{"cadastrosContribuintes":[{"numeroMatriculaContribuinte":"0007","dataAtualizacaoCadastral":"2026-01-02","tipoContribuinte":"1","numeroDocumentoContribuinte":"00000000000","nomeCompletoContribuinte":"Pessoa Ficticia","indicativoCadastroAtivo":"S","indicativoEspolio":"N"}]}
+JSON
+curl -i 'http://localhost:8080/v6/tributario/consultarPorNumeroLote/<numeroLote>' \
+  -H 'auth_token: <chave-do-login>'
+curl -i 'http://localhost:8080/__simulator/lotes/<numeroLote>' \
+  -H 'X-Simulator-Key: admin-local-ficticio'
+```
+
+O corpo tem a lista diretamente na raiz, sem wrapper `lote`. A recepção retorna
+`situacao=RECEBIDO`, `numeroLote`, `dataEnvio` com offset e
+`identificadorRemessaOnline`; a consulta usa o nome distinto `identificadorRemessa`.
+Vários lotes são aceitos, mesmo com conteúdo idêntico: hash não deduplica, e não
+há limite de 10.000 registros imposto pelo simulador.
+
+A validação segue o schema de contribuinte: obrigatórios não admitem ausência ou
+`null`; opcionais admitem ambos; extras e coerção de tipos são rejeitados. Datas
+exigem calendário `YYYY-MM-DD`, comprimentos contam caracteres Unicode. O schema
+não exige strings não vazias nos registros nem valida CPF, enums ou regras fiscais.
+JSON malformado, chaves duplicadas, segundo documento e UTF-8 inválido recebem 400;
+estrutura inválida e assuntos sem cobertura recebem 422.
+
+Bytes originais, hash, ordem, vínculos, contagem e evento são confirmados na mesma
+transação SQLite antes do HTTP 200. Falha de statement ou de commit retorna erro
+sanitizado e reverte a operação. Consulta compatível registra atividade/evento,
+mas não avança relógio ou processamento; dados recebidos continuam sem efeito.
+Chave/lote de outra UG ou cenário retorna 404, sem mutação.
+
+A inspeção de lote exige a chave administrativa própria e limita a leitura ao
+cenário da instância. Retorna `numeroLote`, `identificadorRemessa`, `chavePacote`,
+`cenario`, `codigoUg`, `anoMes`, `ordem`, `assunto`, `situacao`, `hash`,
+`bytesBase64` (conteúdo original), `registros`, `recebidos`, `processados`,
+`efetivos` e `eventos`. Estes últimos trazem ID, lote quando aplicável, tipo e
+instante, sem credenciais ou payloads. As contagens processada/efetiva são zero
+nesta fatia. A inspeção não renova atividade nem grava evento de consulta.
+
+A suíte local exercita SQLite real, concorrência, rollback, falha real de commit,
+isolamento, reabertura e migração V1→V2. A execução Docker da #2 e a revisão
+independente são registradas separadamente pela supervisão; integrador real e
+aceite E1/T01 permanecem pendentes.
