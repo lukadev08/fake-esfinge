@@ -22,4 +22,9 @@ public class Composition {
     @Bean AuthenticationService authentication(DataSource source, Clock clock, SimulatorSettings settings) {
         return new AuthenticationService(new JdbcAuthenticationRepository(source), clock, settings.scenario, settings.tokenValidity);
     }
+    @Bean br.dev.luka.esfinge.remessas.application.port.in.Remessas remessas(Authentication authentication, DataSource source, Clock clock, br.dev.luka.esfinge.cenarios.application.port.in.InspectScenario inspection) {
+        return new br.dev.luka.esfinge.remessas.application.RemessaService(authentication,
+                new br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcRemessaRepository(source),
+                new br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcTransactions(source), clock, inspection);
+    }
 }

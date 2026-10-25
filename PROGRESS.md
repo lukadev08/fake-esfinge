@@ -680,3 +680,81 @@ correção delegada se necessária. Recorte: abertura, recepção de contribuint
 consulta RECEBIDO e inspeção administrativa persistida. Outros assuntos ficam
 em #3–#7; processamento em E2, após aceite humano #8. Publicação e merge de PRs
 futuros exigem seus limites de autorização; E1/T01 continuam pendentes.
+
+## 2026-10-24 — Implementar recepção persistida de contribuintes da #2
+
+Referência: [issue #2](https://github.com/lukadev08/fake-esfinge/issues/2), após
+integração da dependência #1 no PR #28; continuação do grupo2 exclusivo.
+Situação: parcial; implementação/testes locais concluídos, revisão e Docker pendentes.
+
+### O que foi feito
+
+- `grupo2_executor` identificado como GPT-6.1 Sol/raciocínio baixo. Implementadas
+  abertura, recepção de contribuintes, consulta RECEBIDO e inspeção administrativa
+  por portas, sem processamento ou finalização. Corrigido entendimento do envelope:
+  lista diretamente na raiz, sem wrapper `lote`, conforme schema/exemplos.
+- Acrescentada migração V2 sem alterar V1: remessas/lotes/eventos, índices únicos,
+  FK de vínculos, BLOB/hash/ordem/contagem e transações IMMEDIATE com rollback
+  inclusive em falha de commit. Verificados checksums anteriores antes do upgrade.
+- Validador Jackson específico segue o schema, sem nova dependência: tipos sem
+  coerção, nulos/ausentes, extras, calendário, Unicode e UTF-8; recusa JSON duplicado
+  ou documento extra. Não inventa strings não vazias, regras fiscais ou limite de 10.000.
+- `verify` concluído: 51 testes aprovados, zero falhas/erros/ignorados, jar em
+  6,725 segundos. Inclui SQLite real/HTTP, concorrência, contenção, falha de statement
+  e COMMIT, isolamento entre UGs/cenários, reabertura e V1→V2. Atualizados README,
+  manifesto e [evidência da #2](docs/evidencias/issue-2.md).
+
+### O que deu errado
+
+- A execução do agente foi interrompida por limite de uso após iniciar o `verify`;
+  retomada no mesmo grupo/árvore. O mesmo handle confirmou término exit0 e os 51
+  testes; não houve reinício ou repetição da suíte sem mudança.
+- Ciclos RED observaram capacidades ausentes e erros de mapeamento (política vazia,
+  evento sem lote, Content-Type válido e documento vazio); corrigidos com testes
+  verdes. Um teste de record com array foi corrigido para comparar conteúdo.
+- Revisão independente, Docker da #2, integrador real e aceite E1/T01 não foram
+  executados pelo executor. Não houve commit, push, PR, merge ou publicação de imagem.
+
+### Próximo passo
+
+Supervisor executar revisão independente do grupo2 e validação final limpa/Docker;
+se houver achados, delegar correção a agente próprio. Só permitir PR com testes
+verdes verificados. #3–#7 dependem da #2; saída E1 continua exigindo aceite humano #8.
+
+## 2026-10-24 — Revisar e validar a #2 sob supervisão
+
+Referência: [issue #2](https://github.com/lukadev08/fake-esfinge/issues/2) e retomada
+solicitada pelo usuário após interrupção por limite de uso.
+Situação: concluída para implementação, revisão e validação locais; publicação pendente.
+
+### O que foi feito
+
+- Retomado o mesmo executor do grupo2 após confirmação de término por erro de
+  limite de uso; preservados arquivos e resultado do processo Maven anterior.
+- `grupo2_reviewer`, GPT-6.1 Sol/médio conforme configuração do papel, aprovou o
+  diff staged sobre `ce1217c` sem achados materiais. Conferidos contrato, isolamento,
+  bytes/contagens/eventos, transações, migração e fronteiras; nenhuma correção obrigatória.
+- Supervisor executou `clean verify`: 51 testes, zero falhas/erros/ignorados,
+  build aprovado em 7,222 segundos. V1 e fontes/schemas contratuais intactos.
+- Construída imagem Linux amd64, usuário `10001:10001`, volume exclusivo e
+  `--network none`; 163 verificações no fluxo inicial e 15 após reinício, todas
+  aprovadas. Incluem concorrência, isolamento UG, bytes UTF-8, nulos/zeros,
+  consulta sem processamento, Unicode e 10.001 registros sem perda/truncamento.
+  Sessão/lote/bytes conservados após reinício; logs somente de inicialização.
+- Atualizados manifesto e [evidência completa](docs/evidencias/issue-2.md).
+  Preparado [PR local da #2](.scratch/pr-issue-2.md), com título/corpo e escopo.
+- Removidos somente o container e o volume temporários criados para o ensaio da
+  #2; imagem local e cliente de checagem temporário preservados.
+
+### O que deu errado
+
+Nenhuma falha remanescente na revisão ou nas verificações finais. A interrupção
+por quota foi resolvida na retomada e não exigiu refazer a implementação.
+Não houve integrador real, aceite E1/T01 ou CI remoto. A autorização anterior de
+publicação/merge referia-se ao PR #28; nenhuma publicação da #2 foi executada.
+
+### Próximo passo
+
+Solicitante decidir sobre push de `issue-2-recepcao-contribuintes`, criação do PR
+em `lukadev08/fake-esfinge` contra `main` e merge da mudança revisada. Após resolver
+essa dependência, iniciar grupo independente da #3 e seguir #4–#7 antes do aceite #8.

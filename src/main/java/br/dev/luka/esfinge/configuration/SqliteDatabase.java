@@ -18,7 +18,7 @@ public final class SqliteDatabase {
         try {
             Path path = Path.of(settings.database).toAbsolutePath();
             Files.createDirectories(path.getParent());
-            var config = new SQLiteConfig(); config.enforceForeignKeys(true); config.setBusyTimeout(5000);
+            var config = new SQLiteConfig(); config.enforceForeignKeys(true); config.setBusyTimeout(5000); config.setTransactionMode(SQLiteConfig.TransactionMode.IMMEDIATE);
             var source = new SQLiteDataSource(config); source.setUrl("jdbc:sqlite:" + path);
             migrate(source);
             seed(source, settings);
@@ -26,26 +26,33 @@ public final class SqliteDatabase {
         } catch (Exception e) { throw new IllegalStateException("Base SQLite indisponivel ou incompativel; dados preservados"); }
     }
     private static void migrate(DataSource source) throws Exception {
-        var resource = new ClassPathResource("db/migration/V1__authentication.sql");
-        String checksum = CredentialHash.token(resource.getContentAsString(StandardCharsets.UTF_8));
+        String[] scripts = {"V1__authentication.sql", "V2__remessas.sql"};
         try (var connection = source.getConnection()) {
             connection.setAutoCommit(false);
             try {
                 int version;
                 try (var statement = connection.createStatement(); var result = statement.executeQuery("PRAGMA user_version")) { version = result.getInt(1); }
+                if (version < 0 || version > scripts.length) throw new IllegalStateException();
                 if (version == 0) {
                     try (var statement = connection.createStatement(); var result = statement.executeQuery("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")) {
                         if (result.getInt(1) != 0) throw new IllegalStateException();
                     }
-                    ScriptUtils.executeSqlScript(connection, resource);
-                    try (var statement = connection.prepareStatement("INSERT INTO schema_migrations(version, checksum) VALUES (1, ?)")) {
-                        statement.setString(1, checksum); statement.executeUpdate();
+                } else {
+                    try (var statement = connection.createStatement(); var result = statement.executeQuery("SELECT version, checksum FROM schema_migrations ORDER BY version")) {
+                        for (int i=0;i<version;i++) {
+                            String checksum=CredentialHash.token(new ClassPathResource("db/migration/"+scripts[i]).getContentAsString(StandardCharsets.UTF_8));
+                            if (!result.next() || result.getInt(1)!=i+1 || !checksum.equals(result.getString(2))) throw new IllegalStateException();
+                        }
+                        if (result.next()) throw new IllegalStateException();
                     }
-                } else if (version == 1) {
-                    try (var statement = connection.createStatement(); var result = statement.executeQuery("SELECT version, checksum FROM schema_migrations")) {
-                        if (!result.next() || result.getInt(1) != 1 || !checksum.equals(result.getString(2)) || result.next()) throw new IllegalStateException();
+                }
+                for (int i=version;i<scripts.length;i++) {
+                    var resource=new ClassPathResource("db/migration/"+scripts[i]);
+                    ScriptUtils.executeSqlScript(connection,resource);
+                    try (var statement=connection.prepareStatement("INSERT INTO schema_migrations(version,checksum) VALUES (?,?)")) {
+                        statement.setInt(1,i+1);statement.setString(2,CredentialHash.token(resource.getContentAsString(StandardCharsets.UTF_8)));statement.executeUpdate();
                     }
-                } else throw new IllegalStateException();
+                }
                 connection.commit();
             } catch (Exception e) { connection.rollback(); throw e; }
         }
