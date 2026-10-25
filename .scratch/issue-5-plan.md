@@ -5,7 +5,7 @@ Base funcional `cc2d12d`, após integração da #4 no PR #31.
 Branch `issue-5-recepcao-baixas`. Exploração concluída em leitura somente pelo
 `grupo5_explorer`, GPT-6 Luna/médio conforme o papel; identidade de caminho
 fornecida pela configuração da orquestração, não introspecção do modelo.
-Publicação/merge da #5 ainda não autorizados.
+Publicação/merge da #5 autorizados e executados no PR #32, commit `25dcbd6` em `main`.
 Implementação, revisão e supervisão locais concluídas por `grupo5_executor`,
 GPT-6.1 Sol/baixo, e `grupo5_reviewer`, GPT-6.1 Sol/médio conforme os papéis:
 82 testes verdes, revisão sem achados materiais e 794 verificações na imagem V5,

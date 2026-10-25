@@ -1057,3 +1057,38 @@ integrador real, CI remoto ou aceite E1/T01.
 Solicitante decidir sobre push de `issue-5-recepcao-baixas`, criação do PR em
 `lukadev08/fake-esfinge` contra `main` e integração da mudança revisada.
 #6 é a próxima tarefa; E1 continua sujeito ao aceite humano #8.
+
+## 2026-10-25 — Publicar/integrar a #5 e iniciar a #6
+
+Referência: [issue #5](https://github.com/lukadev08/fake-esfinge/issues/5),
+[PR #32](https://github.com/lukadev08/fake-esfinge/pull/32) e autorização do usuário
+para publicação/merge, seguindo a sequência da meta.
+Situação: #5 integrada; exploração da #6 iniciada em grupo independente.
+
+### O que foi feito
+
+- Reconfirmados head `b7aa32b`, árvore limpa exceto `.DS_Store`, destino remoto,
+  ausência de branch/PR anteriores e `main` em `cc2d12d`. Publicada a branch e
+  aberto PR #32 com título/corpo preparados; PR anexado à tarefa.
+- Conferidos head e integração possível. Merge autorizado com SHA esperado
+  gerou `25dcbd662c3bcfb91253554a644503929a31fa0b`, sem contorno de proteção.
+  Confirmados PR merged e issue #5 completed. Não havia status de CI publicados;
+  evidência continua local: 82 testes e 794 verificações na imagem V5.
+- Atualizado `main` local por fast-forward e criada `issue-6-recepcao-saldo`.
+  #6 aberta, `ready-for-agent`, sem comentários, dependência #2 concluída.
+  Iniciado `grupo6_explorer`, exclusivo e somente leitura, com identificação
+  solicitada nome/modelo/raciocínio; papel GPT-6 Luna/médio.
+- Atualizados registros da #5. Nenhum código/teste/fonte alterado nesta integração.
+
+### O que deu errado
+
+Nenhuma falha na publicação/integração. Sem nova tentativa de aprovação formal
+da própria conta, implantação, publicação de imagem, integrador real ou CI remoto.
+Aceite E1/T01 permanece pendente.
+
+### Próximo passo
+
+Concluir desenho da #6 com quatro valores monetários nomeados por registro;
+implementar por executor próprio em TDD e revisar com reviewer independente.
+Delegar eventual correção e supervisor verificar testes/Docker antes do PR.
+Publicação/merge da #6 exigem autorização específica; cenário janeiro não encerra T16/E1/T01.
