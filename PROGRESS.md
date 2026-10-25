@@ -1011,3 +1011,49 @@ Concluir desenho da #5 a partir do schema `baixa`; implementar por executor
 próprio em TDD, revisar com reviewer independente e delegar eventual correção.
 Supervisor verificar testes/Docker antes do PR. Publicação/merge da #5 exigem
 autorização específica; saída E1 continua sujeita ao aceite humano #8.
+
+## 2026-10-25 — Concluir implementação e supervisão locais da #5
+
+Referência: [issue #5](https://github.com/lukadev08/fake-esfinge/issues/5), após
+integração da #4 no PR #31, dentro da sequência da meta.
+Situação: implementação, revisão e validação locais concluídas; publicação pendente.
+
+### O que foi feito
+
+- Grupo5 exclusivo: exploração por GPT-6 Luna/médio, execução por GPT-6.1 Sol/baixo,
+  revisão por GPT-6.1 Sol/médio conforme papéis, com identificação solicitada.
+  Executor acrescentou schema/assunto/admin de baixa e V5, reutilizando núcleo,
+  `ReceivedContent`, JDBC e tabela monetária sem alterações.
+- Conservados obrigatórios/opcionais, tipos/zeros, datas, bytes, decimal exato,
+  multiplicidade/contagens e isolamento. Baixa anterior ao crédito e referências
+  inexistentes são aceitas só estruturalmente; relações fiscais continuam adiadas.
+- V5 preserva V1–V4/checksums/fontes, dados de contribuinte/crédito/arrecadação,
+  dinheiro TEXT, IDs/eventos/sessões/FKs e high-water. Falha de migração reverte
+  tudo; rollback real de statement/COMMIT exercitado para quatro assuntos.
+- RED inicial: 200 esperado/422 recebido, exit1/3,470s; mesma fatia GREEN,
+  exit0/4,414s. Regressões focalizadas: 32 testes verdes/5,663s. Executor concluiu
+  `verify`: 82 testes, zero falhas/erros/ignorados, exit0/8,229s.
+- Reviewer aprovou diff staged sobre `299b457`, sem achados materiais; nenhuma
+  correção obrigatória. Supervisor executou `clean verify`: 82 testes verdes,
+  zero falhas/erros/ignorados, exit0/9,079s. Código/testes congelados após validação.
+- Imagem Linux amd64, usuário10001 e `--network none`: V4 preparada com 771
+  verificações, conservada no upgrade. Na V5 passaram 34 verificações de regressão,
+  714 de baixa/HTTP, 34 após reinício e 12 de SQLite somente leitura: **794 no total**,
+  incluindo 10.001 baixas e mais de 20.000 valores TEXT exatos dos três assuntos
+  monetários. Logs comuns somente de inicialização.
+- Atualizados README, manifesto, [evidência completa](docs/evidencias/issue-5.md),
+  plano e [PR local](.scratch/pr-issue-5.md). Removidos somente container/volume
+  temporários do ensaio; imagem e clientes preservados. Dados somente fictícios.
+
+### O que deu errado
+
+Nenhuma falha material remanescente na revisão ou supervisão. O RED inicial foi
+o comportamento esperado antes da implementação. Aviso SLF4J do cliente SQLite
+não falhou o ensaio nem integra logs da aplicação. Não houve publicação da #5,
+integrador real, CI remoto ou aceite E1/T01.
+
+### Próximo passo
+
+Solicitante decidir sobre push de `issue-5-recepcao-baixas`, criação do PR em
+`lukadev08/fake-esfinge` contra `main` e integração da mudança revisada.
+#6 é a próxima tarefa; E1 continua sujeito ao aceite humano #8.

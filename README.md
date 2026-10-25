@@ -7,9 +7,10 @@ E0 está concluído documentalmente no recorte inicial. As fatias E1
 [#1](https://github.com/lukadev08/fake-esfinge/issues/1) e
 [#2](https://github.com/lukadev08/fake-esfinge/issues/2) e
 [#3](https://github.com/lukadev08/fake-esfinge/issues/3) e
-[#4](https://github.com/lukadev08/fake-esfinge/issues/4) implementam autenticação
-fictícia, abertura de envio, recepção de contribuintes, créditos e arrecadação, consulta `RECEBIDO` e
-inspeção administrativa com persistência SQLite. Os outros três assuntos,
+[#4](https://github.com/lukadev08/fake-esfinge/issues/4) e
+[#5](https://github.com/lukadev08/fake-esfinge/issues/5) implementam autenticação
+fictícia, abertura de envio, recepção de contribuintes, créditos, arrecadação e baixas, consulta `RECEBIDO` e
+inspeção administrativa com persistência SQLite. Os outros dois assuntos,
 processamento, finalização, reset e painel ainda não estão implementados.
 A saída E1 depende do aceite humano da #8; testes locais não comprovam T01.
 
@@ -41,7 +42,7 @@ Dados originais do piloto permanecem no ambiente local controlado, fora do Git
 e de serviços externos. Exemplos e evidências compartilhadas exigem sanitização;
 credenciais e tokens do simulador serão fictícios.
 
-## Executar e validar as fatias #1–#4
+## Executar e validar as fatias #1–#5
 
 Requer JDK 21. O wrapper oficial fixa Maven 3.9.9; o primeiro uso baixa Maven e
 as dependências do Maven Central. O build fixa Spring Boot 3.5.10, SQLite JDBC
@@ -58,7 +59,8 @@ configuração, vínculos, sessões e lotes recebidos. A migração V2 acrescent
 lotes e eventos sem alterar a V1; versões/checksums anteriores são conferidos antes
 da atualização. A V3 conserva lotes, eventos, sessões e sequências existentes,
 permite crédito e acrescenta os valores monetários em TEXT. A V4 conserva esses
-dados ao permitir arrecadação e reunir os valores na tabela `valores_recebidos`. Schema, migração ou configuração persistida incompatíveis
+dados ao permitir arrecadação e reunir os valores na tabela `valores_recebidos`.
+A V5 permite baixa, preservando lotes, eventos e dinheiro dos assuntos anteriores. Schema, migração ou configuração persistida incompatíveis
 interrompem a inicialização sem recriar dados. Não há reset nesta
 fatia. Para outra execução, use outro arquivo/volume; preserve o anterior.
 
@@ -129,7 +131,8 @@ Consulte [cobertura atual](docs/cobertura.md),
 [evidência da #1](docs/evidencias/issue-1.md) e
 [evidência da #2](docs/evidencias/issue-2.md) e
 [evidência da #3](docs/evidencias/issue-3.md) e
-[evidência da #4](docs/evidencias/issue-4.md) para resultados e limites.
+[evidência da #4](docs/evidencias/issue-4.md) e
+[evidência da #5](docs/evidencias/issue-5.md) para resultados e limites.
 
 ## Abrir, receber e consultar contribuintes — #2
 
@@ -239,3 +242,29 @@ rejeitadas. Vários lotes e registros repetidos conservam multiplicidade, sem
 limite artificial de 10.000. Consulta continua RECEBIDO, sem processamento.
 A inspeção protegida apresenta assunto `DIARIO_ARRECADACAO`, valores exatos,
 bytes e contagens. Reinício conserva os dados; testes locais não encerram E1/T01.
+
+## Receber e inspecionar baixas de crédito — #5
+
+Use a mesma chave e rota de recepção com lista direta `baixasCreditosTributarios`.
+O schema `baixa` valida nove obrigatórios, dois opcionais/nulos, tipos,
+comprimentos Unicode, data de calendário e extras. Exemplo fictício:
+
+```json
+{"baixasCreditosTributarios":[{"anoLancamentoCreditoTributario":2020,"codigoLancamentoCreditoTributario":"000007","codigoSequencialOperacaoBaixa":1,"tipoBaixa":1,"dataBaixa":"2019-02-28","valorOperacaoBaixa":123456789012345678901234567890.12,"indicativoEstornoBaixa":"N","motivoBaixa":"Motivo fictício","numeroCpfResponsavelOperacao":"00000000001"}]}
+```
+
+As referências de dívida ativa (`anoLancamentoCreditoTributarioDividaAtiva` e
+`codigoLancamentoCreditoTributarioDividaAtiva`) admitem ausência/null. O ano é
+inteiro e o código permanece string; não converter tipos nem remover zeros.
+`valorOperacaoBaixa` segue a política BigDecimal/múltiplo exato de 0,01 e TEXT
+por lote/índice, conservando os bytes originais e multiplicidades.
+
+A V5 conserva dados, dinheiro, IDs, eventos, sessões, FKs e sequências da V4.
+Lotes separados dos quatro assuntos podem reutilizar a mesma chave; misturas
+são rejeitadas. Consulta continua RECEBIDO, sem processamento; inspeção protegida
+mostra `BAIXA_CREDITO_TRIBUTARIO`, UG/cenário, registros, bytes e contagens.
+
+Cronologia (inclusive baixa anterior ao crédito), existência do crédito/dívida,
+catálogos, CPF e cálculos tributários não são validados. O exemplo demonstra
+aceitação estrutural de uma data anterior ao ano do crédito, sem aprovação fiscal.
+Reinício conserva o recebido; testes locais não encerram E1/T01.

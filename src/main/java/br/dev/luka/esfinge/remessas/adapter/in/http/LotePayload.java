@@ -20,7 +20,7 @@ public final class LotePayload {
         Map.entry("tipoRepresentante",2),Map.entry("numeroCpfRepresentante",11));
     private static final Set<String> REQUIRED=Set.of("numeroMatriculaContribuinte","dataAtualizacaoCadastral","tipoContribuinte",
             "numeroDocumentoContribuinte","nomeCompletoContribuinte","indicativoCadastroAtivo","indicativoEspolio");
-    private static final Set<String> UNSUPPORTED_SUBJECTS=Set.of("baixasCreditosTributarios","saldosIniciaisCreditoTributario","inicioPrazoPrescricional");
+    private static final Set<String> UNSUPPORTED_SUBJECTS=Set.of("saldosIniciaisCreditoTributario","inicioPrazoPrescricional");
     public ReceivedContent read(byte[] bytes) {
         JsonNode root;
         try {
@@ -32,13 +32,13 @@ public final class LotePayload {
         if (!root.isObject() || root.size()!=1) throw invalid();
         String subject=root.fieldNames().next();
         if (UNSUPPORTED_SUBJECTS.contains(subject)) throw new RemessaFailure(UNSUPPORTED);
-        if (!subject.equals("cadastrosContribuintes") && !subject.equals("lancamentosCreditosTributarios") && !subject.equals("diarioGeralArrecadacao")) throw invalid();
+        if (!subject.equals("cadastrosContribuintes") && !subject.equals("lancamentosCreditosTributarios") && !subject.equals("diarioGeralArrecadacao") && !subject.equals("baixasCreditosTributarios")) throw invalid();
         JsonNode records=root.get(subject);
         if (!records.isArray() || records.isEmpty()) throw invalid();
         if (!subject.equals("cadastrosContribuintes")) {
             var values=new ArrayList<java.math.BigDecimal>();
-            for (JsonNode record:records) values.add(subject.equals("lancamentosCreditosTributarios")?credit(record):collection(record));
-            return new ReceivedContent(bytes,records.size(),subject.equals("lancamentosCreditosTributarios")?Assunto.LANCAMENTO_CREDITO_TRIBUTARIO:Assunto.DIARIO_ARRECADACAO,values);
+            for (JsonNode record:records) values.add(switch(subject) { case "lancamentosCreditosTributarios" -> credit(record); case "diarioGeralArrecadacao" -> collection(record); default -> writeOff(record); });
+            return new ReceivedContent(bytes,records.size(),switch(subject) { case "lancamentosCreditosTributarios" -> Assunto.LANCAMENTO_CREDITO_TRIBUTARIO; case "diarioGeralArrecadacao" -> Assunto.DIARIO_ARRECADACAO; default -> Assunto.BAIXA_CREDITO_TRIBUTARIO; },values);
         }
         for (JsonNode record:records) {
             if (!record.isObject()) throw invalid();
@@ -111,6 +111,27 @@ public final class LotePayload {
             } else if (!value.isNumber() || value.decimalValue().stripTrailingZeros().scale()>2) throw invalid();
         }
         return record.get("valorCreditoTributario").decimalValue();
+    }
+    private static final Set<String> WRITE_OFF_REQUIRED=Set.of("anoLancamentoCreditoTributario","codigoLancamentoCreditoTributario","codigoSequencialOperacaoBaixa","tipoBaixa","dataBaixa","valorOperacaoBaixa","indicativoEstornoBaixa","motivoBaixa","numeroCpfResponsavelOperacao");
+    private static final Set<String> WRITE_OFF_INTEGERS=Set.of("anoLancamentoCreditoTributario","codigoSequencialOperacaoBaixa","tipoBaixa","anoLancamentoCreditoTributarioDividaAtiva");
+    private static final Map<String,Integer> WRITE_OFF_STRINGS=Map.of("codigoLancamentoCreditoTributario",16,"indicativoEstornoBaixa",1,"motivoBaixa",512,"codigoLancamentoCreditoTributarioDividaAtiva",16,"numeroCpfResponsavelOperacao",11);
+    private static java.math.BigDecimal writeOff(JsonNode record) {
+        if (!record.isObject()) throw invalid();
+        for (String name:WRITE_OFF_REQUIRED) if (!record.hasNonNull(name)) throw invalid();
+        for (var field:record.properties()) {
+            String name=field.getKey();JsonNode value=field.getValue();
+            if (!WRITE_OFF_REQUIRED.contains(name) && !WRITE_OFF_STRINGS.containsKey(name) && !WRITE_OFF_INTEGERS.contains(name)) throw invalid();
+            if (value.isNull() && !WRITE_OFF_REQUIRED.contains(name)) continue;
+            if (WRITE_OFF_INTEGERS.contains(name)) {
+                if (!value.isNumber() || value.decimalValue().stripTrailingZeros().scale()>0) throw invalid();
+            } else if (name.equals("dataBaixa")) {
+                if (!value.isTextual() || !value.textValue().matches("[0-9]{4}-[0-9]{2}-[0-9]{2}")) throw invalid();
+                try { LocalDate.parse(value.textValue()); } catch (DateTimeParseException e) { throw invalid(); }
+            } else if (WRITE_OFF_STRINGS.containsKey(name)) {
+                if (!value.isTextual() || value.textValue().codePointCount(0,value.textValue().length())>WRITE_OFF_STRINGS.get(name)) throw invalid();
+            } else if (!value.isNumber() || value.decimalValue().stripTrailingZeros().scale()>2) throw invalid();
+        }
+        return record.get("valorOperacaoBaixa").decimalValue();
     }
     private static RemessaFailure invalid() { return new RemessaFailure(INVALID_STRUCTURE); }
 }

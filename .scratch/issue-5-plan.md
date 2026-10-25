@@ -6,6 +6,10 @@ Branch `issue-5-recepcao-baixas`. Exploração concluída em leitura somente pel
 `grupo5_explorer`, GPT-6 Luna/médio conforme o papel; identidade de caminho
 fornecida pela configuração da orquestração, não introspecção do modelo.
 Publicação/merge da #5 ainda não autorizados.
+Implementação, revisão e supervisão locais concluídas por `grupo5_executor`,
+GPT-6.1 Sol/baixo, e `grupo5_reviewer`, GPT-6.1 Sol/médio conforme os papéis:
+82 testes verdes, revisão sem achados materiais e 794 verificações na imagem V5,
+além de 771 de preparação em V4. [PR local preparado](pr-issue-5.md).
 
 ## Contrato verificado
 
