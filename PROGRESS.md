@@ -976,3 +976,38 @@ real, CI remoto ou aceite E1/T01.
 Solicitante decidir sobre push de `issue-4-recepcao-arrecadacao`, criação do PR
 em `lukadev08/fake-esfinge` contra `main` e integração da mudança revisada.
 #5 é a próxima tarefa; E1 continua sujeito ao aceite humano #8.
+
+## 2026-10-25 — Publicar/integrar a #4 e iniciar a #5
+
+Referência: [issue #4](https://github.com/lukadev08/fake-esfinge/issues/4),
+[PR #31](https://github.com/lukadev08/fake-esfinge/pull/31) e autorização do usuário
+para publicação/merge, seguindo a sequência de tarefas da meta.
+Situação: #4 integrada; exploração da #5 iniciada em grupo independente.
+
+### O que foi feito
+
+- Reconfirmados head `4e3f8df`, árvore limpa exceto `.DS_Store`, destino remoto,
+  ausência de branch/PR anteriores e `main` em `e0b4852`. Publicada a branch e
+  aberto PR #31 com título/corpo preparados; PR anexado à tarefa.
+- Conferidos head e integração possível. Merge autorizado com SHA esperado
+  gerou `cc2d12d3b3351f4edc8446d0366e4355119c6a7b`, sem contorno de proteção.
+  Confirmados PR merged e issue #4 completed. Não havia status de CI publicados;
+  evidência continua local: 71 testes e 853 verificações na imagem V4.
+- Atualizado `main` local por fast-forward e criada `issue-5-recepcao-baixas`.
+  #5 aberta, `ready-for-agent`, sem comentários, dependência #2 já concluída.
+  Iniciado `grupo5_explorer`, exclusivo e somente leitura, com pedido de
+  identificação nome/modelo/raciocínio; papel GPT-6 Luna/médio.
+- Atualizados registros da #4; código/testes/fontes sem alterações nesta integração.
+
+### O que deu errado
+
+Nenhuma falha de publicação/integração. Não houve nova tentativa de aprovação
+formal da própria conta, implantação ou publicação de imagem. Integrador real,
+CI remoto e aceite E1/T01 continuam pendentes.
+
+### Próximo passo
+
+Concluir desenho da #5 a partir do schema `baixa`; implementar por executor
+próprio em TDD, revisar com reviewer independente e delegar eventual correção.
+Supervisor verificar testes/Docker antes do PR. Publicação/merge da #5 exigem
+autorização específica; saída E1 continua sujeita ao aceite humano #8.

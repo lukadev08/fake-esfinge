@@ -1,6 +1,8 @@
 # PR preparado — issue #4
 
-Situação: local; implementação, revisão e supervisão concluídas. Sem push ou PR.
+Situação: publicado e integrado com autorização do usuário no
+[PR #31](https://github.com/lukadev08/fake-esfinge/pull/31), commit `cc2d12d` em `main`.
+Implementação revisada e validada no commit `4e3f8df`.
 Destino: `lukadev08/fake-esfinge`; base `main`; head `issue-4-recepcao-arrecadacao`.
 Base funcional: `e0b4852`; registro inicial da tarefa: `54525d5`.
 
@@ -32,9 +34,9 @@ humano E1/T01 permanecem pendentes. Não comprova homologação oficial.
 
 Closes #4
 
-## Ações externas a autorizar
+## Situação das ações externas
 
 Push de `issue-4-recepcao-arrecadacao` para `origin`, criação deste PR contra `main`
-e merge da mudança revisada em `lukadev08/fake-esfinge`. Implantação e publicação
+e merge em `lukadev08/fake-esfinge` autorizados e executados em 25/10/2026. Implantação e publicação
 de imagem não estão incluídas. Revisão técnica aprovada; a conta GitHub não permite
 aprovação formal de PR próprio, conforme já verificado na #1.
