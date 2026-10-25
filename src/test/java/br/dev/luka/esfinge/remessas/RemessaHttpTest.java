@@ -102,7 +102,7 @@ class RemessaHttpTest {
         for(String date:new String[]{"2026-02-30","2026-1-02","2026-01-02T00:00:00Z","2026-13-01","2025-02-29"})
             receive(token,key,PAYLOAD.replace("2026-01-02",date)).andExpect(status().isUnprocessableEntity());
     }
-    @Test void jsonMalformadoDuplicadoExtraListasInvalidasEAssuntosSemSuporteNaoPersistem() throws Exception {
+    @Test void jsonMalformadoDuplicadoExtraListasInvalidasEAssuntosDesconhecidosNaoPersistem() throws Exception {
         String token=token(),key=open(token,202608);
         for(String body:new String[]{"{","",PAYLOAD+PAYLOAD,PAYLOAD.replace("\"0007\"","\"0007\",\"numeroMatriculaContribuinte\":\"outra\"")})
             receive(token,key,body).andExpect(status().isBadRequest());
@@ -112,8 +112,7 @@ class RemessaHttpTest {
                 "{\"lote\":"+PAYLOAD+"}",PAYLOAD.substring(0,PAYLOAD.length()-1)+",\"lancamentosCreditosTributarios\":[]}",
                 PAYLOAD.replace("\"numeroMatriculaContribuinte\":","\"extra\":1,\"numeroMatriculaContribuinte\":"),"{\"desconhecido\":[{}]}"})
             receive(token,key,body).andExpect(status().isUnprocessableEntity());
-        for(String subject:new String[]{"inicioPrazoPrescricional"})
-            receive(token,key,"{\""+subject+"\":[{}]}").andExpect(status().isUnprocessableEntity()).andExpect(jsonPath("$.codigo").value("SIM_COBERTURA_AUSENTE"));
+        receive(token,key,"{\"inicioPrazoPrescricional\":[{}]}").andExpect(status().isUnprocessableEntity()).andExpect(jsonPath("$.codigo").value("SIM_ESTRUTURA_INVALIDA"));
         long number=json.readTree(receive(token,key,PAYLOAD).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()).get("numeroLote").asLong();
         http.perform(get("/__simulator/lotes/"+number).header("X-Simulator-Key","admin-local-ficticio"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.ordem").value(1)).andExpect(jsonPath("$.eventos.length()").value(2));

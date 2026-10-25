@@ -20,7 +20,6 @@ public final class LotePayload {
         Map.entry("tipoRepresentante",2),Map.entry("numeroCpfRepresentante",11));
     private static final Set<String> REQUIRED=Set.of("numeroMatriculaContribuinte","dataAtualizacaoCadastral","tipoContribuinte",
             "numeroDocumentoContribuinte","nomeCompletoContribuinte","indicativoCadastroAtivo","indicativoEspolio");
-    private static final Set<String> UNSUPPORTED_SUBJECTS=Set.of("inicioPrazoPrescricional");
     public ReceivedContent read(byte[] bytes) {
         JsonNode root;
         try {
@@ -31,10 +30,13 @@ public final class LotePayload {
         if (root==null || root.isMissingNode()) throw new RemessaFailure(INVALID_REQUEST);
         if (!root.isObject() || root.size()!=1) throw invalid();
         String subject=root.fieldNames().next();
-        if (UNSUPPORTED_SUBJECTS.contains(subject)) throw new RemessaFailure(UNSUPPORTED);
-        if (!subject.equals("cadastrosContribuintes") && !subject.equals("lancamentosCreditosTributarios") && !subject.equals("diarioGeralArrecadacao") && !subject.equals("baixasCreditosTributarios") && !subject.equals("saldosIniciaisCreditoTributario")) throw invalid();
+        if (!subject.equals("cadastrosContribuintes") && !subject.equals("lancamentosCreditosTributarios") && !subject.equals("diarioGeralArrecadacao") && !subject.equals("baixasCreditosTributarios") && !subject.equals("saldosIniciaisCreditoTributario") && !subject.equals("inicioPrazoPrescricional")) throw invalid();
         JsonNode records=root.get(subject);
         if (!records.isArray() || records.isEmpty()) throw invalid();
+        if (subject.equals("inicioPrazoPrescricional")) {
+            for (JsonNode record:records) prescription(record);
+            return new ReceivedContent(bytes,records.size(),Assunto.INICIO_PRAZO_PRESCRICIONAL,List.of());
+        }
         if (!subject.equals("cadastrosContribuintes")) {
             var values=new ArrayList<Map<String,java.math.BigDecimal>>();
             for (JsonNode record:records) values.add(switch(subject) { case "lancamentosCreditosTributarios" -> Map.of("valorLancamentoCreditoTributario",credit(record)); case "diarioGeralArrecadacao" -> Map.of("valorCreditoTributario",collection(record)); case "baixasCreditosTributarios" -> Map.of("valorOperacaoBaixa",writeOff(record)); default -> initialBalance(record); });
@@ -151,6 +153,24 @@ public final class LotePayload {
             } else if (!value.isNumber() || value.decimalValue().stripTrailingZeros().scale()>0) throw invalid();
         }
         return values;
+    }
+    private static final String PRESCRIPTION_YEAR="anoLancamentoCreditoTributarioOuDividaAtiva",PRESCRIPTION_CODE="codigoLancamentoCreditoTributarioOuNumeroInscricaoDividaAtiva";
+    private static final Set<String> PRESCRIPTION_REQUIRED=Set.of(PRESCRIPTION_YEAR,PRESCRIPTION_CODE,"dataInicioPrazoPrescricional","dataAtualizacaoPrazoPrescricional");
+    private static void prescription(JsonNode record) {
+        if (!record.isObject()) throw invalid();
+        for (String name:PRESCRIPTION_REQUIRED) if (!record.hasNonNull(name)) throw invalid();
+        for (var field:record.properties()) {
+            String name=field.getKey();JsonNode value=field.getValue();
+            if (!PRESCRIPTION_REQUIRED.contains(name)) throw invalid();
+            if (name.equals(PRESCRIPTION_YEAR)) {
+                if (!value.isNumber() || value.decimalValue().stripTrailingZeros().scale()>0) throw invalid();
+            } else if (name.equals(PRESCRIPTION_CODE)) {
+                if (!value.isTextual() || value.textValue().codePointCount(0,value.textValue().length())>16) throw invalid();
+            } else {
+                if (!value.isTextual() || !value.textValue().matches("[0-9]{4}-[0-9]{2}-[0-9]{2}")) throw invalid();
+                try { LocalDate.parse(value.textValue()); } catch (DateTimeParseException e) { throw invalid(); }
+            }
+        }
     }
     private static RemessaFailure invalid() { return new RemessaFailure(INVALID_STRUCTURE); }
 }

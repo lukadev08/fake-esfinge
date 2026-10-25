@@ -174,10 +174,15 @@ bloqueou a remoção do volume `fake-esfinge-issue6-supervisao`, exigindo autori
 específica para apagar os dados; volume fictício preservado. Imagem e clientes
 auxiliares também preservados localmente, sem publicação.
 
+Após autorização específica posterior do usuário, o volume foi excluído com exit0
+e sua ausência confirmada no contexto `orbstack`. O bloqueio anterior não foi contornado.
+
 ## Limites
 
 Implementação, revisão, suíte limpa e ensaios pelo jar local e Docker V6 concluídos.
-Sem push, PR, merge, implantação ou publicação de imagem da #6.
+Publicação/merge autorizados e concluídos no [PR #33](https://github.com/lukadev08/fake-esfinge/pull/33),
+head `7e5709b`, merge `ad27bd88b0dc9fba2d5bd08e0a0059988f090119`; #6 completed.
+Sem implantação ou publicação de imagem da #6.
 Sem integrador real, CI remoto, aceite humano
 #8/E1, T01/T16 integral ou homologação oficial. Prazo, processamento, finalização,
 condições/defaults/catálogos/cálculos e validação fiscal permanecem não implementados.

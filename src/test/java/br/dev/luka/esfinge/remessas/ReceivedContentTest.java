@@ -22,8 +22,11 @@ class ReceivedContentTest {
             assertNotNull(new ReceivedContent(new byte[]{1},1,subject.getKey(),List.of(Map.of(subject.getValue(),BigDecimal.ONE))));
             assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},1,subject.getKey(),List.of(Map.of("incorreto",BigDecimal.ONE))));
         }
-        assertNotNull(new ReceivedContent(new byte[]{1},1,Assunto.CADASTRO_CONTRIBUINTE,List.of()));
-        assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},1,Assunto.CADASTRO_CONTRIBUINTE,List.of(balance())));
+        for(var subject:List.of(Assunto.CADASTRO_CONTRIBUINTE,Assunto.INICIO_PRAZO_PRESCRICIONAL)) {
+            assertNotNull(new ReceivedContent(new byte[]{1},1,subject,List.of()));
+            assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},1,subject,List.of(balance())));
+            assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},1,subject,List.of(Map.of())));
+        }
         assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},2,Assunto.SALDO_INICIAL_CREDITO_TRIBUTARIO,List.of(balance())));
         var missing=new HashMap<>(balance());missing.remove("saldoMulta");
         assertThrows(RemessaFailure.class,()->new ReceivedContent(new byte[]{1},1,Assunto.SALDO_INICIAL_CREDITO_TRIBUTARIO,List.of(missing)));
