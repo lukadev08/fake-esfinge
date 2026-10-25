@@ -1,6 +1,6 @@
 # PR preparado — issue #2
 
-Situação: publicado com autorização do usuário; PR [#29](https://github.com/lukadev08/fake-esfinge/pull/29) aberto, sem merge.
+Situação: publicado e integrado com autorização do usuário; PR [#29](https://github.com/lukadev08/fake-esfinge/pull/29) merged em `main`, commit `4b61304`.
 Implementação revisada e validada no commit `02e036f`.
 Destino: `lukadev08/fake-esfinge`; base `main`; head `issue-2-recepcao-contribuintes`.
 Base de desenvolvimento: `a36c7bf`; inclui registro documental de conclusão da #1.
@@ -35,6 +35,6 @@ Closes #2
 ## Situação das ações externas
 
 Push da branch acima para `origin` e criação deste PR contra `main` autorizados
-e executados. Merge em `lukadev08/fake-esfinge` aguarda autorização específica.
+e executados. Merge em `lukadev08/fake-esfinge` autorizado e executado em 24/10/2026.
 Implantação e publicação de imagem não estão incluídas. A aprovação técnica está registrada; a conta GitHub não
 permite submeter aprovação formal em PR da própria conta, conforme verificado na #1.

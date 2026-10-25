@@ -787,3 +787,110 @@ o merge permanece sujeito ao limite específico do `AGENTS.md`.
 Obter autorização específica para integrar o PR #29 em `main`; conferir seu head
 e condições de integração antes do merge. #3–#7 dependem da #2 integrada;
 aceite humano #8/E1 e T01 integral continuam pendentes.
+
+## 2026-10-24 — Explorar a #3 enquanto a integração da #2 aguarda autorização
+
+Referência: [issue #3](https://github.com/lukadev08/fake-esfinge/issues/3) e
+solicitação do usuário: “siga para a próxima tarefa”.
+Situação: preparação local concluída; implementação dependente da integração da #2.
+
+### O que foi feito
+
+- Conferidos PR #29 aberto, head `46c67f2`, integração possível informada pelo
+  GitHub e ausência de status de CI publicados. Código/testes permanecem iguais
+  ao commit revisado/validado `02e036f`; somente três documentos foram atualizados.
+- Confirmada #3 aberta, `ready-for-agent`, sem comentários e bloqueada pela #2.
+  Iniciado explorer exclusivo `grupo3_explorer`, GPT-6 Luna/médio conforme o papel,
+  com identificação e exploração somente leitura.
+- Supervisão e explorer conferiram planejamento, arquitetura, contrato, schema
+  `credito` e pontos de integração. Preparado [plano local](.scratch/issue-3-plan.md)
+  com escopo, persistência decimal exata, migração e fatias TDD previstas.
+
+### O que deu errado
+
+Não há impedimento técnico identificado na exploração. O PR #29 ainda não foi
+integrado; a autorização anterior cobriu publicação. Solicitada autorização
+específica de merge conforme `AGENTS.md`, mantendo trabalho independente em leitura.
+Nenhuma implementação, teste novo, mensagem externa ou publicação da #3 executada.
+
+### Próximo passo
+
+Após autorização, integrar PR #29 com conferência do head, sincronizar a base da
+#3 e iniciar executor próprio. Depois, revisão independente, eventual correção
+delegada e verificação do supervisor. Nenhum critério E1/T01 foi encerrado.
+
+## 2026-10-24 — Integrar a #2 e iniciar implementação da #3
+
+Referência: [PR #29](https://github.com/lukadev08/fake-esfinge/pull/29),
+[issue #3](https://github.com/lukadev08/fake-esfinge/issues/3) e autorização do
+usuário para integrar o PR e prosseguir para a próxima tarefa.
+Situação: integração da #2 concluída; implementação local da #3 iniciada.
+
+### O que foi feito
+
+- Reconfirmados head `46c67f2`, revisão aprovada e ausência de mudanças de código
+  desde a validação `02e036f`. Integrado PR #29 com SHA esperado e método merge,
+  gerando `4b61304929b0435bc6a499911d3025808bc36ce7` em `main`.
+- Conferidos PR merged e issue #2 encerrada como completed. Atualizado `main`
+  local por fast-forward e criada `issue-3-recepcao-creditos`, conservando a
+  preparação local e os arquivos `.DS_Store` fora do versionamento.
+- Atualizados registros da integração e plano da #3. Exploração concluída no
+  grupo3; próxima etapa executada por executor próprio, sob supervisão.
+
+### O que deu errado
+
+Nenhuma falha na integração. Não houve implantação, publicação de imagem ou
+nova tentativa de aprovação formal na própria conta, restrição já comprovada
+na #1. CI remoto, integrador real e aceite E1/T01 continuam pendentes.
+
+### Próximo passo
+
+Implementar #3 por fatias TDD, revisar com agente independente e delegar eventual
+correção. Supervisor verificar testes e Docker antes de preparar PR. A autorização
+recebida não publica nem integra automaticamente futuras mudanças da #3.
+
+## 2026-10-24 — Concluir implementação e supervisão locais da #3
+
+Referência: [issue #3](https://github.com/lukadev08/fake-esfinge/issues/3), após
+integração autorizada da #2 no PR #29.
+Situação: implementação, revisão e validação locais concluídas; publicação pendente.
+
+### O que foi feito
+
+- `grupo3_executor`, GPT-6.1 Sol/baixo conforme papel, implementou recepção de
+  créditos pelo fluxo existente, sem processamento. Parser `LotePayload`, assunto
+  explícito, obrigatórios/opcionais/tipos/datas/mês histórico e decimal exato;
+  preservados contribuintes, bytes, multiplicidade, isolamento e contagens.
+- Persistidos valores BigDecimal como TEXT por lote/índice, junto de bytes,
+  vínculos e evento na mesma transação. V3 preserva V1/V2/checksums, dados,
+  sessões, IDs/eventos/FKs e sequências. Inspeção usa números JSON exatos.
+- RED inicial observou 422 onde crédito exigia 200; a fatia completa passou.
+  Regressões ampliaram schema/SQLite/migração/falhas; executor concluiu `verify`
+  com 61 testes verdes, zero falhas/erros/ignorados, exit0, 7,694 segundos.
+- `grupo3_reviewer`, GPT-6.1 Sol/médio conforme papel, aprovou diff staged sobre
+  `8431741` sem achados materiais. Nenhuma correção obrigatória ou agente de
+  correção necessário. Supervisor executou `clean verify`: 61 testes verdes,
+  zero falhas/erros/ignorados, exit0, 7,508 segundos.
+- Imagem Linux amd64, usuário 10001, volume próprio e `--network none`: base V2
+  preparada com 163 verificações, preservada no upgrade. Na imagem V3 passaram
+  15 verificações de upgrade, 704 de crédito/HTTP, 36 após reinício e 12 de SQLite
+  somente leitura: **767 no total**, incluindo 10.001 registros e valores TEXT
+  equivalentes exatamente a cada registro recebido. Logs comuns só de início.
+- Atualizados README, manifesto, [evidência completa](docs/evidencias/issue-3.md),
+  plano e [PR local](.scratch/pr-issue-3.md). Código/testes congelados após a
+  revisão e validação; somente documentação foi concluída depois.
+- Removidos somente container/volume temporários do ensaio. Imagem e clientes
+  temporários preservados; dados exclusivamente fictícios, sem chamadas ao TCE.
+
+### O que deu errado
+
+Nenhuma falha material remanescente. A compilação isolada de um cliente auxiliar
+precisou incluir seu diretório de classes no classpath; corrigida antes da execução.
+O aviso SLF4J do cliente SQLite não falhou o ensaio nem integra os logs da aplicação.
+Não houve publicação da #3, integrador real, CI remoto ou aceite E1/T01.
+
+### Próximo passo
+
+Solicitante decidir sobre push da branch `issue-3-recepcao-creditos`, criação de
+PR em `lukadev08/fake-esfinge` contra `main` e integração da mudança revisada.
+#4 é a próxima tarefa na sequência; E1 continua sujeito ao aceite humano #8.

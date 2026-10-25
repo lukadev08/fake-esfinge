@@ -32,15 +32,18 @@ public final class JdbcRemessaRepository implements RemessaRepository {
     public Lote receive(Remessa remessa,ReceivedContent content,String hash,Instant now) {
         int order=jdbc.queryForObject("SELECT COALESCE(MAX(ordem),0)+1 FROM lotes WHERE remessa_id=?",Integer.class,remessa.id());
         long number=jdbc.queryForObject("INSERT INTO lotes(remessa_id,cenario,ug,ordem,assunto,payload,hash,registros,recebimento) VALUES (?,?,?,?,?,?,?,?,?) RETURNING numero",Long.class,
-                remessa.id(),remessa.scenario(),remessa.ug(),order,"CADASTRO_CONTRIBUINTE",content.bytes(),hash,content.records(),now.toString());
+                remessa.id(),remessa.scenario(),remessa.ug(),order,content.subject().name(),content.bytes(),hash,content.records(),now.toString());
+        for (int i=0;i<content.creditValues().size();i++) jdbc.update(
+                "INSERT INTO valores_creditos(lote_id,remessa_id,cenario,ug,indice,valor) VALUES (?,?,?,?,?,?)",
+                number,remessa.id(),remessa.scenario(),remessa.ug(),i,content.creditValues().get(i).toString());
         jdbc.update("UPDATE remessas SET atividade=? WHERE id=?",now.toString(),remessa.id());
         jdbc.update("INSERT INTO remessa_eventos(remessa_id,cenario,ug,lote_id,tipo,instante) VALUES (?,?,?,?,?,?)",remessa.id(),remessa.scenario(),remessa.ug(),number,"LOTE_RECEBIDO",now.toString());
-        return new Lote(number,remessa.id(),remessa.key(),remessa.scenario(),remessa.ug(),remessa.yearMonth(),order,content.records(),hash,content.bytes(),now);
+        return new Lote(number,remessa.id(),remessa.key(),remessa.scenario(),remessa.ug(),remessa.yearMonth(),order,content.records(),content.subject(),hash,content.bytes(),now);
     }
     private static final String LOTE_SELECT="SELECT l.*,r.chave,r.competencia FROM lotes l JOIN remessas r ON r.id=l.remessa_id AND r.cenario=l.cenario AND r.ug=l.ug WHERE l.numero=? AND l.cenario=?";
     private Lote lote(java.sql.ResultSet r) throws java.sql.SQLException {
         return new Lote(r.getLong("numero"),r.getLong("remessa_id"),r.getString("chave"),r.getString("cenario"),r.getString("ug"),r.getInt("competencia"),
-                r.getInt("ordem"),r.getInt("registros"),r.getString("hash"),r.getBytes("payload"),Instant.parse(r.getString("recebimento")));
+                r.getInt("ordem"),r.getInt("registros"),Assunto.valueOf(r.getString("assunto")),r.getString("hash"),r.getBytes("payload"),Instant.parse(r.getString("recebimento")));
     }
     public java.util.Optional<Lote> findLote(long number,String scenario,String ug) {
         return jdbc.query(LOTE_SELECT+" AND l.ug=?",(r,n)->lote(r),number,scenario,ug).stream().findFirst();
