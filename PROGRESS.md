@@ -1253,3 +1253,47 @@ Concluir exploração da #7, implementar schema derivado de quatro campos em fat
 TDD por executor próprio e revisar por reviewer independente. Delegar correções
 se necessárias; supervisor verificar suíte/Docker antes de preparar PR.
 Publicação/merge da #7 exigem autorização específica; E2 aguarda o aceite humano #8.
+
+## 2026-10-25 — Implementar, revisar e supervisionar a #7
+
+Referência: [issue #7](https://github.com/lukadev08/fake-esfinge/issues/7) e meta
+autorizada de seguir tarefas em ordem, com equipe independente por issue.
+Situação: implementação, revisão, suíte limpa e Docker V7 aprovados; somente local.
+
+### O que foi feito
+
+- Grupo7 identificado: explorer GPT-6 Luna/médio, executor GPT-6.1 Sol/baixo e
+  reviewer GPT-6.1 Sol/médio. Contrato derivado dos quatro campos mantido, sem DTO
+  extraído, teto fiscal, cronologia ou vínculo tributário inventado.
+- Prazo recebido/consultado/inspecionado em RECEBIDO, não monetário como cadastro.
+  V7 preserva dados V6/campos/valores/IDs/eventos/sessões/FKs/high-water; rollback
+  e falhas reais de statement/COMMIT cobrem o sexto assunto. Fontes/V1–V6 intactos.
+- RED HTTP200/422: exit1/3,995s; mesma fatia GREEN: exit0/3,524s. Focalizada final:
+  43 verdes/6,325s. Executor verify: 105 testes, zero falhas/erros/ignorados,
+  exit0/9,613s; nenhum processo pendente. Reviewer aprovou diff sobre `27e7980`,
+  incluindo novos arquivos, sem achados materiais ou correções obrigatórias.
+- Supervisor clean verify: **105 verdes**, exit0/10,957s. Docker V7 `bcbc05ff4d10`,
+  Linux amd64/Temurin21.0.10+7, mesmo jar aprovado, UID10001, sem rede/portas.
+  **678 verificações**, todas exit0: 13 de captura comparada antes/depois de dez
+  tabelas, 34 de baixa, 46 de saldo, 529 de prazo, 42 após reinício e 14 de SQLite.
+  Incluídos 10.001 prazos, mais de 50.000 valores antigos TEXT exatos e ausência
+  de dinheiro para prazo/cadastro. Preparação V6: 1.350 checks, separados.
+- Código/testes congelados após revisão/validação. Atualizados README, manifesto,
+  [evidência](docs/evidencias/issue-7.md), plano e [PR local](.scratch/pr-issue-7.md).
+  Container temporário removido; volume fictício, imagem e clientes preservados.
+
+### O que deu errado
+
+Primeira focalizada: 43 testes/1 falha, exit1/6,424s, por comparação de identidade
+de `byte[]` em nova asserção de teste. Corrigida somente a asserção para campos e
+`assertArrayEquals`; aplicação não mudou por essa falha. Reexecução verde.
+Nenhuma falha material remanescente na revisão/supervisão. Avisos existentes
+Mockito/ByteBuddy e SLF4J auxiliar não falharam os ensaios. Sem push/PR/merge da #7,
+CI remoto, integrador real ou aceite humano E1/T01.
+
+### Próximo passo
+
+Solicitante decidir publicação/merge da #7 contra `main` em `lukadev08/fake-esfinge`
+e, separadamente, exclusão do volume fictício `fake-esfinge-issue7-supervisao`.
+Depois da integração, #8 exige recepção de payload real no ambiente local
+controlado e aprovação expressa da saída E1; não iniciar E2 antes desse aceite.

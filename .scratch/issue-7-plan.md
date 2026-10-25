@@ -5,6 +5,11 @@ Base funcional `ad27bd8`, após integração da #6 no PR #33.
 Branch `issue-7-recepcao-prazo`. Exploração concluída somente leitura por
 `grupo7_explorer`, identificado como GPT-6 Luna/médio. Publicação/merge da #7
 ainda não autorizados. E2 aguarda aceite humano #8 após esta fatia.
+Implementação e revisão concluídas por `grupo7_executor`, GPT-6.1 Sol/baixo, e
+`grupo7_reviewer`, GPT-6.1 Sol/médio, ambos identificados. Suíte limpa de 105 testes
+e 678 verificações Docker Linux amd64 aprovadas. Nenhuma correção obrigatória.
+[Corpo exato de PR](pr-issue-7.md) preparado; container removido e volume fictício
+preservado até autorização específica de exclusão.
 
 ## Contrato e limite
 

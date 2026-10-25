@@ -7,7 +7,7 @@ public record ReceivedContent(byte[] bytes, int records, Assunto subject, List<M
     public ReceivedContent {
         if (bytes==null || bytes.length==0 || records<1 || subject==null || monetaryValues==null) throw invalid();
         Set<String> fields=switch(subject) {
-            case CADASTRO_CONTRIBUINTE -> Set.of();
+            case CADASTRO_CONTRIBUINTE, INICIO_PRAZO_PRESCRICIONAL -> Set.of();
             case LANCAMENTO_CREDITO_TRIBUTARIO -> Set.of("valorLancamentoCreditoTributario");
             case DIARIO_ARRECADACAO -> Set.of("valorCreditoTributario");
             case BAIXA_CREDITO_TRIBUTARIO -> Set.of("valorOperacaoBaixa");

@@ -9,10 +9,11 @@ E0 está concluído documentalmente no recorte inicial. As fatias E1
 [#3](https://github.com/lukadev08/fake-esfinge/issues/3) e
 [#4](https://github.com/lukadev08/fake-esfinge/issues/4) e
 [#5](https://github.com/lukadev08/fake-esfinge/issues/5) e
-[#6](https://github.com/lukadev08/fake-esfinge/issues/6) implementam autenticação
-fictícia, abertura de envio, recepção de contribuintes, créditos, arrecadação, baixas e saldo inicial, consulta `RECEBIDO` e
-inspeção administrativa com persistência SQLite. O prazo prescricional,
-processamento, finalização, reset e painel ainda não estão implementados.
+[#6](https://github.com/lukadev08/fake-esfinge/issues/6) e
+[#7](https://github.com/lukadev08/fake-esfinge/issues/7) implementam autenticação
+fictícia, abertura de envio, recepção dos seis assuntos, consulta `RECEBIDO` e
+inspeção administrativa com persistência SQLite. Processamento, finalização,
+reset e painel ainda não estão implementados.
 A saída E1 depende do aceite humano da #8; testes locais não comprovam T01.
 
 ## Documentação
@@ -43,7 +44,7 @@ Dados originais do piloto permanecem no ambiente local controlado, fora do Git
 e de serviços externos. Exemplos e evidências compartilhadas exigem sanitização;
 credenciais e tokens do simulador serão fictícios.
 
-## Executar e validar as fatias #1–#6
+## Executar e validar as fatias #1–#7
 
 Requer JDK 21. O wrapper oficial fixa Maven 3.9.9; o primeiro uso baixa Maven e
 as dependências do Maven Central. O build fixa Spring Boot 3.5.10, SQLite JDBC
@@ -63,7 +64,9 @@ permite crédito e acrescenta os valores monetários em TEXT. A V4 conserva esse
 dados ao permitir arrecadação e reunir os valores na tabela `valores_recebidos`.
 A V5 permite baixa, preservando lotes, eventos e dinheiro dos assuntos anteriores.
 A V6 permite saldo inicial com quatro valores por registro e nomeia os valores
-antigos pelo assunto, mantendo TEXT e todos os dados. Schema, migração ou configuração persistida incompatíveis
+antigos pelo assunto, mantendo TEXT e todos os dados. A V7 admite início do prazo
+prescricional, preservando os dados e os valores nomeados V6; prazo não gera
+linhas monetárias. Schema, migração ou configuração persistida incompatíveis
 interrompem a inicialização sem recriar dados. Não há reset nesta
 fatia. Para outra execução, use outro arquivo/volume; preserve o anterior.
 
@@ -136,7 +139,8 @@ Consulte [cobertura atual](docs/cobertura.md),
 [evidência da #3](docs/evidencias/issue-3.md) e
 [evidência da #4](docs/evidencias/issue-4.md) e
 [evidência da #5](docs/evidencias/issue-5.md) e
-[evidência da #6](docs/evidencias/issue-6.md) para resultados e limites.
+[evidência da #6](docs/evidencias/issue-6.md) e
+[evidência da #7](docs/evidencias/issue-7.md) para resultados e limites.
 
 ## Abrir, receber e consultar contribuintes — #2
 
@@ -303,4 +307,32 @@ Consulta continua RECEBIDO e a inspeção protegida mostra
 processados/efetivos zero. Reinício conserva o recebido; duplicatas não são
 eliminadas. O cenário fictício de janeiro não substitui o integrador real nem
 encerra T01/T16/E1. Se saldo faltar no piloto inicial, o cenário complementar
-continua necessário; prazo prescricional permanece não implementado.
+continua necessário.
+
+## Receber e inspecionar início do prazo prescricional — #7
+
+Use a mesma abertura, autenticação, chave e rota de recepção, com lista direta
+`inicioPrazoPrescricional`. Exemplo fictício com referência histórica:
+
+```json
+{"inicioPrazoPrescricional":[{"anoLancamentoCreditoTributarioOuDividaAtiva":2015,"codigoLancamentoCreditoTributarioOuNumeroInscricaoDividaAtiva":"000007","dataInicioPrazoPrescricional":"2020-02-29","dataAtualizacaoPrazoPrescricional":"2010-01-01"}]}
+```
+
+O schema derivado `prazo` tem quatro campos obrigatórios: ano inteiro, código
+string de até16 codepoints e duas datas de calendário `YYYY-MM-DD`. Ausentes/null,
+extras, tipos incompatíveis, timestamps e datas impossíveis recebem422. Não há
+coerção de strings em números nem limite fiscal inferido para o ano.
+
+Os quatro campos foram aprovados a partir do exemplo; **não há DTO extraído**.
+O exemplo aceita atualização anterior ao início para demonstrar ausência de
+validação cronológica, sem afirmar prescrição fiscal ou vínculo válido com crédito
+ou dívida ativa. Essas regras permanecem não implementadas.
+
+Prazo usa conteúdo não monetário, com lista de valores vazia como cadastro.
+Bytes/hash, referências, multiplicidade, contagens, atividade e eventos persistem
+atomicamente. A V7 preserva lotes, quatro valores nomeados de saldo e demais
+assuntos, IDs, sessões, eventos, FKs e sequências; falha reverte a migração.
+Consulta mantém `RECEBIDO`; inspeção protegida mostra `INICIO_PRAZO_PRESCRICIONAL`,
+registros e bytes, com processados/efetivos zero. Reinício conserva o recebido.
+Se prazo não aparecer no piloto, cenário complementar pelo integrador real
+continua necessário; esta fatia não encerra E1/T01 ou homologação oficial.

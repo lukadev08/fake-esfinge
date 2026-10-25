@@ -26,7 +26,7 @@ public final class SqliteDatabase {
         } catch (Exception e) { throw new IllegalStateException("Base SQLite indisponivel ou incompativel; dados preservados"); }
     }
     private static void migrate(DataSource source) throws Exception {
-        String[] scripts = {"V1__authentication.sql", "V2__remessas.sql", "V3__creditos.sql", "V4__arrecadacao.sql", "V5__baixas.sql", "V6__saldo.sql"};
+        String[] scripts = {"V1__authentication.sql", "V2__remessas.sql", "V3__creditos.sql", "V4__arrecadacao.sql", "V5__baixas.sql", "V6__saldo.sql", "V7__prazo.sql"};
         try (var connection = source.getConnection()) {
             connection.setAutoCommit(false);
             try {

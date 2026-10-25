@@ -18,7 +18,7 @@ public final class LoteInspectionController {
     public InspectionResponse inspect(@PathVariable String numeroLote,@RequestHeader(value="X-Simulator-Key",required=false) String key) throws java.io.IOException {
         var inspection=remessas.inspect(key,RemessaController.number(numeroLote));var lote=inspection.lote();
         return new InspectionResponse(lote.number(),lote.remessaId(),lote.key(),lote.scenario(),lote.ug(),lote.yearMonth(),lote.order(),
-            lote.subject().name(),"RECEBIDO",lote.records(),0,0,lote.hash(),lote.bytes(),json.readTree(lote.bytes()).get(switch(lote.subject()) { case CADASTRO_CONTRIBUINTE -> "cadastrosContribuintes"; case LANCAMENTO_CREDITO_TRIBUTARIO -> "lancamentosCreditosTributarios"; case DIARIO_ARRECADACAO -> "diarioGeralArrecadacao"; case BAIXA_CREDITO_TRIBUTARIO -> "baixasCreditosTributarios"; case SALDO_INICIAL_CREDITO_TRIBUTARIO -> "saldosIniciaisCreditoTributario"; }),
+            lote.subject().name(),"RECEBIDO",lote.records(),0,0,lote.hash(),lote.bytes(),json.readTree(lote.bytes()).get(switch(lote.subject()) { case CADASTRO_CONTRIBUINTE -> "cadastrosContribuintes"; case LANCAMENTO_CREDITO_TRIBUTARIO -> "lancamentosCreditosTributarios"; case DIARIO_ARRECADACAO -> "diarioGeralArrecadacao"; case BAIXA_CREDITO_TRIBUTARIO -> "baixasCreditosTributarios"; case SALDO_INICIAL_CREDITO_TRIBUTARIO -> "saldosIniciaisCreditoTributario"; case INICIO_PRAZO_PRESCRICIONAL -> "inicioPrazoPrescricional"; }),
             inspection.events().stream().map(e->new EventResponse(e.id(),e.lote(),e.type(),e.instant())).toList());
     }
 }

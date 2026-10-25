@@ -1,0 +1,17 @@
+CREATE TABLE sequencias_v7 AS SELECT name,seq FROM sqlite_sequence WHERE name IN ('lotes','remessa_eventos');
+CREATE TABLE lotes_v7 (numero INTEGER PRIMARY KEY AUTOINCREMENT, remessa_id INTEGER NOT NULL, cenario TEXT NOT NULL, ug TEXT NOT NULL, ordem INTEGER NOT NULL CHECK(ordem>0), assunto TEXT NOT NULL CHECK(assunto IN ('CADASTRO_CONTRIBUINTE','LANCAMENTO_CREDITO_TRIBUTARIO','DIARIO_ARRECADACAO','BAIXA_CREDITO_TRIBUTARIO','SALDO_INICIAL_CREDITO_TRIBUTARIO','INICIO_PRAZO_PRESCRICIONAL')), payload BLOB NOT NULL, hash TEXT NOT NULL, registros INTEGER NOT NULL CHECK(registros>0), recebimento TEXT NOT NULL, UNIQUE(remessa_id,ordem), UNIQUE(numero,remessa_id,cenario,ug), FOREIGN KEY(remessa_id,cenario,ug) REFERENCES remessas(id,cenario,ug));
+INSERT INTO lotes_v7 SELECT * FROM lotes;
+CREATE TABLE remessa_eventos_v7 (id INTEGER PRIMARY KEY AUTOINCREMENT, remessa_id INTEGER NOT NULL, cenario TEXT NOT NULL, ug TEXT NOT NULL, lote_id INTEGER, tipo TEXT NOT NULL, instante TEXT NOT NULL, FOREIGN KEY(remessa_id,cenario,ug) REFERENCES remessas(id,cenario,ug), FOREIGN KEY(lote_id,remessa_id,cenario,ug) REFERENCES lotes_v7(numero,remessa_id,cenario,ug));
+INSERT INTO remessa_eventos_v7 SELECT * FROM remessa_eventos;
+CREATE TABLE valores_recebidos_v7 (lote_id INTEGER NOT NULL, remessa_id INTEGER NOT NULL, cenario TEXT NOT NULL, ug TEXT NOT NULL, indice INTEGER NOT NULL CHECK(indice>=0), campo TEXT NOT NULL, valor TEXT NOT NULL CHECK(typeof(valor)='text'), PRIMARY KEY(lote_id,indice,campo), FOREIGN KEY(lote_id,remessa_id,cenario,ug) REFERENCES lotes_v7(numero,remessa_id,cenario,ug));
+INSERT INTO valores_recebidos_v7 SELECT * FROM valores_recebidos;
+UPDATE sqlite_sequence SET seq=MAX(seq,COALESCE((SELECT seq FROM sequencias_v7 WHERE name='lotes'),seq)) WHERE name='lotes_v7';
+UPDATE sqlite_sequence SET seq=MAX(seq,COALESCE((SELECT seq FROM sequencias_v7 WHERE name='remessa_eventos'),seq)) WHERE name='remessa_eventos_v7';
+DROP TABLE valores_recebidos;
+DROP TABLE remessa_eventos;
+DROP TABLE lotes;
+ALTER TABLE lotes_v7 RENAME TO lotes;
+ALTER TABLE remessa_eventos_v7 RENAME TO remessa_eventos;
+ALTER TABLE valores_recebidos_v7 RENAME TO valores_recebidos;
+DROP TABLE sequencias_v7;
+PRAGMA user_version=7;
