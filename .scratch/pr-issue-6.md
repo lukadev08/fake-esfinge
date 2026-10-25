@@ -1,6 +1,6 @@
 # Rascunho local — issue #6
 
-Situação: implementação/revisão/suíte e jar local aprovados; Docker V6 pendente.
+Situação: implementação/revisão/suíte, jar local e Docker V6 aprovados.
 Sem push ou PR. Destino: `lukadev08/fake-esfinge`; base `main`;
 head `issue-6-recepcao-saldo`. Base funcional `25dcbd6`, registro inicial `50558ee`.
 
@@ -25,16 +25,21 @@ revisão independente aprovada sem achados materiais; **729 verificações pelo 
 local macOS arm64**, incluindo upgrade V5→V6, reinício, 10.001 saldos e leitura exata
 de mais de 50.000 valores. Outras 714 verificações prepararam a base V5 local.
 
-**Docker V6 pendente:** as operações Docker não concluem e a inspeção visual do
-OrbStack está impedida pela tela bloqueada do Mac. O app abriu fora do sandbox,
-mas a disponibilidade do runtime ainda não foi recuperada.
-Nenhuma imagem V6 foi construída ou validada. CI remoto, integrador real, aceite
+Na imagem V6 Linux amd64 sem rede, **742 verificações** passaram: upgrade da base
+V5, sessão antiga preservada com expiração confirmada, novo login, recepção de
+10.001 saldos, reinício e inspeção SQLite dos campos e valores. As 714 verificações
+de preparação Docker V5 são contabilizadas separadamente. O jar da imagem tem o
+mesmo SHA-256 do artefato aprovado na suíte limpa.
+
+CI remoto, integrador real, aceite
 E1/T01/T16, condições e regras fiscais continuam pendentes; sem homologação oficial.
 
 Closes #6
 
 ## Limite de publicação
 
-Rascunho local. Concluir Docker V6 ou obter decisão explícita sobre seu adiamento;
-depois solicitar autorização específica para push, criação do PR e merge em
+Rascunho local validado. Solicitar autorização específica para push da branch
+`issue-6-recepcao-saldo`, criação do PR contra `main` e merge em
 `lukadev08/fake-esfinge`. Implantação e publicação de imagem não estão incluídas.
+Container temporário removido; volume fictício `fake-esfinge-issue6-supervisao`
+preservado até autorização específica de remoção.

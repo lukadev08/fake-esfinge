@@ -7,9 +7,11 @@ Branch `issue-6-recepcao-saldo`. Exploração concluída em leitura somente por
 Publicação/merge da #6 ainda não autorizados.
 Implementação e revisão concluídas por `grupo6_executor`, GPT-6.1 Sol/baixo, e
 `grupo6_reviewer`, GPT-6.1 Sol/médio conforme os papéis. Suíte limpa de 95 testes
-e 729 verificações pelo jar local aprovadas; Docker V6 pendente porque suas
-operações não concluem. Interface indisponível com Mac bloqueado; solicitado
-desbloqueio manual. [Rascunho de PR](pr-issue-6.md), com esse limite explícito.
+e 729 verificações pelo jar local aprovadas. Após desbloqueio manual do Mac e
+recuperação do Docker, 742 verificações na imagem V6 Linux amd64 passaram,
+incluindo upgrade V5 e reinício. Código/testes preservados após revisão.
+Container removido; volume fictício retido por bloqueio da revisão automática à
+exclusão sem autorização específica. [Rascunho de PR](pr-issue-6.md) preparado.
 
 ## Contrato verificado
 

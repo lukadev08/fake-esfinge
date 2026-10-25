@@ -115,7 +115,7 @@ não falhou o ensaio. Clientes em `/private/tmp/fake-esfinge-issue6-supervisao`,
 base em `/private/tmp/fake-esfinge-issue6-host-state` e fonte V5 em
 `/private/tmp/fake-esfinge-issue6-v5-fixture`, preservados fora do Git.
 
-### Docker V6 pendente
+### Docker V6 e recuperação do ambiente
 
 Antes da interrupção por quota, a imagem Docker V5 passou 714 verificações de
 preparação em volume exclusivo da #6. Na retomada, Docker não respondeu ao CLI
@@ -134,16 +134,50 @@ da interface informou **Mac bloqueado**, sem conseguir desbloqueio automático;
 solicitado desbloqueio manual para continuar o diagnóstico. A causa da instabilidade
 da API permanece não confirmada; bloqueio de tela é o impedimento da inspeção visual.
 
-Não foi construída ou executada imagem V6. O estado atual e a limpeza de
-`fake-esfinge-issue6-supervisao` (container/volume Docker) não puderam ser
-conferidos; eram recursos temporários com dados fictícios da V5. Consultas CLI
-sem resposta foram canceladas. A validação local acima não comprova runtime
-Linux amd64; é necessário recuperar as operações Docker para executar esse ensaio.
+Após confirmação de desbloqueio manual pelo usuário, a interface do OrbStack
+mostrou somente o container temporário da #6 em execução. Sua parada pela
+interface concluiu com status Exited (143), preservando o volume V5. A API voltou
+a responder; o container antigo foi removido e a imagem V6 construída usando o
+mesmo jar aprovado. Não houve restart global, reinstalação ou alteração de configuração.
+A causa da instabilidade permanece não confirmada.
+
+Imagem local `fake-esfinge:issue-6-local`, Linux amd64, Java Temurin **21.0.10+7**,
+ID `sha256:46d3d07e84c02bd53d44e82d2933d1d35fc38c90b62ba94ee2c31fc106690a3c`.
+O SHA-256 de `/opt/simulator/app.jar` coincidiu com o jar acima. Instância V6
+executada como `10001:10001`, `--network none`, volume V5 em `/data` e clientes
+montados somente leitura em `/checks`; nenhuma porta publicada ou chamada ao TCE.
+
+A primeira tentativa de `ContainerCheck5 restart` terminou exit1 com
+`AssertionError: Baixa após reinício HTTP=401`: o checkpoint V5 tinha mais de
+cinco horas, além da validade configurada de uma hora. A inspeção administrativa
+dos dados havia passado. O cliente auxiliar `UpgradeCheck6` confirmou somente
+por leitura SQLite a sessão antiga preservada, UG e duração originais, expiração
+anterior ao instante atual e rejeição HTTP401 sanitizada. Fez novo login e
+prosseguiu com a mesma remessa; não alterou a aplicação, relógio ou sessão antiga.
+
+Resultados finais na imagem V6, cada comando com exit code 0:
+
+| Cliente executado com `docker exec` | Verificações | Evidência |
+| --- | ---: | --- |
+| `UpgradeCheck6` | 47 | Sessão V5 preservada e expirada, novo login, bytes/dinheiro/estado RECEBIDO e nova recepção após upgrade |
+| `ContainerCheck6 first` | 636 | Janeiro, quatro campos exatos, schema/rejeições, isolamento, concorrência, cinco assuntos separados e 10.001 saldos |
+| `ContainerCheck6 restart` | 46 | Sessão recente, bytes/saldos/contagens após reinício, sem processamento pela consulta |
+| `SqliteCheck6` | 13 | Versão6, integridade/FKs, chave com campo, mais de 50.000 valores TEXT exatos por nome/índice/vínculo |
+
+Total: **742 verificações na imagem V6**, separado das 729 no jar macOS e das
+714 de preparação Docker V5. O reinício do container concluiu normalmente.
+Logs comuns contiveram somente duas linhas `Simulador iniciado`; o aviso SLF4J
+veio dos clientes auxiliares SQL e não falhou os ensaios.
+
+Container temporário parado e removido após as verificações. A revisão automática
+bloqueou a remoção do volume `fake-esfinge-issue6-supervisao`, exigindo autorização
+específica para apagar os dados; volume fictício preservado. Imagem e clientes
+auxiliares também preservados localmente, sem publicação.
 
 ## Limites
 
-Implementação, revisão, suíte limpa e ensaio pelo jar local concluídos; Docker V6
-pendente. Sem push, PR, merge, implantação ou publicação de imagem da #6.
+Implementação, revisão, suíte limpa e ensaios pelo jar local e Docker V6 concluídos.
+Sem push, PR, merge, implantação ou publicação de imagem da #6.
 Sem integrador real, CI remoto, aceite humano
 #8/E1, T01/T16 integral ou homologação oficial. Prazo, processamento, finalização,
 condições/defaults/catálogos/cálculos e validação fiscal permanecem não implementados.

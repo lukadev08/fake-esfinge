@@ -1170,3 +1170,50 @@ Mac bloqueado e exigiu desbloqueio manual; causa da instabilidade Docker não co
 Solicitante desbloquear o Mac e confirmar a área de trabalho acessível. Retomar
 diagnóstico/ensaio Docker sem repetir testes verdes nem alterar o código revisado;
 conferir estado do container antes de agir. Publicação da #6 continua não autorizada.
+
+## 2026-10-25 — Concluir ensaio Docker V6 da #6
+
+Referência: [issue #6](https://github.com/lukadev08/fake-esfinge/issues/6) e resposta
+do usuário “Mac desbloqueado”, dando continuidade à recuperação do Docker.
+Situação: implementação, revisão, 95 testes e ensaios macOS/Docker aprovados;
+publicação da #6 e remoção do volume temporário aguardam autorização específica.
+
+### O que foi feito
+
+- Após desbloqueio manual, interface do OrbStack confirmou apenas nossa instância
+  temporária em execução. Parada pela interface concluiu com Exited143, preservando
+  volume V5; API respondeu novamente. Removido container V5 e construída imagem
+  local V6 `46d3d07e84c0`, Linux amd64/Temurin21.0.10+7, com o mesmo jar aprovado.
+- V6 executada no volume V5 como UID10001, sem rede/portas publicadas e com clientes
+  somente leitura. Passaram 47 verificações de upgrade/expiração/novo login, 636
+  de saldo, 46 após reinício e 13 de SQLite: **742**, todas exit0, além de 714 de
+  preparação Docker V5. Conservados 10.001 saldos e mais de 50.000 valores TEXT
+  exatos por campo/índice/vínculo; logs comuns somente de inicialização.
+- Mantidas evidências separadas: 95 testes da suíte limpa e 729 verificações no
+  jar macOS continuam aprovados, sem mudança de código/testes após revisão.
+  Atualizados [evidência](docs/evidencias/issue-6.md), manifesto, plano e
+  [corpo exato de PR local](.scratch/pr-issue-6.md).
+- Container V6 parado e removido. Volume fictício, imagem e clientes preservados.
+  GitHub reconferido: #6 aberta sem comentários, nenhum PR dessa branch e `main`
+  ainda em `25dcbd6`. Nenhuma publicação da #6 realizada.
+
+### O que deu errado
+
+- O primeiro cliente de upgrade esperava sessão V5 ainda válida; recebeu401
+  após mais de cinco horas de interrupção ambiental. Conferência SQLite confirmou
+  sessão/UG/validade de uma hora preservadas e expiração anterior ao instante atual.
+  Cliente auxiliar testou a rejeição e fez novo login; sem mudar aplicação, relógio
+  ou dados antigos. O ensaio corrigido passou; a falha inicial fica registrada.
+- Causa da instabilidade Docker não confirmada. Sem restart global/reinstalação
+  ou alteração de configuração. Avisos SLF4J dos clientes não falharam o ensaio.
+- Revisão automática rejeitou excluir o volume temporário por exigir autorização
+  específica para destruir seus dados. Nenhuma tentativa alternativa de exclusão;
+  volume `fake-esfinge-issue6-supervisao` mantido. Sem CI remoto/integrador real ou
+  aceite humano #8/E1/T01/T16 integral.
+
+### Próximo passo
+
+Solicitante decidir sobre push de `issue-6-recepcao-saldo`, criação de PR contra
+`main` e merge em `lukadev08/fake-esfinge`; decidir separadamente sobre exclusão do
+volume fictício temporário. Após integração autorizada, #7 segue na sequência,
+antes do aceite humano #8.

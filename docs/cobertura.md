@@ -60,8 +60,10 @@ assuntos monetários. As 771 verificações de preparação em V4 são contabili
 
 Evidência da #6: [execução local](evidencias/issue-6.md), 95 testes aprovados no total,
 revisão independente sem achados materiais e 729 verificações no jar macOS arm64,
-incluindo upgrade, reinício e quatro valores nomeados exatos por saldo. Docker V6
-permanece pendente por indisponibilidade do runtime; não há imagem V6 validada.
+incluindo upgrade, reinício e quatro valores nomeados exatos por saldo. Após
+recuperação do ambiente, **742 verificações na imagem V6 Linux amd64** passaram,
+incluindo upgrade real de V5, expiração da sessão antiga, novo login, reinício e
+mais de 50.000 valores TEXT exatos; preparação V5 contabilizada separadamente.
 Janeiro é demonstração estrutural; T01/T16 integral, cenário complementar pelo
 integrador real e saída E1 permanecem pendentes.
 
