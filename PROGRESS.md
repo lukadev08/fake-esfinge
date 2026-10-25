@@ -848,3 +848,49 @@ na #1. CI remoto, integrador real e aceite E1/T01 continuam pendentes.
 Implementar #3 por fatias TDD, revisar com agente independente e delegar eventual
 correção. Supervisor verificar testes e Docker antes de preparar PR. A autorização
 recebida não publica nem integra automaticamente futuras mudanças da #3.
+
+## 2026-10-24 — Concluir implementação e supervisão locais da #3
+
+Referência: [issue #3](https://github.com/lukadev08/fake-esfinge/issues/3), após
+integração autorizada da #2 no PR #29.
+Situação: implementação, revisão e validação locais concluídas; publicação pendente.
+
+### O que foi feito
+
+- `grupo3_executor`, GPT-6.1 Sol/baixo conforme papel, implementou recepção de
+  créditos pelo fluxo existente, sem processamento. Parser `LotePayload`, assunto
+  explícito, obrigatórios/opcionais/tipos/datas/mês histórico e decimal exato;
+  preservados contribuintes, bytes, multiplicidade, isolamento e contagens.
+- Persistidos valores BigDecimal como TEXT por lote/índice, junto de bytes,
+  vínculos e evento na mesma transação. V3 preserva V1/V2/checksums, dados,
+  sessões, IDs/eventos/FKs e sequências. Inspeção usa números JSON exatos.
+- RED inicial observou 422 onde crédito exigia 200; a fatia completa passou.
+  Regressões ampliaram schema/SQLite/migração/falhas; executor concluiu `verify`
+  com 61 testes verdes, zero falhas/erros/ignorados, exit0, 7,694 segundos.
+- `grupo3_reviewer`, GPT-6.1 Sol/médio conforme papel, aprovou diff staged sobre
+  `8431741` sem achados materiais. Nenhuma correção obrigatória ou agente de
+  correção necessário. Supervisor executou `clean verify`: 61 testes verdes,
+  zero falhas/erros/ignorados, exit0, 7,508 segundos.
+- Imagem Linux amd64, usuário 10001, volume próprio e `--network none`: base V2
+  preparada com 163 verificações, preservada no upgrade. Na imagem V3 passaram
+  15 verificações de upgrade, 704 de crédito/HTTP, 36 após reinício e 12 de SQLite
+  somente leitura: **767 no total**, incluindo 10.001 registros e valores TEXT
+  equivalentes exatamente a cada registro recebido. Logs comuns só de início.
+- Atualizados README, manifesto, [evidência completa](docs/evidencias/issue-3.md),
+  plano e [PR local](.scratch/pr-issue-3.md). Código/testes congelados após a
+  revisão e validação; somente documentação foi concluída depois.
+- Removidos somente container/volume temporários do ensaio. Imagem e clientes
+  temporários preservados; dados exclusivamente fictícios, sem chamadas ao TCE.
+
+### O que deu errado
+
+Nenhuma falha material remanescente. A compilação isolada de um cliente auxiliar
+precisou incluir seu diretório de classes no classpath; corrigida antes da execução.
+O aviso SLF4J do cliente SQLite não falhou o ensaio nem integra os logs da aplicação.
+Não houve publicação da #3, integrador real, CI remoto ou aceite E1/T01.
+
+### Próximo passo
+
+Solicitante decidir sobre push da branch `issue-3-recepcao-creditos`, criação de
+PR em `lukadev08/fake-esfinge` contra `main` e integração da mudança revisada.
+#4 é a próxima tarefa na sequência; E1 continua sujeito ao aceite humano #8.

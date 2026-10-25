@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public final class RemessaController {
     private final Remessas remessas;
     private final Authentication authentication;
-    private final ContribuintePayload payload=new ContribuintePayload();
+    private final LotePayload payload=new LotePayload();
     public RemessaController(Remessas remessas, Authentication authentication) { this.remessas=remessas; this.authentication=authentication; }
     public record OpenResponse(String chavePacote) {}
     @GetMapping("/v6/tributario/iniciarEnvio")

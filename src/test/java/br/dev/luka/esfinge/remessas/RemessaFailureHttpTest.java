@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.file.Files;
 import javax.sql.DataSource;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,28 +29,35 @@ class RemessaFailureHttpTest {
     @DynamicPropertySource static void database(DynamicPropertyRegistry registry) {
         registry.add("simulator.database",()->{try{return Files.createTempDirectory("esfinge-commit-").resolve("state.sqlite").toString();}catch(Exception e){throw new IllegalStateException();}});
     }
-    @ParameterizedTest @ValueSource(booleans={false,true})
-    void falhaStatementOuCommitNaoConfirmaESanitiza(boolean commit,CapturedOutput logs) throws Exception {
+    static java.util.stream.Stream<Arguments> failures() {
+        return java.util.stream.Stream.of(Arguments.of(false,false),Arguments.of(true,false),Arguments.of(false,true),Arguments.of(true,true));
+    }
+    @ParameterizedTest @MethodSource("failures")
+    void falhaStatementOuCommitNaoConfirmaESanitiza(boolean commit,boolean credit,CapturedOutput logs) throws Exception {
+        String payload=credit?CreditoHttpTest.PAYLOAD:RemessaHttpTest.PAYLOAD;
         String token=json.readTree(http.perform(post("/autenticacao/login").header("codigoAcesso","acesso-ficticio-a").header("senha","senha-ficticia-a")
                 .param("codigoUg","0001").param("descricaoEmpresaTI","Empresa").param("descritivoSoftware","Software"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString()).get("chave").asText();
-        String key=json.readTree(http.perform(get("/v6/tributario/iniciarEnvio").header("auth_token",token).param("anoMes",commit?"202602":"202601")
+        String key=json.readTree(http.perform(get("/v6/tributario/iniciarEnvio").header("auth_token",token).param("anoMes",Integer.toString(202601+(commit?1:0)+(credit?2:0)))
                 .param("cancelamentoAutomatico","NAO")).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()).get("chavePacote").asText();
         var jdbc=new JdbcTemplate(source);
+        int valuesBefore=jdbc.queryForObject("SELECT COUNT(*) FROM valores_creditos",Integer.class);
         jdbc.execute("CREATE TABLE IF NOT EXISTS falha_commit(remessa_id INTEGER REFERENCES remessas(id) DEFERRABLE INITIALLY DEFERRED)");
         jdbc.execute("CREATE TRIGGER impedir_confirmacao AFTER INSERT ON remessa_eventos WHEN NEW.tipo='LOTE_RECEBIDO' BEGIN "+
                 (commit?"INSERT INTO falha_commit VALUES(-1);":"SELECT RAISE(ABORT,'falha ficticia');")+" END");
         String error;
         try {
             error=http.perform(post("/v6/tributario/enviarParcialLote").header("auth_token",token).param("chavePacote",key)
-                    .contentType("application/json").content(RemessaHttpTest.PAYLOAD)).andExpect(status().isInternalServerError())
+                    .contentType("application/json").content(payload)).andExpect(status().isInternalServerError())
                     .andExpect(jsonPath("$.codigo").value("SIM_ERRO_INTERNO")).andReturn().getResponse().getContentAsString();
         } finally { jdbc.execute("DROP TRIGGER impedir_confirmacao"); }
+        assertEquals(valuesBefore,jdbc.queryForObject("SELECT COUNT(*) FROM valores_creditos",Integer.class));
         for(String secret:new String[]{token,"senha-ficticia-a","SELECT ","INSERT ","Exception","Pessoa Ficticia"}) {
             assertFalse(error.contains(secret));assertFalse(logs.getAll().contains(secret));
         }
         long number=json.readTree(http.perform(post("/v6/tributario/enviarParcialLote").header("auth_token",token).param("chavePacote",key)
-                .contentType("application/json").content(RemessaHttpTest.PAYLOAD)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()).get("numeroLote").asLong();
+                .contentType("application/json").content(payload)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()).get("numeroLote").asLong();
+        assertEquals(valuesBefore+(credit?1:0),jdbc.queryForObject("SELECT COUNT(*) FROM valores_creditos",Integer.class));
         http.perform(get("/__simulator/lotes/"+number).header("X-Simulator-Key","admin-local-ficticio")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.ordem").value(1)).andExpect(jsonPath("$.eventos.length()").value(2)).andExpect(jsonPath("$.recebidos").value(1));
     }

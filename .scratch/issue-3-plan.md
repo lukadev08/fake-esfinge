@@ -1,10 +1,12 @@
 # Preparação local — issue #3
 
 Referência: [issue #3](https://github.com/lukadev08/fake-esfinge/issues/3).
-Situação: exploração concluída; implementação liberada após integração da dependência #2
-no [PR #29](https://github.com/lukadev08/fake-esfinge/pull/29), commit `4b61304` em `main`.
+Situação: implementação, revisão e supervisão locais concluídas após integração
+da dependência #2 no [PR #29](https://github.com/lukadev08/fake-esfinge/pull/29),
+commit `4b61304` em `main`.
 Grupo próprio: `grupo3_explorer`, GPT-6 Luna/médio conforme o papel.
-Branch local `issue-3-recepcao-creditos`. Executor e reviewer próprios na sequência.
+Branch local `issue-3-recepcao-creditos`; executor `grupo3_executor`, GPT-6.1 Sol/baixo,
+e reviewer `grupo3_reviewer`, GPT-6.1 Sol/médio conforme os papéis, concluídos.
 Publicação e merge da #3 ainda não autorizados.
 
 ## Contrato verificado
@@ -54,5 +56,6 @@ Publicação e merge da #3 ainda não autorizados.
 
 O usuário autorizou a integração do PR #29 e a continuação da próxima tarefa.
 Merge executado com head esperado `46c67f2`; PR merged e #2 encerrada conferidos.
-Executar a #3 localmente pelo grupo próprio; preparar publicação somente com
-revisão e verificações verdes, respeitando a autorização externa específica.
+Executada a #3 localmente pelo grupo próprio: 61 testes verdes, revisão sem achados
+materiais e 767 verificações na imagem V3, além de 163 de preparação em V2.
+Preparado PR local; publicação e integração exigem autorização específica.
