@@ -1,6 +1,8 @@
 # Rascunho local — issue #7
 
-Situação: implementação/revisão/suíte e Docker V7 aprovados, sem push ou PR.
+Situação: publicado e integrado com autorização específica no
+[PR #34](https://github.com/lukadev08/fake-esfinge/pull/34), merge
+`53814c6d2b93e6a3ef37e0022f1993ab1c6c9a36`; issue #7 completed.
 Destino: `lukadev08/fake-esfinge`; base `main`; head `issue-7-recepcao-prazo`.
 Base funcional `ad27bd8`, registro inicial `27e7980`.
 
@@ -33,9 +35,9 @@ Closes #7
 
 ## Limite de publicação
 
-Rascunho local validado. Solicitar autorização específica para push de
-`issue-7-recepcao-prazo`, criação do PR contra `main` e merge em
-`lukadev08/fake-esfinge`. Implantação e publicação de imagem não estão incluídas.
+Push, PR e merge realizados após autorização específica do usuário para
+`issue-7-recepcao-prazo` contra `main` em `lukadev08/fake-esfinge`.
+Implantação e publicação de imagem não realizadas.
 Após integração, próximo ponto é #8/HITL; E2 permanece bloqueada pelo aceite humano.
-Container temporário removido; exclusão do volume fictício
-`fake-esfinge-issue7-supervisao` no contexto `orbstack` exige decisão específica.
+Container temporário removido; volume fictício `fake-esfinge-issue7-supervisao`
+excluído no contexto `orbstack` após autorização específica, com ausência confirmada.

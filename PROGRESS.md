@@ -1297,3 +1297,40 @@ Solicitante decidir publicação/merge da #7 contra `main` em `lukadev08/fake-es
 e, separadamente, exclusão do volume fictício `fake-esfinge-issue7-supervisao`.
 Depois da integração, #8 exige recepção de payload real no ambiente local
 controlado e aprovação expressa da saída E1; não iniciar E2 antes desse aceite.
+
+## 2026-10-25 — Publicar/integrar a #7 e preparar o aceite humano #8
+
+Referência: [issue #7](https://github.com/lukadev08/fake-esfinge/issues/7),
+[PR #34](https://github.com/lukadev08/fake-esfinge/pull/34) e autorizações específicas
+do usuário para publicação/merge e exclusão do volume fictício temporário.
+Situação: #7 integrada; preparação documental da #8 iniciada; aceite humano pendente.
+
+### O que foi feito
+
+- Reconfirmados head `07c3951`, árvore limpa exceto `.DS_Store`, destino remoto,
+  ausência de PR anterior e `main` em `ad27bd8`. Push e PR #34 com corpo preparado,
+  anexado à tarefa; conferidos head e merge possível.
+- Merge com SHA esperado gerou `53814c6d2b93e6a3ef37e0022f1993ab1c6c9a36`, sem
+  contorno de proteção. Confirmados PR merged e #7 completed. Nenhum status CI
+  publicado; evidência permanece local: 105 testes e 678 verificações Docker V7.
+- Excluído somente o volume fictício `fake-esfinge-issue7-supervisao` no contexto
+  `orbstack`, exit0 e ausência confirmada, após autorização específica. Imagem e
+  clientes preservados. Atualizados registros da #7 sem alterar código/testes.
+- `main` atualizado por fast-forward; criada branch local `issue-8-aceite-e1`.
+  #8 aberta `ready-for-human`, sem comentários: exige payload real e aprovação
+  expressa do solicitante, sem SQL interno ou aceite E3 completo nesta etapa.
+  Iniciado `grupo8_explorer`, exclusivo/somente leitura, identificado como
+  GPT-6 Luna/médio. Solicitada situação do ensaio em pergunta assíncrona, sem dados sensíveis.
+
+### O que deu errado
+
+Nenhuma falha na publicação, integração ou limpeza autorizada. Sem aprovação
+formal da própria conta, implantação ou publicação de imagem. A preparação da #8
+não comprova execução real, não encerra E1/T01 e não libera E2.
+
+### Próximo passo
+
+Preparar roteiro local mínimo para o solicitante executar no ambiente controlado;
+revisar em grupo próprio e registrar lacunas. Receber somente situação/conclusão
+sanitizada quando permitida, preservando payloads, SQL e resultados detalhados
+internamente. #8 permanece aberta até critérios demonstrados e aceite expresso.
