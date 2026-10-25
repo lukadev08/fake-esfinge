@@ -120,15 +120,25 @@ base em `/private/tmp/fake-esfinge-issue6-host-state` e fonte V5 em
 Antes da interrupção por quota, a imagem Docker V5 passou 714 verificações de
 preparação em volume exclusivo da #6. Na retomada, Docker não respondeu ao CLI
 nem ao `/_ping` no socket local, com timeout de cinco segundos. `orbctl status`
-informou Running, mas o macOS recusou abrir `/Applications/OrbStack.app` com
-`kLSNoExecutableErr` (executável ausente). O diagnóstico somente leitura também
-apontou CLI Homebrew; não foram aplicadas correções globais, reinstalação ou restart.
+informou Running. Dentro do sandbox, o macOS recusou abrir o app com
+`kLSNoExecutableErr`; conferência posterior mostrou que o executável existe.
+A abertura fora do sandbox teve exit0, sem reinstalação, restart ou mudança de
+configuração. O diagnóstico somente leitura também apontou CLI Homebrew, sem fix aplicado.
+
+Depois da resposta do usuário sobre restaurar Docker, `/_ping` respondeu `OK` e
+o inventário confirmou o container da #6 na imagem V5, ativo havia cinco horas,
+com volume e imagem anteriores preservados. A parada normal e a parada com
+timeout1 não concluíram, mesmo fora do sandbox; a consulta seguinte também ficou
+sem resposta. Clientes CLI foram cancelados, sem remover o volume. A inspeção
+da interface informou **Mac bloqueado**, sem conseguir desbloqueio automático;
+solicitado desbloqueio manual para continuar o diagnóstico. A causa da instabilidade
+da API permanece não confirmada; bloqueio de tela é o impedimento da inspeção visual.
 
 Não foi construída ou executada imagem V6. O estado atual e a limpeza de
 `fake-esfinge-issue6-supervisao` (container/volume Docker) não puderam ser
 conferidos; eram recursos temporários com dados fictícios da V5. Consultas CLI
 sem resposta foram canceladas. A validação local acima não comprova runtime
-Linux amd64; é necessário restaurar Docker para executar esse ensaio.
+Linux amd64; é necessário recuperar as operações Docker para executar esse ensaio.
 
 ## Limites
 

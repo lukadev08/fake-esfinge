@@ -1142,3 +1142,31 @@ Solicitante restaurar Docker/OrbStack ou decidir explicitamente manter somente
 a validação local. Executar ensaio V6 quando disponível e limpar apenas os
 recursos temporários da #6. Depois decidir publicação/merge com autorização
 específica; #7 segue na sequência, antes do aceite humano #8.
+
+## 2026-10-25 — Conferir restauração do Docker da #6
+
+Referência: issue #6 e resposta do usuário “Restaurar Docker e avisar”.
+Situação: implementação/revisão/validação local preservadas; Docker V6 pendente.
+
+### O que foi feito
+
+- Salvo commit local `9853f08`, com 95 testes e 729 verificações pelo jar aprovados,
+  sem publicação. Executável do OrbStack confirmado no disco; o erro de abertura
+  observado dentro do sandbox não comprovava ausência física. App abriu fora do
+  sandbox com exit0, sem restart, reinstalação ou mudança de configuração.
+- API respondeu `OK` e inventário confirmou o container temporário da #6 ainda
+  na imagem V5, ativo havia cinco horas, com volume e imagem conhecidos preservados.
+  Mantido contexto explícito `orbstack`; somente recursos da #6 foram selecionados.
+
+### O que deu errado
+
+A parada do container, inclusive com timeout curto fora do sandbox, não concluiu;
+a consulta seguinte também ficou sem resposta. Clientes CLI cancelados. Não houve
+remoção do volume ou construção da imagem V6. A inspeção da interface retornou
+Mac bloqueado e exigiu desbloqueio manual; causa da instabilidade Docker não confirmada.
+
+### Próximo passo
+
+Solicitante desbloquear o Mac e confirmar a área de trabalho acessível. Retomar
+diagnóstico/ensaio Docker sem repetir testes verdes nem alterar o código revisado;
+conferir estado do container antes de agir. Publicação da #6 continua não autorizada.

@@ -25,7 +25,9 @@ revisão independente aprovada sem achados materiais; **729 verificações pelo 
 local macOS arm64**, incluindo upgrade V5→V6, reinício, 10.001 saldos e leitura exata
 de mais de 50.000 valores. Outras 714 verificações prepararam a base V5 local.
 
-**Docker V6 pendente:** a API do OrbStack não responde e o macOS não abre o app.
+**Docker V6 pendente:** as operações Docker não concluem e a inspeção visual do
+OrbStack está impedida pela tela bloqueada do Mac. O app abriu fora do sandbox,
+mas a disponibilidade do runtime ainda não foi recuperada.
 Nenhuma imagem V6 foi construída ou validada. CI remoto, integrador real, aceite
 E1/T01/T16, condições e regras fiscais continuam pendentes; sem homologação oficial.
 

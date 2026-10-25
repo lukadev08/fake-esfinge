@@ -7,8 +7,9 @@ Branch `issue-6-recepcao-saldo`. Exploração concluída em leitura somente por
 Publicação/merge da #6 ainda não autorizados.
 Implementação e revisão concluídas por `grupo6_executor`, GPT-6.1 Sol/baixo, e
 `grupo6_reviewer`, GPT-6.1 Sol/médio conforme os papéis. Suíte limpa de 95 testes
-e 729 verificações pelo jar local aprovadas; Docker V6 pendente porque o runtime
-não responde. [Rascunho de PR](pr-issue-6.md), com esse limite explícito.
+e 729 verificações pelo jar local aprovadas; Docker V6 pendente porque suas
+operações não concluem. Interface indisponível com Mac bloqueado; solicitado
+desbloqueio manual. [Rascunho de PR](pr-issue-6.md), com esse limite explícito.
 
 ## Contrato verificado
 
