@@ -1,6 +1,8 @@
 # PR preparado — issue #3
 
-Situação: local; implementação, revisão e supervisão concluídas. Sem push ou PR.
+Situação: publicado e integrado com autorização do usuário no
+[PR #30](https://github.com/lukadev08/fake-esfinge/pull/30), commit `e0b4852` em `main`.
+Implementação revisada e validada no commit `8a08bc1`.
 Destino: `lukadev08/fake-esfinge`; base `main`; head `issue-3-recepcao-creditos`.
 Base funcional: `4b61304`; registro inicial da tarefa: `8431741`.
 
@@ -30,9 +32,9 @@ humano E1/T01 permanecem pendentes. Não comprova homologação oficial.
 
 Closes #3
 
-## Ações externas a autorizar
+## Situação das ações externas
 
 Push de `issue-3-recepcao-creditos` para `origin`, criação deste PR contra `main`
-e merge da mudança revisada em `lukadev08/fake-esfinge`. Implantação e publicação
+e merge em `lukadev08/fake-esfinge` autorizados e executados em 25/10/2026. Implantação e publicação
 de imagem não estão incluídas. A revisão técnica está aprovada; a conta GitHub
 não permite aprovação formal em PR da própria conta, conforme verificado na #1.
