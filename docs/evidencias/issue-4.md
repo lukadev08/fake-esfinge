@@ -118,7 +118,9 @@ Todos os dados são fictícios; não houve chamadas ao TCE.
 ## Limites
 
 Implementação, revisão e supervisão locais concluídas. Publicação/merge da #4
-ainda não executados. Não houve implantação ou publicação de imagem.
+autorizados e executados em 25/10/2026 no [PR #31](https://github.com/lukadev08/fake-esfinge/pull/31),
+head `4e3f8df`, commit de merge `cc2d12d` em `main`; issue #4 encerrada.
+Não houve implantação ou publicação de imagem.
 Não houve integrador real, CI remoto,
 aceite humano #8/E1, T01 integral ou homologação oficial. Sem processamento,
 finalização, demais três assuntos, catálogos, cronologia, cálculos ou validação

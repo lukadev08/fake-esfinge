@@ -112,7 +112,7 @@ class RemessaHttpTest {
                 "{\"lote\":"+PAYLOAD+"}",PAYLOAD.substring(0,PAYLOAD.length()-1)+",\"lancamentosCreditosTributarios\":[]}",
                 PAYLOAD.replace("\"numeroMatriculaContribuinte\":","\"extra\":1,\"numeroMatriculaContribuinte\":"),"{\"desconhecido\":[{}]}"})
             receive(token,key,body).andExpect(status().isUnprocessableEntity());
-        for(String subject:new String[]{"baixasCreditosTributarios","saldosIniciaisCreditoTributario","inicioPrazoPrescricional"})
+        for(String subject:new String[]{"saldosIniciaisCreditoTributario","inicioPrazoPrescricional"})
             receive(token,key,"{\""+subject+"\":[{}]}").andExpect(status().isUnprocessableEntity()).andExpect(jsonPath("$.codigo").value("SIM_COBERTURA_AUSENTE"));
         long number=json.readTree(receive(token,key,PAYLOAD).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()).get("numeroLote").asLong();
         http.perform(get("/__simulator/lotes/"+number).header("X-Simulator-Key","admin-local-ficticio"))

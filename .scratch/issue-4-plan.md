@@ -8,7 +8,7 @@ Executor `grupo4_executor`, GPT-6.1 Sol/baixo, e reviewer `grupo4_reviewer`,
 GPT-6.1 Sol/médio conforme os papéis, concluídos. Implementação e supervisão
 locais aprovadas: 71 testes, revisão sem achados e 853 verificações na imagem V4,
 além de 704 de preparação em V3. [PR local preparado](pr-issue-4.md).
-Publicação/merge da #4 ainda não autorizados.
+Publicação/merge da #4 autorizados e executados no PR #31, commit `cc2d12d` em `main`.
 
 ## Contrato verificado
 
