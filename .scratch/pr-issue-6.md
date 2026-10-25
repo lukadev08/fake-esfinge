@@ -1,7 +1,9 @@
 # Rascunho local — issue #6
 
-Situação: implementação/revisão/suíte, jar local e Docker V6 aprovados.
-Sem push ou PR. Destino: `lukadev08/fake-esfinge`; base `main`;
+Situação: publicado e integrado com autorização específica no
+[PR #33](https://github.com/lukadev08/fake-esfinge/pull/33), merge
+`ad27bd88b0dc9fba2d5bd08e0a0059988f090119`; issue #6 completed.
+Destino: `lukadev08/fake-esfinge`; base `main`;
 head `issue-6-recepcao-saldo`. Base funcional `25dcbd6`, registro inicial `50558ee`.
 
 ## Título
@@ -38,8 +40,8 @@ Closes #6
 
 ## Limite de publicação
 
-Rascunho local validado. Solicitar autorização específica para push da branch
-`issue-6-recepcao-saldo`, criação do PR contra `main` e merge em
-`lukadev08/fake-esfinge`. Implantação e publicação de imagem não estão incluídas.
-Container temporário removido; volume fictício `fake-esfinge-issue6-supervisao`
-preservado até autorização específica de remoção.
+Push, PR e merge realizados após autorização específica do usuário para a branch
+`issue-6-recepcao-saldo` contra `main` em `lukadev08/fake-esfinge`.
+Implantação e publicação de imagem não realizadas. Container temporário removido;
+volume fictício `fake-esfinge-issue6-supervisao` excluído após autorização específica
+posterior, com ausência confirmada no contexto `orbstack`.

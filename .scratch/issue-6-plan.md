@@ -4,14 +4,15 @@ Referência: [issue #6](https://github.com/lukadev08/fake-esfinge/issues/6).
 Base funcional `25dcbd6`, após integração da #5 no PR #32.
 Branch `issue-6-recepcao-saldo`. Exploração concluída em leitura somente por
 `grupo6_explorer`, GPT-6 Luna/médio conforme o papel.
-Publicação/merge da #6 ainda não autorizados.
+Publicação/merge autorizados e concluídos no [PR #33](https://github.com/lukadev08/fake-esfinge/pull/33),
+merge `ad27bd88b0dc9fba2d5bd08e0a0059988f090119`; issue #6 completed.
 Implementação e revisão concluídas por `grupo6_executor`, GPT-6.1 Sol/baixo, e
 `grupo6_reviewer`, GPT-6.1 Sol/médio conforme os papéis. Suíte limpa de 95 testes
 e 729 verificações pelo jar local aprovadas. Após desbloqueio manual do Mac e
 recuperação do Docker, 742 verificações na imagem V6 Linux amd64 passaram,
 incluindo upgrade V5 e reinício. Código/testes preservados após revisão.
-Container removido; volume fictício retido por bloqueio da revisão automática à
-exclusão sem autorização específica. [Rascunho de PR](pr-issue-6.md) preparado.
+Container removido; após autorização específica posterior, volume fictício excluído.
+[Corpo de PR](pr-issue-6.md) publicado sem alteração.
 
 ## Contrato verificado
 

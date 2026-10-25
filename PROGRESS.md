@@ -1217,3 +1217,39 @@ Solicitante decidir sobre push de `issue-6-recepcao-saldo`, criação de PR cont
 `main` e merge em `lukadev08/fake-esfinge`; decidir separadamente sobre exclusão do
 volume fictício temporário. Após integração autorizada, #7 segue na sequência,
 antes do aceite humano #8.
+
+## 2026-10-25 — Publicar/integrar a #6 e iniciar a #7
+
+Referência: [issue #6](https://github.com/lukadev08/fake-esfinge/issues/6),
+[PR #33](https://github.com/lukadev08/fake-esfinge/pull/33) e autorizações específicas
+do usuário para publicação/merge e exclusão do volume fictício temporário.
+Situação: #6 integrada; exploração da #7 iniciada em grupo independente.
+
+### O que foi feito
+
+- Reconfirmados head `7e5709b`, árvore limpa exceto `.DS_Store`, destino remoto,
+  ausência de PR anterior e `main` em `25dcbd6`. Push e PR #33 realizados com corpo
+  preparado; PR anexado à tarefa. Conferidos head e merge possível.
+- Merge com SHA esperado gerou `ad27bd88b0dc9fba2d5bd08e0a0059988f090119`, sem
+  contorno de proteção. Confirmados PR merged e #6 completed. Nenhum status de CI
+  publicado; evidência permanece local: 95 testes, 729 verificações macOS e 742 Docker.
+- Após autorização específica, removido somente o volume fictício
+  `fake-esfinge-issue6-supervisao` no contexto `orbstack`, exit0 e ausência confirmada.
+  Imagem e clientes preservados. Atualizados registros da #6 sem mudar seu código/testes.
+- `main` atualizado por fast-forward e criada branch `issue-7-recepcao-prazo`.
+  #7 aberta `ready-for-agent`, sem comentários, dependência #2 concluída. Iniciado
+  `grupo7_explorer`, exclusivo/somente leitura, com identificação solicitada
+  nome/modelo/raciocínio; papel GPT-6 Luna/médio.
+
+### O que deu errado
+
+Nenhuma falha na publicação/integração ou limpeza autorizada. Não houve nova
+tentativa de aprovação formal da própria conta, implantação, publicação de imagem
+ou CI remoto. Aceite E1/T01 permanece pendente, sujeito à #8.
+
+### Próximo passo
+
+Concluir exploração da #7, implementar schema derivado de quatro campos em fatia
+TDD por executor próprio e revisar por reviewer independente. Delegar correções
+se necessárias; supervisor verificar suíte/Docker antes de preparar PR.
+Publicação/merge da #7 exigem autorização específica; E2 aguarda o aceite humano #8.
