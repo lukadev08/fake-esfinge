@@ -894,3 +894,85 @@ Não houve publicação da #3, integrador real, CI remoto ou aceite E1/T01.
 Solicitante decidir sobre push da branch `issue-3-recepcao-creditos`, criação de
 PR em `lukadev08/fake-esfinge` contra `main` e integração da mudança revisada.
 #4 é a próxima tarefa na sequência; E1 continua sujeito ao aceite humano #8.
+
+## 2026-10-25 — Publicar/integrar a #3 e iniciar a #4
+
+Referência: [issue #3](https://github.com/lukadev08/fake-esfinge/issues/3),
+[PR #30](https://github.com/lukadev08/fake-esfinge/pull/30) e autorização do usuário
+para publicação/merge, mantendo a sequência de tarefas da meta.
+Situação: #3 integrada; exploração da #4 iniciada em grupo independente.
+
+### O que foi feito
+
+- Reconfirmados head local `8a08bc1`, árvore limpa exceto `.DS_Store`, ausência de
+  branch/PR remotos da #3 e `main` em `4b61304`. Publicada a branch revisada e
+  aberto PR #30 com título/corpo preparados; PR anexado à tarefa.
+- Conferidos head e integração possível. Merge executado com SHA esperado,
+  sem contorno de proteção, gerando `e0b485276e5841eb0785217edb8f4dd0dbae8bda`.
+  Verificados PR merged e issue #3 encerrada como completed. Não havia status
+  de CI publicados; evidência permanece local: 61 testes e 767 verificações V3.
+- Atualizado `main` local por fast-forward e criada `issue-4-recepcao-arrecadacao`.
+  #4 aberta, `ready-for-agent`, sem comentários, dependência #2 já concluída.
+  Iniciado `grupo4_explorer`, exclusivo da tarefa e somente leitura, com pedido
+  de identificação nome/modelo/raciocínio.
+- Atualizados registros da #3. Nenhum código, teste ou fonte contratual alterado
+  nesta integração; arquivos `.DS_Store` preservados fora do versionamento.
+
+### O que deu errado
+
+Nenhuma falha na publicação ou integração. A aprovação técnica independente foi
+preservada; não se repetiu tentativa de aprovação formal da própria conta.
+Sem implantação, publicação de imagem, integrador real, CI remoto ou aceite E1/T01.
+
+### Próximo passo
+
+Concluir desenho da #4 a partir do schema `arrecadacao`, implementar por executor
+próprio em TDD e revisar com reviewer independente. Delegar eventual correção;
+supervisor verificar testes/Docker antes de preparar PR. Publicação/merge da #4
+continuam sujeitos à autorização específica. Aceite humano #8/E1 permanece pendente.
+
+## 2026-10-25 — Concluir implementação e supervisão locais da #4
+
+Referência: [issue #4](https://github.com/lukadev08/fake-esfinge/issues/4), após
+integração da #3 no PR #30, dentro da sequência da meta.
+Situação: implementação, revisão e validação locais concluídas; publicação pendente.
+
+### O que foi feito
+
+- Grupo4 exclusivo: exploração por GPT-6 Luna/médio, execução por GPT-6.1
+  Sol/baixo e revisão por GPT-6.1 Sol/médio, conforme os papéis, com identificação.
+  Executor implementou arrecadação no fluxo existente, sem processamento.
+- Schema `arrecadacao`, opcionais/nulos, `numeroParcelas` plural, datas, Unicode,
+  inteiros e dinheiro exatos; singular, extras e misturas rejeitados. Preservados
+  contribuintes/créditos, bytes, multiplicidade, contagens e isolamento.
+- `monetaryValues` e tabela comum `valores_recebidos` preservam dinheiro em TEXT
+  para créditos/arrecadação, na transação de lote/evento/atividade. V4 mantém
+  V1–V3/checksums/fontes, dinheiro existente, IDs/eventos/sessões/FKs e high-water.
+- RED inicial: 200 esperado, 422 recebido, exit1/3,372s; a mesma fatia passou,
+  exit0/3,351s. Regressões focalizadas: 26 testes verdes/4,984s. Executor concluiu
+  `verify`: 71 testes, zero falhas/erros/ignorados, exit0/7,313s.
+- Reviewer aprovou diff staged sobre `54525d5`, sem achados materiais; nenhuma
+  correção obrigatória. Supervisor executou `clean verify`: 71 testes verdes,
+  zero falhas/erros/ignorados, exit0/8,349s. Código/testes congelados após validação.
+- Imagem Linux amd64, usuário10001 e `--network none`: V3 preparada com 704
+  verificações, preservada no upgrade. Na V4 passaram 36 verificações de crédito,
+  771 de arrecadação/HTTP, 34 após reinício e 12 de SQLite somente leitura:
+  **853 no total**, com 10.001 arrecadações e mais de 20.000 valores TEXT exatos
+  dos dois assuntos. Logs comuns somente de inicialização.
+- Atualizados README, manifesto, [evidência completa](docs/evidencias/issue-4.md),
+  plano e [PR local](.scratch/pr-issue-4.md). Removidos somente container/volume
+  temporários do ensaio; imagem e clientes preservados. Dados somente fictícios.
+
+### O que deu errado
+
+Uma substituição inicial de versão nos testes alterou a expectativa de conflitos
+concorrentes de três para quatro; detectada/restaurada pelo executor, sem mudar
+produção. Não há falha material remanescente. Aviso SLF4J do cliente SQLite não
+falhou o ensaio nem integra logs da aplicação. Sem publicação da #4, integrador
+real, CI remoto ou aceite E1/T01.
+
+### Próximo passo
+
+Solicitante decidir sobre push de `issue-4-recepcao-arrecadacao`, criação do PR
+em `lukadev08/fake-esfinge` contra `main` e integração da mudança revisada.
+#5 é a próxima tarefa; E1 continua sujeito ao aceite humano #8.

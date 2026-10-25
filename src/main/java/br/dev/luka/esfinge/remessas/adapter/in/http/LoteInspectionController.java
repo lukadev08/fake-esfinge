@@ -18,7 +18,7 @@ public final class LoteInspectionController {
     public InspectionResponse inspect(@PathVariable String numeroLote,@RequestHeader(value="X-Simulator-Key",required=false) String key) throws java.io.IOException {
         var inspection=remessas.inspect(key,RemessaController.number(numeroLote));var lote=inspection.lote();
         return new InspectionResponse(lote.number(),lote.remessaId(),lote.key(),lote.scenario(),lote.ug(),lote.yearMonth(),lote.order(),
-            lote.subject().name(),"RECEBIDO",lote.records(),0,0,lote.hash(),lote.bytes(),json.readTree(lote.bytes()).get(lote.subject()==br.dev.luka.esfinge.remessas.domain.Assunto.CADASTRO_CONTRIBUINTE?"cadastrosContribuintes":"lancamentosCreditosTributarios"),
+            lote.subject().name(),"RECEBIDO",lote.records(),0,0,lote.hash(),lote.bytes(),json.readTree(lote.bytes()).get(switch(lote.subject()) { case CADASTRO_CONTRIBUINTE -> "cadastrosContribuintes"; case LANCAMENTO_CREDITO_TRIBUTARIO -> "lancamentosCreditosTributarios"; case DIARIO_ARRECADACAO -> "diarioGeralArrecadacao"; }),
             inspection.events().stream().map(e->new EventResponse(e.id(),e.lote(),e.type(),e.instant())).toList());
     }
 }

@@ -108,7 +108,9 @@ imagem local e clientes temporários foram preservados. Nenhum dado real foi usa
 ## Limites
 
 Implementação, revisão e supervisão locais concluídas. Publicação e merge da #3
-ainda não executados. Não houve implantação ou publicação de imagem.
+autorizados e executados em 25/10/2026 no [PR #30](https://github.com/lukadev08/fake-esfinge/pull/30),
+head `8a08bc1`, commit de merge `e0b4852` em `main`; issue #3 encerrada.
+Não houve implantação ou publicação de imagem.
 Não houve integrador real, CI remoto,
 aceite humano #8/E1, T01 integral ou homologação oficial. Sem processamento,
 finalização, demais quatro assuntos ou validação fiscal/de vínculos entre assuntos.

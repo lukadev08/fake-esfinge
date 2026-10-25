@@ -6,9 +6,10 @@ independente da origem dos dados e sem encaminhar chamadas ao TCE.
 E0 está concluído documentalmente no recorte inicial. As fatias E1
 [#1](https://github.com/lukadev08/fake-esfinge/issues/1) e
 [#2](https://github.com/lukadev08/fake-esfinge/issues/2) e
-[#3](https://github.com/lukadev08/fake-esfinge/issues/3) implementam autenticação
-fictícia, abertura de envio, recepção de contribuintes e créditos, consulta `RECEBIDO` e
-inspeção administrativa com persistência SQLite. Os outros quatro assuntos,
+[#3](https://github.com/lukadev08/fake-esfinge/issues/3) e
+[#4](https://github.com/lukadev08/fake-esfinge/issues/4) implementam autenticação
+fictícia, abertura de envio, recepção de contribuintes, créditos e arrecadação, consulta `RECEBIDO` e
+inspeção administrativa com persistência SQLite. Os outros três assuntos,
 processamento, finalização, reset e painel ainda não estão implementados.
 A saída E1 depende do aceite humano da #8; testes locais não comprovam T01.
 
@@ -40,7 +41,7 @@ Dados originais do piloto permanecem no ambiente local controlado, fora do Git
 e de serviços externos. Exemplos e evidências compartilhadas exigem sanitização;
 credenciais e tokens do simulador serão fictícios.
 
-## Executar e validar as fatias #1–#3
+## Executar e validar as fatias #1–#4
 
 Requer JDK 21. O wrapper oficial fixa Maven 3.9.9; o primeiro uso baixa Maven e
 as dependências do Maven Central. O build fixa Spring Boot 3.5.10, SQLite JDBC
@@ -56,7 +57,8 @@ padrão fica em `data/simulator.sqlite`, ignorada pelo Git. Reiniciar conserva
 configuração, vínculos, sessões e lotes recebidos. A migração V2 acrescenta remessas,
 lotes e eventos sem alterar a V1; versões/checksums anteriores são conferidos antes
 da atualização. A V3 conserva lotes, eventos, sessões e sequências existentes,
-permite crédito e acrescenta os valores monetários em TEXT. Schema, migração ou configuração persistida incompatíveis
+permite crédito e acrescenta os valores monetários em TEXT. A V4 conserva esses
+dados ao permitir arrecadação e reunir os valores na tabela `valores_recebidos`. Schema, migração ou configuração persistida incompatíveis
 interrompem a inicialização sem recriar dados. Não há reset nesta
 fatia. Para outra execução, use outro arquivo/volume; preserve o anterior.
 
@@ -126,7 +128,8 @@ completo pertencem à #21. O runtime não contém cliente/proxy para o TCE.
 Consulte [cobertura atual](docs/cobertura.md),
 [evidência da #1](docs/evidencias/issue-1.md) e
 [evidência da #2](docs/evidencias/issue-2.md) e
-[evidência da #3](docs/evidencias/issue-3.md) para resultados e limites.
+[evidência da #3](docs/evidencias/issue-3.md) e
+[evidência da #4](docs/evidencias/issue-4.md) para resultados e limites.
 
 ## Abrir, receber e consultar contribuintes — #2
 
@@ -209,3 +212,30 @@ Consulta continua `RECEBIDO`, sem processamento. A inspeção existente mostra
 protegida pela chave administrativa. Vários lotes e registros repetidos não são
 deduplicados. Cronologia, referências entre assuntos, catálogos externos e cálculos
 tributários não estão implementados. Os testes locais da #3 não encerram E1/T01.
+
+## Receber e inspecionar diário de arrecadação — #4
+
+Use a mesma chave e rota de recepção com lista direta `diarioGeralArrecadacao`.
+O schema `arrecadacao` valida oito obrigatórios e dois opcionais/nulos, tipos,
+comprimentos Unicode, datas de calendário e extras. Exemplo fictício:
+
+```json
+{"diarioGeralArrecadacao":[{"anoCodigoSequencialOperacaoArrecadacao":2020,"codigoSequencialOperacaoArrecadacao":"000009","tipoArrecadacao":1,"dataOperacao":"2020-02-29","codigoEspecificacaoReceita":1,"anoLancamentoCreditoTributario":2019,"codigoLancamentoCreditoTributario":"000007","valorCreditoTributario":123456789012345678901234567890.12,"numeroParcelas":2}]}
+```
+
+`numeroParcelas` é inteiro opcional/nulo. O plural é aproximação confirmada pelo
+cliente, divergente da extração original; `numeroParcela` recebe 422, sem alias.
+`numeroAnoTipoCobranca` também é opcional/nulo. Não são validados catálogos,
+cronologia, existência do crédito ou cálculos tributários.
+
+`valorCreditoTributario` usa decimal exato, com a mesma política monetária dos
+créditos. A V4 reúne os valores dos dois assuntos em `valores_recebidos`, por
+lote/índice/UG/cenário, preservando os valores TEXT existentes na V3. Bytes,
+metadados, valores e evento são confirmados atomicamente; falha de COMMIT não
+confirma recepção. Contribuintes não recebem valores monetários.
+
+Lotes separados dos três assuntos podem usar a mesma chave; listas mistas são
+rejeitadas. Vários lotes e registros repetidos conservam multiplicidade, sem
+limite artificial de 10.000. Consulta continua RECEBIDO, sem processamento.
+A inspeção protegida apresenta assunto `DIARIO_ARRECADACAO`, valores exatos,
+bytes e contagens. Reinício conserva os dados; testes locais não encerram E1/T01.

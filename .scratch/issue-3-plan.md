@@ -7,7 +7,7 @@ commit `4b61304` em `main`.
 Grupo próprio: `grupo3_explorer`, GPT-6 Luna/médio conforme o papel.
 Branch local `issue-3-recepcao-creditos`; executor `grupo3_executor`, GPT-6.1 Sol/baixo,
 e reviewer `grupo3_reviewer`, GPT-6.1 Sol/médio conforme os papéis, concluídos.
-Publicação e merge da #3 ainda não autorizados.
+Publicação e merge da #3 autorizados e executados no PR #30, commit `e0b4852` em `main`.
 
 ## Contrato verificado
 
@@ -58,4 +58,5 @@ O usuário autorizou a integração do PR #29 e a continuação da próxima tare
 Merge executado com head esperado `46c67f2`; PR merged e #2 encerrada conferidos.
 Executada a #3 localmente pelo grupo próprio: 61 testes verdes, revisão sem achados
 materiais e 767 verificações na imagem V3, além de 163 de preparação em V2.
-Preparado PR local; publicação e integração exigem autorização específica.
+Publicação e integração autorizadas posteriormente e executadas no PR #30;
+issue #3 encerrada, com a continuação da #4 em grupo próprio.
