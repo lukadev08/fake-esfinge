@@ -86,7 +86,9 @@ aplicação e do versionamento. As evidências são de dados fictícios e execu�
 
 ## Limites de aceite
 
-Revisão e supervisão locais da #2 concluídas. Publicação e merge ainda não executados.
+Revisão e supervisão locais da #2 concluídas. Publicação autorizada e executada no
+[PR #29](https://github.com/lukadev08/fake-esfinge/pull/29), com implementação
+revisada no commit `02e036f`; merge ainda não autorizado ou executado.
 Não há outros assuntos, processamento, finalização, descarte, reset, expiração
 administrativa de envio, painel ou CI remoto nesta entrega. As evidências contribuem
 parcialmente para T01/T02/T10/T11/T13/T14/T18; não comprovam integrador real,

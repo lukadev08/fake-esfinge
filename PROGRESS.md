@@ -758,3 +758,32 @@ publicação/merge referia-se ao PR #28; nenhuma publicação da #2 foi executad
 Solicitante decidir sobre push de `issue-2-recepcao-contribuintes`, criação do PR
 em `lukadev08/fake-esfinge` contra `main` e merge da mudança revisada. Após resolver
 essa dependência, iniciar grupo independente da #3 e seguir #4–#7 antes do aceite #8.
+
+## 2026-10-24 — Publicar a #2 no PR #29
+
+Referência: [issue #2](https://github.com/lukadev08/fake-esfinge/issues/2) e
+autorização do usuário: “autorizada a publicação”.
+Situação: publicação concluída; integração pendente de autorização específica.
+
+### O que foi feito
+
+- Confirmados branch, destino remoto, ausência de PR anterior e `main` em
+  `a36c7bf`. Árvore revisada no commit `02e036f`, sem alterações de código após
+  revisão e validação: 51 testes e 178 verificações Docker aprovadas.
+- Enviada `issue-2-recepcao-contribuintes` para `origin` e aberto o
+  [PR #29](https://github.com/lukadev08/fake-esfinge/pull/29) contra `main`,
+  com título/corpo preparados; PR anexado à tarefa.
+- Atualizados o registro do PR e a evidência local. Nenhuma alteração de código
+  ou teste nesta publicação; `.DS_Store` permanecem fora do versionamento.
+
+### O que deu errado
+
+Nenhuma falha na publicação. Não foram executados merge, implantação, publicação
+de imagem, CI remoto ou integrador real. A autorização recebida cobre publicação;
+o merge permanece sujeito ao limite específico do `AGENTS.md`.
+
+### Próximo passo
+
+Obter autorização específica para integrar o PR #29 em `main`; conferir seu head
+e condições de integração antes do merge. #3–#7 dependem da #2 integrada;
+aceite humano #8/E1 e T01 integral continuam pendentes.
