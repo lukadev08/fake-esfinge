@@ -787,3 +787,64 @@ o merge permanece sujeito ao limite específico do `AGENTS.md`.
 Obter autorização específica para integrar o PR #29 em `main`; conferir seu head
 e condições de integração antes do merge. #3–#7 dependem da #2 integrada;
 aceite humano #8/E1 e T01 integral continuam pendentes.
+
+## 2026-10-24 — Explorar a #3 enquanto a integração da #2 aguarda autorização
+
+Referência: [issue #3](https://github.com/lukadev08/fake-esfinge/issues/3) e
+solicitação do usuário: “siga para a próxima tarefa”.
+Situação: preparação local concluída; implementação dependente da integração da #2.
+
+### O que foi feito
+
+- Conferidos PR #29 aberto, head `46c67f2`, integração possível informada pelo
+  GitHub e ausência de status de CI publicados. Código/testes permanecem iguais
+  ao commit revisado/validado `02e036f`; somente três documentos foram atualizados.
+- Confirmada #3 aberta, `ready-for-agent`, sem comentários e bloqueada pela #2.
+  Iniciado explorer exclusivo `grupo3_explorer`, GPT-6 Luna/médio conforme o papel,
+  com identificação e exploração somente leitura.
+- Supervisão e explorer conferiram planejamento, arquitetura, contrato, schema
+  `credito` e pontos de integração. Preparado [plano local](.scratch/issue-3-plan.md)
+  com escopo, persistência decimal exata, migração e fatias TDD previstas.
+
+### O que deu errado
+
+Não há impedimento técnico identificado na exploração. O PR #29 ainda não foi
+integrado; a autorização anterior cobriu publicação. Solicitada autorização
+específica de merge conforme `AGENTS.md`, mantendo trabalho independente em leitura.
+Nenhuma implementação, teste novo, mensagem externa ou publicação da #3 executada.
+
+### Próximo passo
+
+Após autorização, integrar PR #29 com conferência do head, sincronizar a base da
+#3 e iniciar executor próprio. Depois, revisão independente, eventual correção
+delegada e verificação do supervisor. Nenhum critério E1/T01 foi encerrado.
+
+## 2026-10-24 — Integrar a #2 e iniciar implementação da #3
+
+Referência: [PR #29](https://github.com/lukadev08/fake-esfinge/pull/29),
+[issue #3](https://github.com/lukadev08/fake-esfinge/issues/3) e autorização do
+usuário para integrar o PR e prosseguir para a próxima tarefa.
+Situação: integração da #2 concluída; implementação local da #3 iniciada.
+
+### O que foi feito
+
+- Reconfirmados head `46c67f2`, revisão aprovada e ausência de mudanças de código
+  desde a validação `02e036f`. Integrado PR #29 com SHA esperado e método merge,
+  gerando `4b61304929b0435bc6a499911d3025808bc36ce7` em `main`.
+- Conferidos PR merged e issue #2 encerrada como completed. Atualizado `main`
+  local por fast-forward e criada `issue-3-recepcao-creditos`, conservando a
+  preparação local e os arquivos `.DS_Store` fora do versionamento.
+- Atualizados registros da integração e plano da #3. Exploração concluída no
+  grupo3; próxima etapa executada por executor próprio, sob supervisão.
+
+### O que deu errado
+
+Nenhuma falha na integração. Não houve implantação, publicação de imagem ou
+nova tentativa de aprovação formal na própria conta, restrição já comprovada
+na #1. CI remoto, integrador real e aceite E1/T01 continuam pendentes.
+
+### Próximo passo
+
+Implementar #3 por fatias TDD, revisar com agente independente e delegar eventual
+correção. Supervisor verificar testes e Docker antes de preparar PR. A autorização
+recebida não publica nem integra automaticamente futuras mudanças da #3.
