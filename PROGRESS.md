@@ -1385,3 +1385,44 @@ critérios e reconciliar divergências. Quando permitido pela empresa, retornar
 somente versão do artefato/contrato, conclusão sanitizada, lacunas e decisão
 expressa sobre E1. Manter #8 aberta e E2 bloqueada até esse aceite; não declarar
 T01/E3 integral ou homologação oficial a partir desta preparação.
+
+## 2026-10-25 — Autorizar e validar a publicação documental do roteiro E1
+
+Referência: solicitação do usuário “autorizo o próximo merge e publicação com
+testes verdes” e continuação da implementação sob supervisão; apoio à
+[issue #8](https://github.com/lukadev08/fake-esfinge/issues/8).
+Situação: publicação do roteiro autorizada e validada; execução/aceite E1 pendentes.
+
+### O que foi feito
+
+- Reconfirmados branch `issue-8-aceite-e1`, head `28036ed`, árvore limpa exceto
+  `.DS_Store`, ausência de PR anterior e `main` remoto em `53814c6`. #8 aberta,
+  `ready-for-human`, sem comentários ou conclusão de ensaio fornecida.
+- Mantida a revisão documental aprovada do grupo8, incluindo as duas correções
+  de escopo já rechecadas. Supervisor reconferiu três links locais, whitespace,
+  cinco critérios PENDENTES e ausência de alterações no código/testes/build/Dockerfile.
+- Comando Maven inspecionado novamente. Novo `verify` supervisionado: **105 testes,
+  zero falhas/erros/ignorados**, exit0 em **11,123s**, com build/jar aprovados.
+  SQLite temporário e credenciais fictícias; nenhum acesso ao integrador/TCE ou
+  dados reais. Não houve novo ensaio Docker; imagem #7 permanece referência anterior.
+- Preparado [corpo exato de PR](.scratch/pr-issue-8-roteiro.md), sem fechamento
+  automático da #8 e sem declaração de saída E1. Autorização permite publicar e
+  integrar esta documentação contra `main` em `lukadev08/fake-esfinge`.
+- O mesmo reviewer do grupo8, identificado como GPT-6.1 Sol/médio, aprovou também
+  a preparação da publicação, corpo com `Refs #8` e registro de autorização,
+  sem achados materiais ou inferência de execução/aceite E1.
+
+### O que deu errado
+
+Nenhuma falha na validação. A nova autorização de publicação/continuação não
+comprova o ensaio real nem esclarece se a dependência E1→E2 pode ser adiada.
+Solicitada definição assíncrona específica sobre antecipar E2 com #8 pendente,
+pois o planejamento e `AGENTS.md` exigem a sequência. Sem resposta, o marco é mantido.
+Avisos existentes Mockito/ByteBuddy não falharam os testes. Sem CI remoto ou
+nova evidência de execução interna do solicitante.
+
+### Próximo passo
+
+Publicar e integrar o PR documental autorizado com head verificado, mantendo
+#8 aberta. A implementação E2 aguarda execução/aceite E1 ou decisão expressa
+do solicitante permitindo antecipá-la; não inferir aceite nem encerrar #8.
