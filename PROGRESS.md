@@ -1334,3 +1334,54 @@ Preparar roteiro local mínimo para o solicitante executar no ambiente controlad
 revisar em grupo próprio e registrar lacunas. Receber somente situação/conclusão
 sanitizada quando permitida, preservando payloads, SQL e resultados detalhados
 internamente. #8 permanece aberta até critérios demonstrados e aceite expresso.
+
+## 2026-10-25 — Retomar e revisar o roteiro local do aceite #8
+
+Referência: [issue #8](https://github.com/lukadev08/fake-esfinge/issues/8), pedido
+“retome de onde parou” e confirmação do solicitante: “Vou executar no ambiente
+interno controlado”. Situação: preparação documental concluída e revisada;
+execução real e aceite humano E1 pendentes.
+
+### O que foi feito
+
+- Reconfirmados branch `issue-8-aceite-e1`, base documental `e17baa5`, ausência
+  inicial de roteiro e árvore limpa exceto `.DS_Store`. PR #34 continua integrado
+  em `53814c6`; #8 aberta `ready-for-human`, sem comentários. Código, testes,
+  dependências e Dockerfile permanecem iguais à versão funcional integrada.
+- Retomado o mesmo `grupo8_executor` após uso normal restabelecido, sem consumir
+  reset. Grupo identificado: explorer GPT-6 Luna/médio, executor GPT-6.1 Sol/baixo,
+  reviewer GPT-6.1 Sol/médio e agente de correção GPT-6.1 Sol/baixo.
+- Criado [roteiro local](.scratch/issue-8-roteiro.md) para execução pelo solicitante
+  no ambiente interno controlado: artefato/configuração/volume exclusivos,
+  recepção pelo integrador real, inspeção privada antes/depois da reabertura,
+  autenticação e modelo de conclusão sanitizada. Todos os critérios de execução
+  e aceite continuam PENDENTES; payloads, SQL e detalhes permanecem internos.
+- Imagem local V7 `bcbc05ff4d10` e SHA do jar `0d54ec70afea3c1f7f2a87db0e172683795000913e4c4668576643b17c5d5957`
+  reconferidos neste Mac. Disponibilidade/execução na empresa não comprovadas;
+  construção interna deve identificar seu próprio artefato. Os 105 testes e 678
+  verificações da #7 permanecem evidência anterior, sem nova execução nesta tarefa.
+- Reviewer encontrou duas ampliações indevidas do gate: exigir captura do corpo
+  no integrador e observar recepção antes do422. Correção delegada a agente próprio:
+  inspeções anteriores/posteriores são a referência obrigatória; comparação com
+  corpo enviado é adicional quando disponível. Consulta/admin após disparo
+  rejeitado são permitidos, pois não houve processamento. Rechecagem aprovou o
+  roteiro sem achados materiais remanescentes.
+- Verificação estática: rotas/headers/campos/configuração conferidos nas fontes,
+  três links locais existentes, whitespace/final de arquivo e diff sem erros.
+  Nenhum build, suíte, container de aplicação ou integrador real iniciado para a #8.
+
+### O que deu errado
+
+O primeiro turno do executor foi interrompido por limite de uso, antes de criar
+o arquivo; retomada preservou a mesma tarefa/árvore. A revisão documental apontou
+dois P2 de escopo, corrigidos e rechecados. Nenhum código foi alterado, nenhum
+dado real acessado e nenhuma publicação externa da #8 realizada. Revisão do
+roteiro não comprova execução real nem aprovação da saída E1.
+
+### Próximo passo
+
+Solicitante executar o roteiro no ambiente interno controlado, conferir os
+critérios e reconciliar divergências. Quando permitido pela empresa, retornar
+somente versão do artefato/contrato, conclusão sanitizada, lacunas e decisão
+expressa sobre E1. Manter #8 aberta e E2 bloqueada até esse aceite; não declarar
+T01/E3 integral ou homologação oficial a partir desta preparação.
