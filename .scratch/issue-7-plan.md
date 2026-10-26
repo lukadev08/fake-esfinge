@@ -3,13 +3,15 @@
 Referência: [issue #7](https://github.com/lukadev08/fake-esfinge/issues/7).
 Base funcional `ad27bd8`, após integração da #6 no PR #33.
 Branch `issue-7-recepcao-prazo`. Exploração concluída somente leitura por
-`grupo7_explorer`, identificado como GPT-6 Luna/médio. Publicação/merge da #7
-ainda não autorizados. E2 aguarda aceite humano #8 após esta fatia.
+`grupo7_explorer`, identificado como GPT-6 Luna/médio. Publicação/merge autorizados
+e concluídos no [PR #34](https://github.com/lukadev08/fake-esfinge/pull/34), merge
+`53814c6d2b93e6a3ef37e0022f1993ab1c6c9a36`; issue #7 completed.
+E2 aguarda aceite humano #8 após esta fatia.
 Implementação e revisão concluídas por `grupo7_executor`, GPT-6.1 Sol/baixo, e
 `grupo7_reviewer`, GPT-6.1 Sol/médio, ambos identificados. Suíte limpa de 105 testes
 e 678 verificações Docker Linux amd64 aprovadas. Nenhuma correção obrigatória.
-[Corpo exato de PR](pr-issue-7.md) preparado; container removido e volume fictício
-preservado até autorização específica de exclusão.
+[Corpo exato de PR](pr-issue-7.md) publicado sem alteração. Container removido;
+volume fictício excluído após autorização específica, com ausência confirmada.
 
 ## Contrato e limite
 

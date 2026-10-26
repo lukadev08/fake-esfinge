@@ -124,10 +124,15 @@ Container temporário parado e removido. Volume fictício
 sem tentar apagá-lo. Imagem e clientes em `/private/tmp/fake-esfinge-issue7-supervisao`
 preservados localmente; nenhuma publicação de imagem.
 
+Após autorização específica posterior do usuário, o volume foi excluído com
+exit0 e sua ausência confirmada no contexto `orbstack`.
+
 ## Limites
 
 Recepção estrutural não valida prescrição, cronologia ou vínculo fiscal ao
 crédito/dívida ativa. Sem DTO extraído, captura independente do cliente/TCE,
 integrador real, CI remoto ou aceite humano #8/E1/T01. Se prazo faltar no piloto,
 cenário complementar continua necessário. Processamento, finalização e demais
-capacidades E2 permanecem não implementadas. Sem publicação/merge desta fatia.
+capacidades E2 permanecem não implementadas. Publicação/merge autorizados e
+concluídos no [PR #34](https://github.com/lukadev08/fake-esfinge/pull/34), head
+`07c3951`, merge `53814c6d2b93e6a3ef37e0022f1993ab1c6c9a36`; #7 completed.

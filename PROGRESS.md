@@ -1297,3 +1297,132 @@ Solicitante decidir publicação/merge da #7 contra `main` em `lukadev08/fake-es
 e, separadamente, exclusão do volume fictício `fake-esfinge-issue7-supervisao`.
 Depois da integração, #8 exige recepção de payload real no ambiente local
 controlado e aprovação expressa da saída E1; não iniciar E2 antes desse aceite.
+
+## 2026-10-25 — Publicar/integrar a #7 e preparar o aceite humano #8
+
+Referência: [issue #7](https://github.com/lukadev08/fake-esfinge/issues/7),
+[PR #34](https://github.com/lukadev08/fake-esfinge/pull/34) e autorizações específicas
+do usuário para publicação/merge e exclusão do volume fictício temporário.
+Situação: #7 integrada; preparação documental da #8 iniciada; aceite humano pendente.
+
+### O que foi feito
+
+- Reconfirmados head `07c3951`, árvore limpa exceto `.DS_Store`, destino remoto,
+  ausência de PR anterior e `main` em `ad27bd8`. Push e PR #34 com corpo preparado,
+  anexado à tarefa; conferidos head e merge possível.
+- Merge com SHA esperado gerou `53814c6d2b93e6a3ef37e0022f1993ab1c6c9a36`, sem
+  contorno de proteção. Confirmados PR merged e #7 completed. Nenhum status CI
+  publicado; evidência permanece local: 105 testes e 678 verificações Docker V7.
+- Excluído somente o volume fictício `fake-esfinge-issue7-supervisao` no contexto
+  `orbstack`, exit0 e ausência confirmada, após autorização específica. Imagem e
+  clientes preservados. Atualizados registros da #7 sem alterar código/testes.
+- `main` atualizado por fast-forward; criada branch local `issue-8-aceite-e1`.
+  #8 aberta `ready-for-human`, sem comentários: exige payload real e aprovação
+  expressa do solicitante, sem SQL interno ou aceite E3 completo nesta etapa.
+  Iniciado `grupo8_explorer`, exclusivo/somente leitura, identificado como
+  GPT-6 Luna/médio. Solicitada situação do ensaio em pergunta assíncrona, sem dados sensíveis.
+
+### O que deu errado
+
+Nenhuma falha na publicação, integração ou limpeza autorizada. Sem aprovação
+formal da própria conta, implantação ou publicação de imagem. A preparação da #8
+não comprova execução real, não encerra E1/T01 e não libera E2.
+
+### Próximo passo
+
+Preparar roteiro local mínimo para o solicitante executar no ambiente controlado;
+revisar em grupo próprio e registrar lacunas. Receber somente situação/conclusão
+sanitizada quando permitida, preservando payloads, SQL e resultados detalhados
+internamente. #8 permanece aberta até critérios demonstrados e aceite expresso.
+
+## 2026-10-25 — Retomar e revisar o roteiro local do aceite #8
+
+Referência: [issue #8](https://github.com/lukadev08/fake-esfinge/issues/8), pedido
+“retome de onde parou” e confirmação do solicitante: “Vou executar no ambiente
+interno controlado”. Situação: preparação documental concluída e revisada;
+execução real e aceite humano E1 pendentes.
+
+### O que foi feito
+
+- Reconfirmados branch `issue-8-aceite-e1`, base documental `e17baa5`, ausência
+  inicial de roteiro e árvore limpa exceto `.DS_Store`. PR #34 continua integrado
+  em `53814c6`; #8 aberta `ready-for-human`, sem comentários. Código, testes,
+  dependências e Dockerfile permanecem iguais à versão funcional integrada.
+- Retomado o mesmo `grupo8_executor` após uso normal restabelecido, sem consumir
+  reset. Grupo identificado: explorer GPT-6 Luna/médio, executor GPT-6.1 Sol/baixo,
+  reviewer GPT-6.1 Sol/médio e agente de correção GPT-6.1 Sol/baixo.
+- Criado [roteiro local](.scratch/issue-8-roteiro.md) para execução pelo solicitante
+  no ambiente interno controlado: artefato/configuração/volume exclusivos,
+  recepção pelo integrador real, inspeção privada antes/depois da reabertura,
+  autenticação e modelo de conclusão sanitizada. Todos os critérios de execução
+  e aceite continuam PENDENTES; payloads, SQL e detalhes permanecem internos.
+- Imagem local V7 `bcbc05ff4d10` e SHA do jar `0d54ec70afea3c1f7f2a87db0e172683795000913e4c4668576643b17c5d5957`
+  reconferidos neste Mac. Disponibilidade/execução na empresa não comprovadas;
+  construção interna deve identificar seu próprio artefato. Os 105 testes e 678
+  verificações da #7 permanecem evidência anterior, sem nova execução nesta tarefa.
+- Reviewer encontrou duas ampliações indevidas do gate: exigir captura do corpo
+  no integrador e observar recepção antes do422. Correção delegada a agente próprio:
+  inspeções anteriores/posteriores são a referência obrigatória; comparação com
+  corpo enviado é adicional quando disponível. Consulta/admin após disparo
+  rejeitado são permitidos, pois não houve processamento. Rechecagem aprovou o
+  roteiro sem achados materiais remanescentes.
+- Verificação estática: rotas/headers/campos/configuração conferidos nas fontes,
+  três links locais existentes, whitespace/final de arquivo e diff sem erros.
+  Nenhum build, suíte, container de aplicação ou integrador real iniciado para a #8.
+
+### O que deu errado
+
+O primeiro turno do executor foi interrompido por limite de uso, antes de criar
+o arquivo; retomada preservou a mesma tarefa/árvore. A revisão documental apontou
+dois P2 de escopo, corrigidos e rechecados. Nenhum código foi alterado, nenhum
+dado real acessado e nenhuma publicação externa da #8 realizada. Revisão do
+roteiro não comprova execução real nem aprovação da saída E1.
+
+### Próximo passo
+
+Solicitante executar o roteiro no ambiente interno controlado, conferir os
+critérios e reconciliar divergências. Quando permitido pela empresa, retornar
+somente versão do artefato/contrato, conclusão sanitizada, lacunas e decisão
+expressa sobre E1. Manter #8 aberta e E2 bloqueada até esse aceite; não declarar
+T01/E3 integral ou homologação oficial a partir desta preparação.
+
+## 2026-10-25 — Autorizar e validar a publicação documental do roteiro E1
+
+Referência: solicitação do usuário “autorizo o próximo merge e publicação com
+testes verdes” e continuação da implementação sob supervisão; apoio à
+[issue #8](https://github.com/lukadev08/fake-esfinge/issues/8).
+Situação: publicação do roteiro autorizada e validada; execução/aceite E1 pendentes.
+
+### O que foi feito
+
+- Reconfirmados branch `issue-8-aceite-e1`, head `28036ed`, árvore limpa exceto
+  `.DS_Store`, ausência de PR anterior e `main` remoto em `53814c6`. #8 aberta,
+  `ready-for-human`, sem comentários ou conclusão de ensaio fornecida.
+- Mantida a revisão documental aprovada do grupo8, incluindo as duas correções
+  de escopo já rechecadas. Supervisor reconferiu três links locais, whitespace,
+  cinco critérios PENDENTES e ausência de alterações no código/testes/build/Dockerfile.
+- Comando Maven inspecionado novamente. Novo `verify` supervisionado: **105 testes,
+  zero falhas/erros/ignorados**, exit0 em **11,123s**, com build/jar aprovados.
+  SQLite temporário e credenciais fictícias; nenhum acesso ao integrador/TCE ou
+  dados reais. Não houve novo ensaio Docker; imagem #7 permanece referência anterior.
+- Preparado [corpo exato de PR](.scratch/pr-issue-8-roteiro.md), sem fechamento
+  automático da #8 e sem declaração de saída E1. Autorização permite publicar e
+  integrar esta documentação contra `main` em `lukadev08/fake-esfinge`.
+- O mesmo reviewer do grupo8, identificado como GPT-6.1 Sol/médio, aprovou também
+  a preparação da publicação, corpo com `Refs #8` e registro de autorização,
+  sem achados materiais ou inferência de execução/aceite E1.
+
+### O que deu errado
+
+Nenhuma falha na validação. A nova autorização de publicação/continuação não
+comprova o ensaio real nem esclarece se a dependência E1→E2 pode ser adiada.
+Solicitada definição assíncrona específica sobre antecipar E2 com #8 pendente,
+pois o planejamento e `AGENTS.md` exigem a sequência. Sem resposta, o marco é mantido.
+Avisos existentes Mockito/ByteBuddy não falharam os testes. Sem CI remoto ou
+nova evidência de execução interna do solicitante.
+
+### Próximo passo
+
+Publicar e integrar o PR documental autorizado com head verificado, mantendo
+#8 aberta. A implementação E2 aguarda execução/aceite E1 ou decisão expressa
+do solicitante permitindo antecipá-la; não inferir aceite nem encerrar #8.
