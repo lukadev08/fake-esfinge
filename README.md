@@ -15,6 +15,8 @@ fictícia, abertura de envio, recepção dos seis assuntos, consulta `RECEBIDO` 
 inspeção administrativa com persistência SQLite. Processamento, finalização,
 reset e painel ainda não estão implementados.
 A saída E1 depende do aceite humano da #8; testes locais não comprovam T01.
+A continuidade técnica E2 autorizada está delimitada na
+[seção 13.1 do planejamento](docs/planejamento-simulador-tributario.md#131-pendência-e1-e-continuidade-de-e2).
 
 ## Documentação
 
@@ -37,7 +39,7 @@ Validação de vínculos entre assuntos e regras tributárias fica para evoluç�
 o piloto inicial não equivale ao aceite integral do MVP ou T01.
 
 As versões HTML, PDF e DOCX do planejamento são apresentações da versão
-anterior e não foram regeneradas nesta revisão de 23/10/2026. Consulte o Markdown
+anterior e não foram regeneradas nesta revisão de 26/10/2026. Consulte o Markdown
 para as decisões atuais. Os comandos abaixo validam somente a fatia implementada.
 
 Dados originais do piloto permanecem no ambiente local controlado, fora do Git

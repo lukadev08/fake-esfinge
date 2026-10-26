@@ -1488,3 +1488,48 @@ Solicitante executar e conferir o ensaio no ambiente interno controlado. Quando
 permitido, retornar somente versão do artefato/contrato, conclusão sanitizada,
 lacunas e decisão expressa sobre E1. Retomar E2 após o aceite, mantendo detalhes
 e dados originais internos e sem declarar T01/E3 integral por esse marco.
+
+## 2026-10-26 — Registrar pendência E1 e autorizar continuidade técnica E2
+
+Referência: solicitação do usuário para registrar a validação interna E1 ainda
+não executada e direcionar E2, alterando apenas a documentação relacionada.
+Situação: #8/E1 pendente; início técnico de E2 autorizado; documentação revisada.
+
+### O que foi feito
+
+- A nova decisão substitui a orientação anterior, registrada na mesma data, de
+  manter E2 aguardando o aceite E1. A exceção de sequência está centralizada na
+  [seção 13.1 do planejamento](docs/planejamento-simulador-tributario.md#131-pendência-e1-e-continuidade-de-e2),
+  revisão 1.7. E1 conserva critérios, responsável solicitante e execução no
+  ambiente interno controlado, sem data definida ou aprovação presumida.
+- Direcionada a próxima implementação para a #9, começando pelas tabelas de
+  transição, com equipe própria, revisão, correções delegadas e testes verificados.
+  Mantidos os demais critérios e dependências de aceite E1/T01/E3/E4/E5.
+- Alinhados ponteiros em AGENTS, README, manifesto e roteiro da #8; atualizado
+  somente o registro atual fora do corpo publicado do PR #35. Histórico anterior,
+  referência do artefato E1 e cinco critérios PENDENTES do roteiro preservados.
+- Grupo8 retomado para esta atualização documental: explorer GPT-6 Luna/médio,
+  executor GPT-6.1 Sol/baixo e reviewer GPT-6.1 Sol/médio, identificados. Revisão
+  aprovada sem achados materiais. Aplicado `writing-for-agents` ao ajuste de
+  AGENTS, com ponteiro curto para a decisão central.
+- Verificações estáticas aprovadas: sete referências válidas à seção 13.1,
+  versão/data do planejamento, whitespace, cinco critérios E1 PENDENTES e corpo
+  publicado do PR #35 idêntico ao anterior. Diff restrito aos sete documentos.
+- GitHub consultado somente para leitura: #8 aberta `ready-for-human`; #9 aberta
+  `ready-for-agent`, sem comentários e ainda com `Blocked by: #8`. A exceção
+  documental autoriza seu início técnico; nenhuma dependência remota foi removida.
+
+### O que deu errado
+
+Nenhuma falha de execução informada; o ensaio E1 segue sem validação real por
+indisponibilidade do solicitante. A liberação de desenvolvimento E2 não demonstra
+compatibilidade nem encerra E1/T01/E3. Nenhum código, teste, build, dado do piloto,
+arquivo de apresentação ou estado do rastreador foi alterado nesta tarefa.
+
+### Próximo passo
+
+Prosseguir em execução posterior com a implementação técnica da #9, dentro do
+escopo e ciclo de supervisão autorizados. O solicitante realizará a pendência
+#8 internamente e retornará, quando permitido, versão do artefato/contrato,
+conclusão sanitizada, lacunas e decisão expressa sobre E1. Reconciliar divergências
+do ensaio antes de declarar esse aceite; os demais marcos continuam obrigatórios.

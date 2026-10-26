@@ -38,5 +38,8 @@ Refs #8
 O usuário autorizou o próximo push/PR/merge com testes verdes e a continuação sob
 supervisão. A publicação documental foi concluída com corpo exato acima, revisão
 aprovada e testes verdes. Execução e aceite E1 não foram demonstrados.
-Em 26/10/2026, o solicitante decidiu manter E2 aguardando o aceite E1 da #8,
-sem antecipação da implementação.
+Histórico: em 26/10/2026, o solicitante decidiu manter E2 aguardando o aceite E1
+da #8, sem antecipação da implementação. Essa decisão foi substituída, na mesma
+data, pela autorização vigente de continuidade técnica E2, delimitada na
+[seção 13.1 do planejamento](../docs/planejamento-simulador-tributario.md#131-pendência-e1-e-continuidade-de-e2).
+O corpo exato publicado acima permanece preservado como registro do PR #35.

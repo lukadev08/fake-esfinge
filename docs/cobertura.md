@@ -41,6 +41,9 @@ registra a evolução implementada.
 | Aceites humanos / T01 / E1–E5 | Integrador real, referência independente e reprodução | Issues #8, #19, #20, #22, #26 | Pendente |
 | Docker Linux amd64 | Imagem mínima, volume local e runtime Java21 | Dockerfile; supervisão da #2 com 178 verificações HTTP/reinício sem rede, imagem identificada na evidência | Implementada e exercitada localmente no jar da #2 |
 
+A pendência de aceite E1 e a continuidade técnica E2 autorizada estão delimitadas
+na [seção 13.1 do planejamento](planejamento-simulador-tributario.md#131-pendência-e1-e-continuidade-de-e2).
+
 Evidência da #2: [execução local](evidencias/issue-2.md), 51 testes aprovados no total,
 178 verificações Docker e revisão independente sem achados materiais.
 

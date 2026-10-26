@@ -9,7 +9,8 @@ Referência: [issue #8](https://github.com/lukadev08/fake-esfinge/issues/8),
 [contrato E0](../docs/contrato-e0.md) e [comandos existentes](../README.md).
 O objetivo é comprovar recepção de payload efetivamente produzido e enviado pelo integrador
 e conservação após reabrir a instância. O fluxo completo e o esperado independente
-de E3/T01 permanecem separados; E2 aguarda a saída E1 aprovada expressamente.
+de E3/T01 permanecem separados. A continuidade técnica E2 autorizada está
+delimitada na [seção 13.1 do planejamento](../docs/planejamento-simulador-tributario.md#131-pendência-e1-e-continuidade-de-e2).
 
 ## 1. Fixar o artefato e preparar a execução interna
 
