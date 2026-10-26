@@ -2,6 +2,8 @@
 
 Destino autorizado: `lukadev08/fake-esfinge`, branch `issue-8-aceite-e1` contra `main`.
 Somente documentação e registros; a issue #8 continua aberta e E1 não está aprovado.
+Publicado e integrado no [PR #35](https://github.com/lukadev08/fake-esfinge/pull/35),
+head `2bc1444`, merge `ddf84875a5afd5a336537ca631afe04ef9ebfd1c`.
 
 ## Título
 
@@ -34,6 +36,6 @@ Refs #8
 ## Autorização e limites
 
 O usuário autorizou o próximo push/PR/merge com testes verdes e a continuação sob
-supervisão. Esta é a publicação documental preparada da tarefa atual. Não há
-autorização factual de aceite E1; a decisão sobre antecipar E2 foi solicitada
-separadamente, sem resposta até a preparação deste registro.
+supervisão. A publicação documental foi concluída com corpo exato acima, revisão
+aprovada e testes verdes. Execução e aceite E1 não foram demonstrados; a decisão
+sobre antecipar E2 foi solicitada separadamente e continua pendente de resposta.

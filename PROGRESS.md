@@ -1426,3 +1426,38 @@ nova evidência de execução interna do solicitante.
 Publicar e integrar o PR documental autorizado com head verificado, mantendo
 #8 aberta. A implementação E2 aguarda execução/aceite E1 ou decisão expressa
 do solicitante permitindo antecipá-la; não inferir aceite nem encerrar #8.
+
+## 2026-10-25 — Publicar e integrar o roteiro de apoio ao aceite E1
+
+Referência: autorização do usuário para o próximo merge/publicação com testes
+verdes, [PR #35](https://github.com/lukadev08/fake-esfinge/pull/35) e issue #8.
+Situação: publicação documental concluída; #8 aberta; decisão sobre antecipar E2 pendente.
+
+### O que foi feito
+
+- Commit local `2bc1444` salvou o corpo exato de PR e a validação supervisionada.
+  Publicada `issue-8-aceite-e1` e criado PR #35 contra `main`, com `Refs #8`, sem
+  fechamento automático ou afirmação de saída E1. PR anexado à tarefa.
+- Conferidos head esperado, base e merge possível. Merge normal autorizado
+  gerou `ddf84875a5afd5a336537ca631afe04ef9ebfd1c`; PR merged e `main` remoto
+  reconfirmados. #8 continua aberta, sem comentários ou resultado real fornecido.
+- Nenhum status de CI publicado; verdes locais: 105 testes no novo verify
+  supervisionado/11,123s e verificações documentais. Fonte/testes/build/Dockerfile
+  permanecem iguais a `53814c6`. Não foi repetido o ensaio Docker da #7.
+- Branch local sincronizada por fast-forward com `origin/main`. Atualizado o
+  registro do PR, mantendo o roteiro e seus cinco critérios PENDENTES.
+
+### O que deu errado
+
+Nenhuma falha na publicação ou integração, sem contorno de proteção. A autorização
+de continuação foi recebida, mas o ensaio/aceite real E1 segue sem evidência e a
+pergunta específica sobre adiar a dependência E1→E2 permanece sem resposta.
+Não iniciada implementação E2, não fechado o aceite #8, sem implantação ou
+publicação de imagem. Este registro posterior ao merge permanece local.
+
+### Próximo passo
+
+Receber conclusão sanitizada e aceite E1 após execução interna, ou decisão
+expressa permitindo antecipar E2 com #8 pendente. Na segunda hipótese, registrar
+a exceção de sequência e retomar a próxima implementação em equipe própria,
+preservando #8/T01/E3 como pendentes e supervisão/revisão/testes por tarefa.
