@@ -1461,3 +1461,30 @@ Receber conclusão sanitizada e aceite E1 após execução interna, ou decisão
 expressa permitindo antecipar E2 com #8 pendente. Na segunda hipótese, registrar
 a exceção de sequência e retomar a próxima implementação em equipe própria,
 preservando #8/T01/E3 como pendentes e supervisão/revisão/testes por tarefa.
+
+## 2026-10-26 — Manter E2 aguardando o aceite humano E1
+
+Referência: resposta expressa do solicitante “Manter E2 aguardando o aceite E1”
+à definição sobre antecipar E2 com a [issue #8](https://github.com/lukadev08/fake-esfinge/issues/8) pendente.
+Situação: sequência E1→E2 mantida; execução interna e aceite humano E1 pendentes.
+
+### O que foi feito
+
+- Registrada a decisão de não antecipar E2. #8 reconfirmada aberta; nenhuma
+  conclusão do ensaio real ou aprovação de saída E1 foi fornecida.
+- Atualizado somente o registro local da autorização. Roteiro revisado permanece
+  disponível em [.scratch/issue-8-roteiro.md](.scratch/issue-8-roteiro.md), com os
+  critérios de execução e aceite pendentes; corpo publicado do PR #35 preservado.
+
+### O que deu errado
+
+Nenhuma falha. Não há impedimento técnico novo; a implementação aguarda o marco
+humano mantido pelo solicitante. Sem mudanças na aplicação, novos testes,
+publicação ou início de E2 nesta decisão.
+
+### Próximo passo
+
+Solicitante executar e conferir o ensaio no ambiente interno controlado. Quando
+permitido, retornar somente versão do artefato/contrato, conclusão sanitizada,
+lacunas e decisão expressa sobre E1. Retomar E2 após o aceite, mantendo detalhes
+e dados originais internos e sem declarar T01/E3 integral por esse marco.

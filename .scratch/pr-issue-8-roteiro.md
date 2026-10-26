@@ -37,5 +37,6 @@ Refs #8
 
 O usuário autorizou o próximo push/PR/merge com testes verdes e a continuação sob
 supervisão. A publicação documental foi concluída com corpo exato acima, revisão
-aprovada e testes verdes. Execução e aceite E1 não foram demonstrados; a decisão
-sobre antecipar E2 foi solicitada separadamente e continua pendente de resposta.
+aprovada e testes verdes. Execução e aceite E1 não foram demonstrados.
+Em 26/10/2026, o solicitante decidiu manter E2 aguardando o aceite E1 da #8,
+sem antecipação da implementação.
