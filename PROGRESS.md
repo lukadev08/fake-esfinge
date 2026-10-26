@@ -1533,3 +1533,39 @@ escopo e ciclo de supervisão autorizados. O solicitante realizará a pendência
 #8 internamente e retornará, quando permitido, versão do artefato/contrato,
 conclusão sanitizada, lacunas e decisão expressa sobre E1. Reconciliar divergências
 do ensaio antes de declarar esse aceite; os demais marcos continuam obrigatórios.
+
+## 2026-10-26 — Iniciar implementação técnica da #9
+
+Referência: pedido do usuário “Dê continuidade a implementação”,
+[issue #9](https://github.com/lukadev08/fake-esfinge/issues/9) e exceção de sequência
+da seção 13.1 do planejamento. Situação: exploração concluída; transições/desenho
+registrados antes do código; #8/E1 permanece pendente.
+
+### O que foi feito
+
+- Preservada em commit local `abad882` a documentação já revisada que autoriza
+  E2 técnico com E1 pendente; criada branch `issue-9-processamento-assuntos`.
+  `main` remoto permanece `ddf8487`; nenhum push/PR da #9 realizado.
+- Issue #9 reconfirmada aberta `ready-for-agent`, sem comentários. Dependência
+  remota #8 preservada; exceção do solicitante autoriza este início técnico.
+- Novo grupo exclusivo: `grupo9_explorer`, identificado GPT-6 Luna/médio,
+  concluiu somente leitura. Supervisor leu arquitetura/contrato/código e inspecionou
+  comandos de build/testes; não há CONTEXT.md/ADRs locais nesta árvore, sem recriá-los.
+- [Plano da #9](.scratch/issue-9-plan.md) registra tabelas de transição, interfaces
+  e fatias TDD. Disparo usa snapshot dos pendentes da chave conforme fonte V6,
+  sem seleção implícita de assunto; recebidos posteriores aguardam novo disparo.
+  Reutilizados os seams já confirmados em E0 e vocabulário de `codebase-design`.
+
+### O que deu errado
+
+Uma busca inicial citou arquivo de operações inexistente; o pacote foi inventariado
+e as rotas/schemas reais consultados, sem criar artefato substituto. Nenhum build,
+teste, aplicação ou alteração de código realizado na preparação. Ensaio interno
+E1 permanece não executado; não há aceite presumido ou homologação oficial.
+
+### Próximo passo
+
+Executor próprio implementar a #9 em fatias RED→GREEN, sem antecipar finalização,
+recuperação/reset/expiração ou regras fiscais. Reviewer independente avaliar,
+correções delegadas se necessárias; supervisor conferir suíte limpa e Docker
+antes de preparar publicação específica. #8/E1 continua pendente do solicitante.
