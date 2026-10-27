@@ -1776,3 +1776,37 @@ testes não repetidos nesta operação. Ensaio real #8/E1/T01/E3 e CI remoto pen
 Concluir exploração e tabelas de decisão da #11; implementar com equipe própria,
 TDD, revisão independente e supervisão do artefato final. Publicação da nova fatia
 continua exigindo autorização específica; #8/E1 permanece com o solicitante.
+
+## 2026-10-26 — Preparar implementação da #11
+
+Referência: continuação técnica E2 autorizada e
+[issue #11](https://github.com/lukadev08/fake-esfinge/issues/11). Situação: exploração
+e tabelas de decisão concluídas antes do código; implementação em seguida.
+
+### O que foi feito
+
+- Explorer próprio `grupo11_explorer`, papel configurado GPT-6 Luna/médio, leu
+  contrato/arquitetura/código. Corrigiu variante inicial inferida sem evidência.
+  Supervisor definiu [plano da #11](.scratch/issue-11-plan.md) com falha administrativa
+  por lote/índice, diagnóstico contratual e propagação atômica do mesmo assunto.
+- Decisões derivadas: falhar na conclusão sem commit parcial por registro;
+  conservar payload/hash como histórico, remover dados ativos e marcar lote inativo;
+  abortar seguintes não concluídos, inclusive EM_PROCESSAMENTO/fora do snapshot.
+  Outros assuntos/anteriores válidos permanecem; finalização considera só ativos.
+- Plano administrativo por lote/geração, imutável após início, separado do payload.
+  V10 preservará dados V9; reconstrução necessária restrita à tabela de trabalhos.
+  Reforçada ordem de exclusão das FKs e revalidação contra conclusão tardia.
+- Comandos existentes inspecionados, sem dependência/configuração novas. #11 aberta,
+  sem comentários; #9 concluída. #8/E1/T01/E3 e publicação da #11 pendentes.
+
+### O que deu errado
+
+Nenhuma execução de código/build/testes nesta preparação. Lacunas de API própria,
+arquivo histórico e ciclo do plano foram resolvidas por decisões documentadas do
+simulador, sem atribuir equivalência oficial. Identificação incorreta inicial do
+explorer foi corrigida; nenhuma alteração de fonte original ou dado real.
+
+### Próximo passo
+
+Executor próprio implementar em fatias TDD, seguido de revisão independente,
+correções delegadas e supervisão de suíte limpa/Docker sobre artefato final.
