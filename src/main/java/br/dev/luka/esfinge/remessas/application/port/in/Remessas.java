@@ -9,4 +9,6 @@ public interface Remessas { Remessa open(String token, int yearMonth, String can
     Reception.Plan receptionPlan(String adminKey,String key,Assunto subject);
     Reception.Plan planReception(String adminKey,String key,Assunto subject,Reception.Type type,long attempt);
     void removeReceptionPlan(String adminKey,String key,Assunto subject);
+    Competencia competencia(String adminKey,String ug,int yearMonth);
+    Competencia blockCompetencia(String adminKey,String ug,int yearMonth,boolean blocked);
 }

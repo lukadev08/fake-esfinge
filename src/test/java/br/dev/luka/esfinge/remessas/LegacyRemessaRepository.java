@@ -11,6 +11,8 @@ final class LegacyRemessaRepository implements RemessaRepository {
     private final JdbcTemplate jdbc;
     LegacyRemessaRepository(DataSource source) { jdbc = new JdbcTemplate(source);current=new br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcRemessaRepository(source); }
     private final br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcRemessaRepository current;
+    public boolean blocked(String scenario,String ug,int yearMonth) {return false;}
+    public void block(String scenario,String ug,int yearMonth,boolean blocked) {throw new UnsupportedOperationException();}
     public Remessa open(String scenario,String ug,int yearMonth,String key,Instant now) {return current.open(scenario,ug,yearMonth,key,now);}
     public java.util.Optional<Remessa> find(String key,String scenario) {throw new UnsupportedOperationException();}
     public java.util.Optional<Reception.Plan> receptionPlan(Remessa remessa,Assunto subject) {return java.util.Optional.empty();}

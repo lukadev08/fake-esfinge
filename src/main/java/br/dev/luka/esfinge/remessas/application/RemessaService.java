@@ -21,7 +21,10 @@ public final class RemessaService implements Remessas {
         var session = authentication.authenticate(token);
         if (yearMonth < 202601 || yearMonth > 202612) throw new RemessaFailure(INVALID_REQUEST);
         if (!"NAO".equals(cancellation)) throw new RemessaFailure(UNSUPPORTED);
-        return transactions.execute(() -> repository.open(session.scenario(), session.ug(), yearMonth, "sim-envio-" + UUID.randomUUID(), clock.instant()));
+        return transactions.execute(() -> {
+            requireUnblocked(session.scenario(),session.ug(),yearMonth);
+            return repository.open(session.scenario(),session.ug(),yearMonth,"sim-envio-"+UUID.randomUUID(),clock.instant());
+        });
     }
     public Lote receive(String token,String key,ReceivedContent content) {
         var session=authentication.authenticate(token);
@@ -29,6 +32,7 @@ public final class RemessaService implements Remessas {
         if (content==null || content.records()<1 || content.bytes().length==0) throw new RemessaFailure(INVALID_STRUCTURE);
         var result=transactions.execute(() -> {
             var remessa=repository.find(key,session.scenario(),session.ug()).orElseThrow(() -> new RemessaFailure(NOT_FOUND));
+            requireUnblocked(remessa.scenario(),remessa.ug(),remessa.yearMonth());
             remessa.requireOpen();
             var interruption=repository.receptionAttempt(remessa,content.subject());
             if(interruption==Reception.Type.ANTES_ACEITACAO) return new Receipt(null,interruption);
@@ -43,6 +47,23 @@ public final class RemessaService implements Remessas {
         return result.lot();
     }
     private record Receipt(Lote lot,Reception.Type interruption) {}
+    public Competencia competencia(String adminKey,String ug,int yearMonth) {
+        var scenario=competenciaScenario(adminKey,ug,yearMonth);
+        return transactions.execute(()->new Competencia(ug,yearMonth,repository.blocked(scenario,ug,yearMonth)));
+    }
+    public Competencia blockCompetencia(String adminKey,String ug,int yearMonth,boolean blocked) {
+        var scenario=competenciaScenario(adminKey,ug,yearMonth);
+        return transactions.execute(()->{repository.block(scenario,ug,yearMonth,blocked);return new Competencia(ug,yearMonth,blocked);});
+    }
+    private String competenciaScenario(String adminKey,String ug,int yearMonth) {
+        var snapshot=inspection.inspect(adminKey);
+        if(ug==null || ug.isEmpty() || yearMonth<202601 || yearMonth>202612) throw new RemessaFailure(INVALID_REQUEST);
+        if(snapshot.identities().stream().noneMatch(identity->identity.ugs().contains(ug))) throw new RemessaFailure(NOT_FOUND);
+        return snapshot.scenario();
+    }
+    private void requireUnblocked(String scenario,String ug,int yearMonth) {
+        if(repository.blocked(scenario,ug,yearMonth)) throw new RemessaFailure(BLOCKED);
+    }
     public Reception.Plan receptionPlan(String adminKey,String key,Assunto subject) {
         var scenario=inspection.inspect(adminKey).scenario();validatePlanKey(key,subject);
         return transactions.execute(()->repository.receptionPlan(repository.find(key,scenario).orElseThrow(()->new RemessaFailure(NOT_FOUND)),subject).orElseThrow(()->new RemessaFailure(NOT_FOUND)));
@@ -66,6 +87,7 @@ public final class RemessaService implements Remessas {
         if(totals==null) throw new RemessaFailure(INVALID_STRUCTURE);
         transactions.execute(()->{
             var remessa=repository.find(key,session.scenario(),session.ug()).orElseThrow(()->new RemessaFailure(NOT_FOUND));
+            requireUnblocked(remessa.scenario(),remessa.ug(),remessa.yearMonth());
             remessa.requireOpen();totals.verify(repository.finalization(remessa));repository.finish(remessa,clock.instant());return null;
         });
     }

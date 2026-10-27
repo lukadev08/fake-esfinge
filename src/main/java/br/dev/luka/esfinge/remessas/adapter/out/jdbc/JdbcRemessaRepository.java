@@ -10,6 +10,13 @@ import org.springframework.dao.DataAccessException;
 public final class JdbcRemessaRepository implements RemessaRepository {
     private final JdbcTemplate jdbc;
     public JdbcRemessaRepository(DataSource source) { jdbc = new JdbcTemplate(source); }
+    public boolean blocked(String scenario,String ug,int yearMonth) {
+        return jdbc.queryForObject("SELECT COUNT(*) FROM competencias_bloqueadas WHERE cenario=? AND ug=? AND competencia=?",Integer.class,scenario,ug,yearMonth)>0;
+    }
+    public void block(String scenario,String ug,int yearMonth,boolean blocked) {
+        if(blocked) jdbc.update("INSERT INTO competencias_bloqueadas(cenario,ug,competencia) VALUES(?,?,?) ON CONFLICT DO NOTHING",scenario,ug,yearMonth);
+        else jdbc.update("DELETE FROM competencias_bloqueadas WHERE cenario=? AND ug=? AND competencia=?",scenario,ug,yearMonth);
+    }
     public Remessa open(String scenario, String ug, int yearMonth, String key, Instant now) {
         long id;
         try {

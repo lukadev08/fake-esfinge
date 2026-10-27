@@ -6,6 +6,8 @@ import java.util.List;
 import java.time.Instant;
 
 public interface RemessaRepository { Remessa open(String scenario, String ug, int yearMonth, String key, Instant now);
+    boolean blocked(String scenario,String ug,int yearMonth);
+    void block(String scenario,String ug,int yearMonth,boolean blocked);
     Optional<Remessa> find(String key,String scenario,String ug);
     Optional<Remessa> find(String key,String scenario);
     Optional<Reception.Plan> receptionPlan(Remessa remessa,Assunto subject);

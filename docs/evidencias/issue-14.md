@@ -134,6 +134,21 @@ remapeou a porta32768 para32769; sondagem na antiga falhou exit7, consulta da
 porta publicada corrigiu o destino e a fase resume passou. Readiness e tentativas
 anteriores não entram nas51 verificações. Nenhuma falha funcional remanescente.
 
+## Publicação e encerramento
+
+Em27/10/2026, supervisão publicou e integrou o
+[PR #41](https://github.com/lukadev08/fake-esfinge/pull/41):
+head `32882ce546def7fe1ace775a9e8be8f645928e2a`, base `566afda`,
+merge `f4ba83693ce9d12900ff140248b6dc3661cb193e`.
+GitHub confirmou MERGED e #14 CLOSED/COMPLETED. Check rollup vazio: não houve
+CI remoto;263 testes e51 verificações Docker continuam evidência local.
+
+Checkout alinhado por fast-forward ao merge; nenhum código, teste, smoke ou jar
+alterado após validação. O [corpo publicado](../../.scratch/pr-issue-14.md) foi
+preservado exatamente. Container temporário ausente, nenhum volume Docker
+criado; bindmount e registros fictícios em tmp conservados. #15 está explorada,
+ainda sem implementação.
+
 ## Cobertura não demonstrada
 
 Demora e HTTP500 adicionais são evolução, sem serem contados como T12 completo.

@@ -139,7 +139,7 @@ class JdbcRemessaTest {
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM sqlite_master WHERE name='remessas'",Integer.class));
         jdbc.update("UPDATE schema_migrations SET checksum=?",CredentialHash.token(v1.getContentAsString(StandardCharsets.UTF_8)));
         var migrated=SqliteDatabase.open(settings("cenario-a"));assertEquals(original,new JdbcAuthenticationRepository(migrated).findSession("preservado","cenario-a").orElseThrow());
-        assertEquals(12,new JdbcTemplate(migrated).queryForObject("PRAGMA user_version",Integer.class));
+        assertEquals(13,new JdbcTemplate(migrated).queryForObject("PRAGMA user_version",Integer.class));
         assertNotNull(fixture("cenario-a").service.open("preservado",202601,"NAO"));
     }
     ReceivedContent creditContent() {
@@ -191,7 +191,7 @@ class JdbcRemessaTest {
         assertEquals(2,jdbc.queryForObject("PRAGMA user_version",Integer.class));jdbc.update("UPDATE schema_migrations SET checksum=? WHERE version=2",checksum);
         var migrated=fixture("cenario-a");var state=migrated.service.inspect("admin-ficticio",lote.number());
         assertEquals(events,state.events());assertArrayEquals(content().bytes(),state.lote().bytes());assertEquals(lote.number(),state.lote().number());assertEquals(lote.hash(),state.lote().hash());
-        assertEquals(12,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(12,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));
+        assertEquals(13,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(13,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));
         assertTrue(jdbc.queryForList("PRAGMA foreign_key_check").isEmpty());
         var credit=migrated.service.receive(token,key,creditContent());assertEquals(43,credit.number());assertEquals(2,credit.order());
         assertEquals(78,migrated.service.inspect("admin-ficticio",credit.number()).events().getLast().id());
@@ -263,7 +263,7 @@ class JdbcRemessaTest {
         assertEquals("123456789012345678901234567890.12",jdbc.queryForObject("SELECT valor FROM valores_recebidos WHERE lote_id=?",String.class,old.credit().number()));
         assertEquals("text",jdbc.queryForObject("SELECT typeof(valor) FROM valores_recebidos",String.class));
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM sqlite_master WHERE name='valores_creditos'",Integer.class));
-        assertEquals(12,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(12,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));
+        assertEquals(13,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(13,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));
         assertTrue(jdbc.queryForList("PRAGMA foreign_key_check").isEmpty());
         var collection=migrated.service.receive(old.token(),old.key(),collectionContent());assertEquals(43,collection.number());assertEquals(3,collection.order());
         assertEquals(78,migrated.service.inspect("admin-ficticio",collection.number()).events().getLast().id());
@@ -334,7 +334,7 @@ class JdbcRemessaTest {
         }
         assertEquals(List.of("123456789012345678901234567890.12","123456789012345678901234567890.12"),jdbc.queryForList("SELECT valor FROM valores_recebidos ORDER BY lote_id",String.class));
         assertEquals(List.of("text","text"),jdbc.queryForList("SELECT typeof(valor) FROM valores_recebidos ORDER BY lote_id",String.class));
-        assertEquals(12,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(12,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));
+        assertEquals(13,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(13,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));
         assertTrue(jdbc.queryForList("PRAGMA foreign_key_check").isEmpty());
         var baixa=migrated.service.receive(old.old().token(),old.old().key(),writeOffContent());assertEquals(43,baixa.number());assertEquals(4,baixa.order());
         assertEquals(78,migrated.service.inspect("admin-ficticio",baixa.number()).events().getLast().id());
@@ -410,7 +410,7 @@ class JdbcRemessaTest {
         assertEquals(List.of("valorLancamentoCreditoTributario","valorCreditoTributario","valorOperacaoBaixa"),jdbc.queryForList("SELECT campo FROM valores_recebidos ORDER BY lote_id",String.class));
         assertEquals(List.of("123456789012345678901234567890.12","123456789012345678901234567890.12","123456789012345678901234567890.12"),jdbc.queryForList("SELECT valor FROM valores_recebidos ORDER BY lote_id",String.class));
         assertEquals(List.of("text","text","text"),jdbc.queryForList("SELECT typeof(valor) FROM valores_recebidos ORDER BY lote_id",String.class));
-        assertEquals(12,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(12,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));assertTrue(jdbc.queryForList("PRAGMA foreign_key_check").isEmpty());
+        assertEquals(13,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(13,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));assertTrue(jdbc.queryForList("PRAGMA foreign_key_check").isEmpty());
         var saldo=migrated.service.receive(old.old().old().token(),old.old().old().key(),balanceContent());assertEquals(43,saldo.number());assertEquals(5,saldo.order());
         assertEquals(78,migrated.service.inspect("admin-ficticio",saldo.number()).events().getLast().id());assertEquals(7,jdbc.queryForObject("SELECT COUNT(*) FROM valores_recebidos",Integer.class));
         assertThrows(org.springframework.dao.DataAccessException.class,()->jdbc.update("UPDATE valores_recebidos SET ug='0002' WHERE lote_id=?",saldo.number()));
@@ -475,7 +475,7 @@ class JdbcRemessaTest {
         }
         assertEquals(money,jdbc.queryForList("SELECT * FROM valores_recebidos ORDER BY lote_id,indice,campo"));
         assertEquals(sessions,jdbc.queryForList("SELECT * FROM sessions"));assertEquals(7,money.size());
-        assertEquals(12,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(12,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));
+        assertEquals(13,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(13,jdbc.queryForObject("SELECT COUNT(*) FROM schema_migrations",Integer.class));
         assertTrue(jdbc.queryForList("PRAGMA foreign_key_check").isEmpty());assertEquals(1,jdbc.queryForObject("PRAGMA foreign_keys",Integer.class));
         var prazo=migrated.service.receive(old.old().old().old().token(),old.old().old().old().key(),prescriptionContent());
         assertEquals(43,prazo.number());assertEquals(6,prazo.order());assertEquals(78,migrated.service.inspect("admin-ficticio",prazo.number()).events().getLast().id());

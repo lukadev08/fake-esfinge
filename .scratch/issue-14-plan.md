@@ -8,6 +8,10 @@ Desenho aprovado pela supervisão antes da produção e implementado. Revisão d
 código e conferência documental final aprovadas pelo revisor exclusivo, sem
 achados materiais. Resultados e limites estão na [evidência](../docs/evidencias/issue-14.md).
 
+Publicação concluída em27/10/2026 no [PR #41](https://github.com/lukadev08/fake-esfinge/pull/41),
+merge `f4ba83693ce9d12900ff140248b6dc3661cb193e`; #14 encerrada como completed.
+#15 explorada e ainda não implementada; aceites humanos continuam pendentes.
+
 ## Contrato administrativo proposto
 
 GET/PUT/DELETE `/__simulator/falhas/recepcao` com query exata
