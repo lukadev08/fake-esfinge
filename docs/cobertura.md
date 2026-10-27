@@ -110,4 +110,6 @@ quinze tabelas preservadas, reinício, 17 totalizadores, 10.001 créditos, conte
 efetivo exato, disputas e fechamento/histórico persistidos. As 538 verificações da
 preparação V8 e 3 do snapshot anterior são separadas. Sem regras fiscais,
 recuperação, sem movimento, T17 ou aceite humano implícitos; #8/E1 e T01/E3
-pendentes. Publicação/merge da #10 ainda não realizados.
+pendentes. Publicação/merge autorizados e concluídos no
+[PR #37](https://github.com/lukadev08/fake-esfinge/pull/37), head `d47c751`, merge
+`4de2ba5e8c799e388ecd5c6a89bcc1a33d32ff1f`; #10 completed, #8 aberta.

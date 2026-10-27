@@ -1,6 +1,8 @@
 # Rascunho local — issue #10
 
-Situação: implementação técnica local revisada e validada; publicação não autorizada.
+Situação: publicado e integrado com autorização específica no
+[PR #37](https://github.com/lukadev08/fake-esfinge/pull/37), head `d47c751`, merge
+`4de2ba5e8c799e388ecd5c6a89bcc1a33d32ff1f`; #10 completed, #8/E1 pendente.
 Destino: `lukadev08/fake-esfinge`; base `main`; head `issue-10-finalizacao`.
 Base funcional `eb376d0` (PR #36/#9), plano anterior ao código `db0ee14`.
 Inclui registro documental local da integração/limpeza autorizada da #9 (`f4e48b4`).
@@ -39,10 +41,13 @@ Refs #8
 
 ## Limite de publicação
 
-Aguardando autorização específica para push de `issue-10-finalizacao`, criação do
-PR contra `main` e merge em `lukadev08/fake-esfinge`. Publicação de imagem e implantação
-fora do pedido. Depois da integração, próxima fatia técnica é #11, respeitando
-suas dependências e o ciclo de supervisão; #8/E1 permanece pendente.
+Push de `issue-10-finalizacao`, PR contra `main` e merge em `lukadev08/fake-esfinge`
+realizados após autorização específica. GitHub confirmou head revisado, ausência
+de conflitos, merge, `main` no merge acima e #10 completed. Check-runs/statuses
+vazios no head: resultados verdes são locais, sem CI executado. Publicação de
+imagem e implantação não realizadas. Continuidade técnica para #11 dentro de
+suas dependências e supervisão; #8/E1 permanece pendente. Corpo publicado preservado.
 
 Container temporário removido. Volume fictício `fake-esfinge-issue10-supervisao`
-preservado no contexto `orbstack`; exclusão exige autorização específica.
+excluído no contexto `orbstack` após autorização específica, exit0 e ausência
+confirmada. Nenhum outro volume excluído.

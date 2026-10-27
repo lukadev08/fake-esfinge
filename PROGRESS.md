@@ -1740,3 +1740,39 @@ localmente, revisão/suíte/Docker aprovados; publicação específica pendente.
 Obter autorização específica para push/PR/merge da #10 e decisão separada sobre
 exclusão do volume fictício. Depois de integrar, prosseguir à #11 dentro das
 dependências e supervisão autorizadas. Solicitante mantém #8/E1 pendente.
+
+## 2026-10-26 — Publicar e integrar #10; excluir ensaio autorizado
+
+Referência: autorização expressa de publicação/merge da #10 e exclusão de
+`fake-esfinge-issue10-supervisao`. Situação: PR #37 integrado, #10 completed;
+continuidade técnica para #11, com #8/E1 pendente.
+
+### O que foi feito
+
+- Push de `issue-10-finalizacao`, head revisado `d47c751`, criação do
+  [PR #37](https://github.com/lukadev08/fake-esfinge/pull/37) com corpo preparado
+  e anexo à tarefa. Base remota `eb376d0` reconfirmada; comparação de três commits
+  sem divergência e PR sem conflitos. Merge com SHA esperado produziu
+  `4de2ba5e8c799e388ecd5c6a89bcc1a33d32ff1f`.
+- GitHub confirmou PR merged, `main` no merge, #10 closed/completed e #8 aberta.
+  Checks/statuses vazios no head, sem CI executado. Evidências locais continuam
+  155 testes e 1.279 verificações Docker verdes, sem mudança de código após revisão.
+- Conferidos nome exato e ausência de containers usuários; excluído somente o
+  volume `fake-esfinge-issue10-supervisao` no contexto `orbstack`, exit0, com
+  ausência confirmada. Imagem/clientes preservados. Manifesto, evidência e registro
+  do PR atualizados; corpo publicado preservado.
+- Criada branch local `issue-11-erro-assincrono` sobre `origin/main` integrado.
+  #11 reconfirmada aberta `ready-for-agent`, sem comentários, dependente da #9
+  já concluída. Explorer próprio iniciado para erro assíncrono controlado.
+
+### O que deu errado
+
+Nenhuma falha de publicação, merge ou exclusão. Um trecho duplicado durante a
+edição documental foi removido antes de validar/commitar. Código não mudou;
+testes não repetidos nesta operação. Ensaio real #8/E1/T01/E3 e CI remoto pendentes.
+
+### Próximo passo
+
+Concluir exploração e tabelas de decisão da #11; implementar com equipe própria,
+TDD, revisão independente e supervisão do artefato final. Publicação da nova fatia
+continua exigindo autorização específica; #8/E1 permanece com o solicitante.
