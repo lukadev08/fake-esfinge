@@ -159,4 +159,7 @@ aprovada; executor verify e supervisor clean verify com **243 testes**, zero
 falhas/erros/ignorados, exit0. **1.807 verificações na imagem final V11 Linux amd64
 sem rede**, incluindo upgrade V10/16 tabelas, cancelamento/nova chave/reenvio,
 reinício, conteúdo exato e agendador automático. Preparação anterior270+3 separada.
-Publicação da #13 aguarda autorização específica.
+Publicação/merge autorizados e concluídos no
+[PR #40](https://github.com/lukadev08/fake-esfinge/pull/40), head `c3714b9`, merge
+`566afda0c3ac9c6f1f623d752407616978b5cd93`; #13 completed, #8 aberta.
+Execução encerrada após a #13 a pedido do solicitante; #14 não iniciada.

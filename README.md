@@ -524,4 +524,7 @@ reenvio integral com novos IDs, sem deduplicação por hash ou herança de plano
 Envio aberto sem lotes também pode ser cancelado; envio já finalizado não pode.
 Veja [evidência da #13](docs/evidencias/issue-13.md). Testes fictícios não encerram
 #8/E1, T01/E3 ou homologação. Cancelamento automático, resposta perdida, reset,
-expiração e regras fiscais ficam fora da fatia. Publicação da #13 não autorizada.
+expiração e regras fiscais ficam fora da fatia. Publicação/merge da #13 autorizados
+e concluídos no [PR #40](https://github.com/lukadev08/fake-esfinge/pull/40).
+Trabalho encerrado após a #13 a pedido do solicitante, sem iniciar a #14;
+[resumo do desenvolvimento](.scratch/resumo-ate-issue-13.md) registrado localmente.

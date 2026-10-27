@@ -2,7 +2,8 @@
 
 Data: 27/10/2026. Perfil: 2026/V6/6.06. Base funcional `f2d7e58`, plano `b296dc5`,
 branch `issue-13-cancelamento-envio`. Dados exclusivamente fictícios em SQLite
-temporário; sem integrador, produção ou TCE. Publicação da #13 não autorizada.
+temporário; sem integrador, produção ou TCE. Publicação/merge autorizados e
+concluídos no [PR #40](https://github.com/lukadev08/fake-esfinge/pull/40).
 
 ## Implementação
 
@@ -129,10 +130,10 @@ ao total; só a repetição integral acima e o automático verde são contados.
 Avisos SLF4J dos clientes não impediram validação. Logs dos containers finais
 continham apenas inicialização, sem erro ou dados recebidos.
 
-Containers removidos, ausência confirmada. Três volumes fictícios preservados
+Containers removidos, ausência confirmada. Três volumes fictícios excluídos com autorização
 no contexto `orbstack`: `fake-esfinge-issue13-supervisao`,
 `fake-esfinge-issue13-supervisao-repro` e `fake-esfinge-issue13-supervisao-auto`.
-Exclusão depende de autorização específica. Clientes/logs permanecem temporários
+Exit0 e ausência confirmada; nenhum outro volume excluído. Clientes/logs permanecem temporários
 locais; nenhum token, payload, SQL ou dado original foi adicionado à evidência.
 
 ## Cobertura e limites
@@ -160,5 +161,7 @@ Matriz: parcelas T08/T10/T11/T13/T14/T15/T18/T19 e contagens sintéticas de T01.
 #8/E1 e T01/E3 continuam pendentes. Sem integrador real, aceite humano, CI remoto
 ou homologação. Cancelamento automático, resposta perdida, reset, expiração e
 regras fiscais não são implementados nesta fatia. Docker/revisão foram concluídos
-pela supervisão nas etapas acima. #13 aberta, sem comentários; publicação/merge
-aguardam autorização específica. Próxima fatia identificada: #14, resposta perdida.
+pela supervisão nas etapas acima. PR #40 merged, head `c3714b9`, merge
+`566afda0c3ac9c6f1f623d752407616978b5cd93`; #13 closed/completed, #8 aberta.
+GitHub sem check-runs/statuses no head; resultados verdes são evidência local.
+Trabalho encerrado após a #13 a pedido do solicitante; #14 não iniciada.

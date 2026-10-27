@@ -2126,3 +2126,43 @@ Obter autorização específica para push/PR/merge da #13 e decisão separada so
 exclusão dos três volumes fictícios. Após integrar, prosseguir para #14 com equipe
 própria/supervisão e suas dependências; solicitante mantém o ensaio/aceite #8/E1.
 E2 integral não é concluído por esta fatia.
+
+## 2026-10-27 — Integrar #13, excluir ensaios e encerrar a pedido
+
+Referência: autorização expressa de push/PR/merge da #13, exclusão dos três
+volumes fictícios e orientação para parar após a #13 e resumir o trabalho.
+Situação: PR #40 integrado, #13 completed; implementação encerrada, #14 não iniciada.
+
+### O que foi feito
+
+- Push de `issue-13-cancelamento-envio`, head revisado `c3714b9`, criação do
+  [PR #40](https://github.com/lukadev08/fake-esfinge/pull/40) com corpo preparado e
+  anexo à tarefa. Base `f2d7e58` reconfirmada; comparação de três commits sem
+  divergência, PR sem conflitos e merge protegido pelo head esperado.
+  Merge: `566afda0c3ac9c6f1f623d752407616978b5cd93`.
+- GitHub confirmou PR merged, `main` no merge e #13 closed/completed. Inventário
+  confirmou #1–#7/#9–#13 encerradas; #8 e #14–#27 abertas. Check-runs/statuses
+  vazios no head:243 testes/1.807 verificações Docker são evidência local, sem CI.
+- Conferidos nomes exatos e ausência de containers usuários; excluídos somente
+  `fake-esfinge-issue13-supervisao`, `fake-esfinge-issue13-supervisao-repro` e
+  `fake-esfinge-issue13-supervisao-auto` no contexto `orbstack`, exit0 e ausência
+  confirmada. Imagem/clientes preservados; corpo publicado não alterado.
+- Checkout alinhado ao merge por fast-forward, sem branch/tarefa #14. Registros
+  de publicação/limpeza atualizados e [resumo](.scratch/resumo-ate-issue-13.md)
+  preparado localmente, sem nova publicação documental. Nenhum código/teste mudou.
+- Orientação mais recente de parar após a #13 substitui a continuação anterior
+  para #14; aprovação de publicação da #13 não foi interpretada como revogação
+  dessa parada. Nenhuma implementação da #14 foi iniciada.
+- Verificação documental local:94 links sem destino ausente, whitespace válido
+  e corpo publicado do PR preservado. Resumo e registros finais não publicados.
+
+### O que deu errado
+
+Nenhuma falha de publicação, merge ou exclusão. Não foram repetidos testes para
+o encerramento documental; código validado permanece o mesmo. #8/E1/T01/E3 e
+CI remoto continuam pendentes; não há homologação ou conclusão integral do MVP.
+
+### Próximo passo
+
+Entregar o resumo e parar. Aguardar nova orientação antes de retomar implementação.
+O solicitante mantém o ensaio/aceite interno #8/E1 pendente, sem data estabelecida.

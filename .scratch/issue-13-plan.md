@@ -134,3 +134,12 @@ Evidência completa em [issue-13.md](../docs/evidencias/issue-13.md).
 V1–V10/fontes/schemas/build/dependências intactos; somente V11 nova. Containers
 removidos, três volumes fictícios preservados. #13 aberta; publicação/merge e
 exclusão dos volumes dependem de autorização específica. #8/E1/T01/E3 pendentes.
+
+## Encerramento autorizado — 27/10/2026
+
+Publicação e merge concluídos no [PR #40](https://github.com/lukadev08/fake-esfinge/pull/40),
+head `c3714b9`, merge `566afda0c3ac9c6f1f623d752407616978b5cd93`; #13 completed.
+Três volumes de ensaio excluídos com autorização específica e ausência confirmada.
+O solicitante determinou parar após a #13 e relatar o trabalho; a continuação
+anterior para #14 foi substituída. #14 não iniciada; nenhum código mudou neste
+encerramento. [Resumo local](resumo-ate-issue-13.md); #8/E1/T01/E3 continuam pendentes.
