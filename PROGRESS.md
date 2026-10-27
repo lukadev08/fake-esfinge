@@ -2323,3 +2323,103 @@ pendentes; esta entrega não conclui E2 integral.
 
 Supervisão retomar a coordenação da #15, usando sua exploração já concluída e
 executor/reviewer exclusivos. Nenhuma implementação da #15 pertence a esta entrada.
+
+## 2026-10-27 — Preparar bloqueio administrativo da issue #15
+
+Referência: continuidade técnica E2 autorizada e
+[issue #15](https://github.com/lukadev08/fake-esfinge/issues/15).
+Situação: exploração reconferida após a #14; plano anterior ao código preparado.
+
+### O que foi feito
+
+- Executor exclusivo leu planejamento, arquitetura, contrato E0, registros e
+  issue #15 sem comentários. Base funcional `f4ba836`, registro `fe5919d` e branch
+  `codex/issue-15-bloqueio-competencia` conferidos; .DS_Store preservados.
+- [Plano local](.scratch/issue-15-plan.md) define contrato administrativo estrito,
+  bloqueio persistido por cenário/UG/competência, guardas transacionais das seis
+  mutações compatíveis e verificações de ausência de efeitos. Recepção bloqueada
+  não consome o plano de falhas da #14.
+- Política prospectiva: trabalhos previamente aceitos continuam; consultas e
+  administração mantêm acesso/precondições próprias. Não há ratificação fictícia.
+
+### O que deu errado
+
+Nenhuma produção ou teste alterado/executado nesta preparação. Reset e repetição
+do bloqueio dependem da #17; #8/E1 e T01/E3 continuam pendentes.
+
+### Próximo passo
+
+Supervisão revisar o desenho. Depois, executor implementar por TDD, rodar focais
+e suíte; reviewer exclusivo independente avaliar código e evidências.
+
+## 2026-10-27 — Implementar, revisar e supervisionar a issue #15
+
+Referência: continuidade técnica E2 e
+[issue #15](https://github.com/lukadev08/fake-esfinge/issues/15).
+Situação: código aprovado, validação final verde; conferência documental pendente.
+
+### O que foi feito
+
+- Desenho revisado pela supervisão antes do código. Contrato administrativo
+  GET/PUT por UG/competência, V13 aditiva e guardas transacionais nas seis mutações.
+  Autenticação/resolução isolada precedem bloqueio 403; bloqueio precede guardas
+  de estado e consumo do plano #14. Consultas/administração preservam a semântica.
+- Bloqueio prospectivo documentado/testado: trabalho aceito continua inclusive
+  com bloqueio durante cálculo; desbloquear não reabre chave encerrada.
+- TDD RED 404/esperado 200, GREEN inicial e ampliação. Focal 119 verde; executor
+  `verify`: **275 testes**, zero falhas/erros/ignorados, exit0, 33,539s. Novos:
+  seis HTTP e seis JDBC; entrada estrita, ausência de efeitos, isolamento,
+  reinício, corrida, rollback statement/COMMIT e migração V12 preenchida/falha V13.
+- Supervisão `clean verify` confirmou 275 testes, exit0, 34,867s. Jar final
+  `088f5a171fdde9886db840ede5dfc568e8b8e7deebc77f111bce96d5f8c5a912`.
+  Reviewer exclusivo aprovou código/testes sem achados materiais.
+- Smoke no jar copiado e na imagem final Linux amd64: **51 verificações em cada**,
+  33+18 com reinício. Imagem
+  `sha256:b62c844a61198fc5d917c8ba89f505071780c1f46d2ecab95c2e0ad418f54120`;
+  hash do jar interno conferido. SQLite íntegro/FKs sem violações, somente leitura.
+- Processos host encerrados e listener 18195 ausente. Container parado/removido,
+  nenhum volume Docker criado; bases fictícias tmp preservadas. README,
+  cobertura, [evidência](docs/evidencias/issue-15.md), plano e
+  [rascunho de PR](.scratch/pr-issue-15.md) consolidados. Código/testes/smoke/jar
+  congelados; build sem rede/pullfalse, runtime bridge somente loopback.
+
+### O que deu errado
+
+SIGTERM foi negado pelo sandbox; revisão automática da execução escalonada
+falhou por limite de uso e não executou a ação. Após retomada autorizada e
+consulta fresca de uso, processos temporários foram conferidos/encerrados e
+smoke concluído. A revisão retomada foi completada depois, sem contar a
+interrupção como revisão concluída. Uma partida prematura do reinício falhou
+antes da parada; não integra resultados. Não se inferiu ausência pelo erro de pgrep.
+No Docker, aspas corrigiram glob zsh no argumento das UGs antes de executar
+o comando; prontidão/porta foram conferidas. Nenhum smoke Docker ou teste final
+falhou; incidentes operacionais detalhados na evidência.
+
+### Próximo passo
+
+Reviewer conferir somente consolidação documental. Supervisão preparar PR/merge
+nos limites da autorização e retomar #16 com grupo próprio. Reset #17, #8/E1,
+T01/E3, CI remoto e homologação permanecem pendentes.
+
+## 2026-10-27 — Aprovar consolidação documental final da #15
+
+Referência: revisão independente da
+[issue #15](https://github.com/lukadev08/fake-esfinge/issues/15).
+Situação: código/documentos aprovados; pronta para publicação pela supervisão.
+
+### O que foi feito
+
+Reviewer exclusivo aprovou a consolidação documental final, sem achados materiais.
+Executor atualizou somente marcadores de revisão em plano, evidência, cobertura,
+README e rascunho do PR. Código, testes, smoke e jar permaneceram congelados;
+resultados e limites preservados, sem repetição de build ou ensaios.
+
+### O que deu errado
+
+Nenhuma correção funcional solicitada. Aceites humanos, reset #17, T01/E3,
+CI remoto e homologação continuam pendentes.
+
+### Próximo passo
+
+Supervisão preparar commit/push/PR/merge da #15 nos limites da autorização
+vigente e retomar a coordenação da #16 com grupo próprio.

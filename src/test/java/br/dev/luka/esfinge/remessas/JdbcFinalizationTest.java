@@ -140,8 +140,8 @@ class JdbcFinalizationTest {
         return source;
     }
     @Test void migraV8PreenchidaPreservaTodasAsTabelasChecksumsBytesESequencias() throws Exception {
-        var source=legacyEight();var jdbc=new JdbcTemplate(source);var before=snapshot(jdbc);var f=fixture("cenario-a");assertEquals(12,jdbc.queryForObject("PRAGMA user_version",Integer.class));
-        var after=snapshot(jdbc);for(var row:after.get("remessas")){assertNull(row.remove("finalizada_em"));assertNull(row.remove("cancelada_em"));}after.get("schema_migrations").removeLast();after.get("schema_migrations").removeLast();after.get("schema_migrations").removeLast();after.remove("falhas_processamento");after.remove("falhas_recepcao");after.get("schema_migrations").removeLast();for(var row:after.get("lotes")) assertEquals(1,row.remove("ativo"));for(var row:after.get("processamento_trabalhos")) {assertNull(row.remove("codigo"));assertNull(row.remove("mensagem"));assertNull(row.remove("registro"));}assertEquals(before,after);
+        var source=legacyEight();var jdbc=new JdbcTemplate(source);var before=snapshot(jdbc);var f=fixture("cenario-a");assertEquals(13,jdbc.queryForObject("PRAGMA user_version",Integer.class));
+        var after=snapshot(jdbc);assertTrue(after.remove("competencias_bloqueadas").isEmpty());after.get("schema_migrations").removeLast();for(var row:after.get("remessas")){assertNull(row.remove("finalizada_em"));assertNull(row.remove("cancelada_em"));}after.get("schema_migrations").removeLast();after.get("schema_migrations").removeLast();after.get("schema_migrations").removeLast();after.remove("falhas_processamento");after.remove("falhas_recepcao");after.get("schema_migrations").removeLast();for(var row:after.get("lotes")) assertEquals(1,row.remove("ativo"));for(var row:after.get("processamento_trabalhos")) {assertNull(row.remove("codigo"));assertNull(row.remove("mensagem"));assertNull(row.remove("registro"));}assertEquals(before,after);
         var repository=new JdbcRemessaRepository(f.source);var remessa=repository.find(jdbc.queryForObject("SELECT chave FROM remessas",String.class),"cenario-a","0001").orElseThrow();assertNull(remessa.finalizedAt());
         assertEquals(Processing.Mode.AUTOMATICO,f.processing.configuration(ADMIN).modo());assertEquals(17,f.processing.configuration(ADMIN).latenciaMilissegundos());assertEquals(INITIAL.plusMillis(123),f.clock.instant());
         String token=f.token("0001"),key=remessa.key();assertEquals(RemessaFailure.Kind.CONFLICT,assertThrows(RemessaFailure.class,()->f.remessas.finish(token,key,totals(1))).kind());
@@ -155,7 +155,7 @@ class JdbcFinalizationTest {
         jdbc.execute("CREATE UNIQUE INDEX remessa_aberta_unica ON remessas(cenario,ug,competencia) WHERE estado='ABERTO'");
         String checksum=jdbc.queryForObject("SELECT checksum FROM schema_migrations WHERE version=8",String.class);jdbc.update("UPDATE schema_migrations SET checksum='adulterado' WHERE version=8");var corrupt=snapshot(jdbc);
         assertThrows(IllegalStateException.class,()->SqliteDatabase.open(settings("cenario-a")));assertEquals(corrupt,snapshot(jdbc));assertEquals(8,jdbc.queryForObject("PRAGMA user_version",Integer.class));
-        jdbc.update("UPDATE schema_migrations SET checksum=? WHERE version=8",checksum);fixture("cenario-a");assertEquals(12,jdbc.queryForObject("PRAGMA user_version",Integer.class));
+        jdbc.update("UPDATE schema_migrations SET checksum=? WHERE version=8",checksum);fixture("cenario-a");assertEquals(13,jdbc.queryForObject("PRAGMA user_version",Integer.class));
         jdbc.update("UPDATE schema_migrations SET checksum='adulterado' WHERE version=9");var v9=snapshot(jdbc);assertThrows(IllegalStateException.class,()->SqliteDatabase.open(settings("cenario-a")));assertEquals(v9,snapshot(jdbc));
     }
 }

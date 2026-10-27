@@ -584,3 +584,56 @@ pendentes. Código aprovado por revisão independente;263 testes e51 verificaç�
 Docker Linux amd64 confirmados pela supervisão, com limites na evidência.
 Publicação e merge concluídos em27/10/2026 no
 [PR #41](https://github.com/lukadev08/fake-esfinge/pull/41); #14 encerrada.
+
+## Bloqueio administrativo de UG/competência — #15
+
+GET/PUT `/__simulator/competencias/{ug}/{anoMes}` exigem `X-Simulator-Key` e
+nenhuma query. A UG mantém seus zeros e deve estar configurada no cenário atual;
+`anoMes` tem exatamente seis dígitos ASCII de 202601 a 202612. GET não tem corpo.
+PUT exige JSON UTF-8 estrito com apenas um booleano:
+
+```json
+{"bloqueada":true}
+```
+
+GET/PUT retornam `{"ug":"0001","anoMes":202601,"bloqueada":true}`. Uma combinação
+válida ainda não bloqueada retorna `false`; PUT com `false` desbloqueia. Chave
+administrativa ausente/inválida, inclusive token compatível em seu lugar, recebe
+401; UG não configurada, 404; competência, query, corpo ou mídia inválidos, 400.
+GET não escreve e PUT altera somente o bloqueio, sem renovar atividade compatível.
+
+As seis mutações compatíveis — abrir, receber, disparar, finalizar, descartar
+assunto e cancelar — consultam o bloqueio na mesma transação de seus efeitos.
+Após autenticar e resolver a chave isolada, o alvo bloqueado recebe 403
+`SIM_ACESSO_NEGADO`, antes das demais guardas de estado, inclusive para uma chave
+encerrada. Sem bloqueio, as guardas anteriores continuam válidas. Rejeição não
+altera lote, trabalho, atividade, eventos ou tentativas de falha da #14.
+UGs, competências e cenários não selecionados permanecem independentes.
+
+Consulta compatível autorizada continua disponível e renova atividade conforme
+o contrato existente, sem executar tarefas. Administração mantém suas próprias
+precondições e não renova atividade. **O bloqueio é prospectivo:** trabalhos
+aceitos antes dele continuam no executor existente; não são suspensos nem
+cancelados. Desbloquear libera novas mutações, sem reabrir uma chave encerrada.
+Essa é uma política derivada do simulador, sem ratificação fictícia na API do TCE.
+
+V13 acrescenta somente a tabela de bloqueios por cenário/UG/competência;
+V1–V12 e seus checksums permanecem intactos. Reinício conserva bloqueios e dados.
+Reset e repetição com estado inicial pertencem à #17, ainda pendente.
+
+O [smoke fictício](.scratch/issue-15-smoke.py) exige instância/base vazia e exclusiva,
+relógio fixo e duas UGs: `--simulator.clock-mode=fixed` e
+`--simulator.users[0].ugs=0001,0002`. Depois da prontidão:
+
+```sh
+python3 .scratch/issue-15-smoke.py prepare --port 8080 --state /tmp/issue-15-ficticio.json
+# Reinicie a mesma instância conservando a base; depois:
+python3 .scratch/issue-15-smoke.py resume --port 8080 --state /tmp/issue-15-ficticio.json
+```
+
+[Evidência da #15](docs/evidencias/issue-15.md): executor e supervisão confirmaram
+275 testes verdes, incluindo 12 novos HTTP/SQLite; smoke do jar e da imagem final
+Linux amd64 passaram 51 verificações cada, com reinício. Código aprovado por
+revisão independente, sem achados; conferência documental final também aprovada.
+Ensaios fictícios
+não encerram #8/E1, T01/E3 ou homologação oficial.

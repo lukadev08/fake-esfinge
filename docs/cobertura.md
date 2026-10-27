@@ -12,7 +12,8 @@ Artefato 0.1.0, issues [#1](https://github.com/lukadev08/fake-esfinge/issues/1) 
 [#11](https://github.com/lukadev08/fake-esfinge/issues/11) e
 [#12](https://github.com/lukadev08/fake-esfinge/issues/12) e
 [#13](https://github.com/lukadev08/fake-esfinge/issues/13) e
-[#14](https://github.com/lukadev08/fake-esfinge/issues/14).
+[#14](https://github.com/lukadev08/fake-esfinge/issues/14) e
+[#15](https://github.com/lukadev08/fake-esfinge/issues/15).
 Fontes: [contrato E0](contrato-e0.md), [pacote derivado](contratos/2026-v6-6.06/README.md)
 e [hashes das fontes](contratos/2026-v6-6.06/fontes.json), consolidados em 23/10/2026.
 Não há OpenAPI oficial nem ensaio independente do integrador/TCE. O manifesto
@@ -25,6 +26,9 @@ registra a evolução implementada.
 | Token | Vínculo usuário/UG/cenário, opaco, inválido/expirado 401 antes de efeito | `AuthenticationServiceTest`, `AuthenticationHttpTest`; parcela T10/T11 | Implementada |
 | Validade de token | 3600 segundos configuráveis, relógio substituível | Contrato E0; testes de limite e duração customizada | Aproximada; duração local aprovada, sem equivalência oficial |
 | Administração | GET `/__simulator/configuracao`, chave própria, inspeção sem segredos | `AuthenticationHttpTest`, `SimulatorSettingsTest` | Implementada; API exclusiva do simulador |
+| Bloqueio de competência | GET/PUT `/__simulator/competencias/{ug}/{anoMes}`, chave própria, UG opaca configurada, mês ASCII 2026 e JSON booleano estrito; V13 aditiva, reinício e rollback | `CompetenciaHttpTest`, `JdbcCompetenciaTest`; parcelas T09/T10 | Implementada no contrato administrativo derivado |
+| Mutações em competência bloqueada | Abrir/receber/disparar/finalizar/descartar/cancelar retornam 403 `SIM_ACESSO_NEGADO` dentro da transação, após autenticação/resolução isolada, sem efeitos ou consumo da tentativa #14 | `CompetenciaHttpTest`, `JdbcCompetenciaTest`; ausência de efeitos, corrida/isolamento/reinício | Implementada no contrato derivado; consultas autorizadas permanecem disponíveis |
+| Bloqueio prospectivo | Trabalhos previamente aceitos continuam; administração mantém suas precondições; desbloqueio libera novas mutações | E0/T09, interpretação documentada no plano #15; `CompetenciaHttpTest`, `JdbcCompetenciaTest` | Aproximada; política local sem suspender/cancelar trabalho ou inventar ratificação compatível |
 | Persistência | SQLite real, migrações V1→V2→V3→V4→V5→V6→V7→V8→V9→V10→V11→V12 com checksum/version, FK por conexão, reabertura, incompatibilidade sem recriar | `JdbcAuthenticationRepositoryTest`, `JdbcRemessaTest`, `JdbcCancellationTest`, `JdbcReceptionFailureTest` | Implementada para contexto/identidades/sessões/remessas/lotes/eventos/planos; parcela de T13 |
 | Erros e logs | Envelope próprio sanitizado, sem senha/token/SQL/stack trace | `InternalFailureHttpTest`, testes HTTP/configuração | Implementada; logs padrão desabilitados |
 | Fronteiras | Núcleo Java puro, domínio sem aplicação, capacidades sem ciclos | `ArchitectureTest`, análise de dependências de classes | Implementada na fatia atual |
@@ -180,4 +184,16 @@ regras fiscais ou homologação implícitos.
 Publicação/merge da #14 concluídos em27/10/2026 no
 [PR #41](https://github.com/lukadev08/fake-esfinge/pull/41), head `32882ce`,
 merge `f4ba83693ce9d12900ff140248b6dc3661cb193e`; #14 completed.
-Checks remotos vazios; resultados acima são locais. #15 explorada, ainda não implementada.
+Checks remotos vazios; resultados acima são locais.
+
+Evidência da #15: [execução local](evidencias/issue-15.md). V13 aditiva preserva
+V1–V12, dados, planos, checksums e sequências; upgrade de V12 preenchida, falha
+de migração, reinício, rollback statement/COMMIT e corrida verificam o bloqueio.
+Executor `verify` e supervisão `clean verify`: **275 testes**, zero falhas/erros/
+ignorados, exit0; 12 novos HTTP/SQLite. Smoke do jar local: **51 verificações**,
+33 antes e 18 após reinício, com seis mutações 403, isolamento, trabalho anterior,
+desbloqueio e decimal exato. Na imagem final Linux amd64, outras **51 verificações**
+passaram com reinício, integridade SQLite e hash do jar conferidos. Código aprovado
+por revisão independente sem achados; conferência documental final também
+aprovada. Publicação permanece pendente. Reset #17,
+#8/E1, T01/E3, CI remoto, regras fiscais e homologação não demonstrados.

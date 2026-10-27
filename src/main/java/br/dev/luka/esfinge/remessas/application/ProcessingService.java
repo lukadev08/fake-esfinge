@@ -26,6 +26,7 @@ public final class ProcessingService implements Processamento {
         var session=auth.authenticate(token);if(key==null || key.isEmpty()) throw new RemessaFailure(INVALID_REQUEST);
         return transactions.execute(()->{
             var remessa=lots.find(key,session.scenario(),session.ug()).orElseThrow(()->new RemessaFailure(NOT_FOUND));
+            requireUnblocked(remessa);
             remessa.requireOpen();
             long generation=repository.generation(session.scenario());
             if(repository.active(remessa.id(),generation)) throw new RemessaFailure(CONFLICT);
@@ -44,6 +45,7 @@ public final class ProcessingService implements Processamento {
         var session=auth.authenticate(token);if(key==null || key.isEmpty() || subject==null) throw new RemessaFailure(INVALID_REQUEST);
         transactions.execute(()->{
             var remessa=lots.find(key,session.scenario(),session.ug()).orElseThrow(()->new RemessaFailure(NOT_FOUND));
+            requireUnblocked(remessa);
             remessa.requireOpen();long generation=repository.generation(session.scenario());
             if(repository.active(remessa.id(),generation)) throw new RemessaFailure(CONFLICT);
             repository.discard(remessa,subject,generation,clock.instant());return null;
@@ -53,11 +55,15 @@ public final class ProcessingService implements Processamento {
         var session=auth.authenticate(token);if(key==null || key.isEmpty()) throw new RemessaFailure(INVALID_REQUEST);
         transactions.execute(()->{
             var remessa=lots.find(key,session.scenario(),session.ug()).orElseThrow(()->new RemessaFailure(NOT_FOUND));
+            requireUnblocked(remessa);
             remessa.requireOpen();repository.cancel(remessa,repository.generation(session.scenario()),clock.instant());return null;
         });
     }
     public Processing.Consultation consult(String token,long number) {
         return transactions.execute(()->{var lot=remessas.consult(token,number);return new Processing.Consultation(lot,repository.state(lot.number()),repository.diagnostic(lot.number()));});
+    }
+    private void requireUnblocked(Remessa remessa) {
+        if(lots.blocked(remessa.scenario(),remessa.ug(),remessa.yearMonth())) throw new RemessaFailure(BLOCKED);
     }
     public Processing.Snapshot inspect(String adminKey,long number) {
         return transactions.execute(()->{var received=remessas.inspect(adminKey,number);long lot=received.lote().number();return new Processing.Snapshot(received,repository.state(lot),repository.processed(lot),repository.effective(lot),repository.isActive(lot),repository.diagnostic(lot));});
