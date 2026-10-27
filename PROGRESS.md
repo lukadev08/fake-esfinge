@@ -1897,3 +1897,37 @@ seguem pendentes; integração da #11 não conclui E2 integral ou homologação.
 Concluir exploração e tabelas de decisão da #12; implementar em equipe própria
 com TDD/revisão/supervisão e correções delegadas. Publicação da nova fatia continua
 sob autorização específica; solicitante mantém pendência interna #8/E1.
+
+## 2026-10-27 — Preparar implementação da #12
+
+Referência: continuação técnica E2 autorizada e
+[issue #12](https://github.com/lukadev08/fake-esfinge/issues/12). Situação: exploração
+e decisões/transições concluídas antes do código; implementação em seguida.
+
+### O que foi feito
+
+- `grupo12_explorer`, papel configurado GPT-6 Luna/médio, concluiu somente leitura.
+  Supervisor leu contrato/fonte V6/arquitetura/código e registrou
+  [plano da #12](.scratch/issue-12-plan.md), reconferido pelo explorer sem conflito.
+- Decisões: guarda global de ciclo ativo na chave (RECEBIDO agendado/EM), exceção
+  derivada para RECEBIDO sem trabalho, sucesso preservado quando inativado e
+  históricos anteriores intactos. Sucesso vazio/repetição de assunto suportado
+  segue fonte, com atividade/evento próprios e sem promessa de idempotência oficial.
+- Operação permanece no módulo remessas via Processamento, reutilizando V10 e
+  menor remoção JDBC, sem migração/infraestrutura novas. Reenvio conserva chave
+  com IDs próprios; finalização só de ativos. Cancelamento/rota de lote/falha de
+  resposta perdida continuam fora do escopo.
+- #12 aberta sem comentários, dependências #10/#11 concluídas, #8/E1 pendente.
+  Comandos de build/teste herdados inspecionados; nenhuma publicação da #12 autorizada.
+
+### O que deu errado
+
+Nenhuma execução de código/build/teste nesta preparação. A chave de schema foi
+inventariada como `descarteQuery`, evitando supor outra definição. Lacunas de
+RECEBIDO/atividade/estado histórico foram resolvidas a partir da fonte/E0 e
+marcadas como decisões derivadas do simulador, sem equivalência oficial.
+
+### Próximo passo
+
+Executor próprio implementar em fatias TDD, revisão independente, correções
+delegadas e supervisão de suíte limpa/imagem final antes da publicação específica.
