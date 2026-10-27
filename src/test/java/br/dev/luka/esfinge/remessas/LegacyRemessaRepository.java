@@ -12,6 +12,12 @@ final class LegacyRemessaRepository implements RemessaRepository {
     LegacyRemessaRepository(DataSource source) { jdbc = new JdbcTemplate(source);current=new br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcRemessaRepository(source); }
     private final br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcRemessaRepository current;
     public Remessa open(String scenario,String ug,int yearMonth,String key,Instant now) {return current.open(scenario,ug,yearMonth,key,now);}
+    public java.util.Optional<Remessa> find(String key,String scenario) {throw new UnsupportedOperationException();}
+    public java.util.Optional<Reception.Plan> receptionPlan(Remessa remessa,Assunto subject) {return java.util.Optional.empty();}
+    public void planReception(Remessa remessa,Assunto subject,Reception.Type type,long attempt,Instant now) {throw new UnsupportedOperationException();}
+    public void removeReceptionPlan(Remessa remessa,Assunto subject,Instant now) {throw new UnsupportedOperationException();}
+    public Reception.Type receptionAttempt(Remessa remessa,Assunto subject) {return null;}
+    public void responseLost(Remessa remessa,Lote lot,Instant now) {throw new UnsupportedOperationException();}
     public java.util.Optional<Remessa> find(String key,String scenario,String ug) {
         return jdbc.query("SELECT id,chave,cenario,ug,competencia,abertura,atividade FROM remessas WHERE chave=? AND cenario=? AND ug=? AND estado='ABERTO'",
                 (r,n) -> new Remessa(r.getLong("id"),r.getString("chave"),r.getString("cenario"),r.getString("ug"),r.getInt("competencia"),

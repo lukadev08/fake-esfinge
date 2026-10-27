@@ -19,6 +19,7 @@ public final class RemessaErrors {
             case INVALID_STRUCTURE -> { status=422; code="SIM_ESTRUTURA_INVALIDA"; message="Estrutura invalida"; }
             case UNSUPPORTED -> { status=422; code="SIM_COBERTURA_AUSENTE"; message="Capacidade nao implementada"; }
             case NOT_FOUND -> { status=404; code="SIM_RECURSO_NAO_ENCONTRADO"; message="Recurso nao encontrado"; }
+            case RECOVERY_REQUIRED -> { status=409; code="SIM_ENVIO_ABERTO_SEM_PROCESSAMENTO"; message="Assunto aguarda descarte apos perda de resposta"; }
             default -> { status=409; code="SIM_ESTADO_INVALIDO"; message="Operacao incompativel com o estado atual"; }
         }
         return ResponseEntity.status(status).body(new ErrorBody(code, message, "sim-" + UUID.randomUUID()));

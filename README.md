@@ -47,7 +47,7 @@ Dados originais do piloto permanecem no ambiente local controlado, fora do Git
 e de serviços externos. Exemplos e evidências compartilhadas exigem sanitização;
 credenciais e tokens do simulador serão fictícios.
 
-## Executar e validar as fatias #1–#10
+## Executar e validar as fatias #1–#14
 
 Requer JDK 21. O wrapper oficial fixa Maven 3.9.9; o primeiro uso baixa Maven e
 as dependências do Maven Central. O build fixa Spring Boot 3.5.10, SQLite JDBC
@@ -526,5 +526,59 @@ Veja [evidência da #13](docs/evidencias/issue-13.md). Testes fictícios não en
 #8/E1, T01/E3 ou homologação. Cancelamento automático, resposta perdida, reset,
 expiração e regras fiscais ficam fora da fatia. Publicação/merge da #13 autorizados
 e concluídos no [PR #40](https://github.com/lukadev08/fake-esfinge/pull/40).
-Trabalho encerrado após a #13 a pedido do solicitante, sem iniciar a #14;
+Trabalho foi encerrado após a #13 a pedido do solicitante e retomado em 27/10;
 [resumo do desenvolvimento](.scratch/resumo-ate-issue-13.md) registrado localmente.
+
+## Interrupção antes da aceitação e resposta perdida após commit — #14
+
+GET/PUT/DELETE `/__simulator/falhas/recepcao` exigem `X-Simulator-Key` e query
+exata `chavePacote`/`assunto` (um dos seis nomes do descarte). PUT exige JSON UTF-8:
+
+```json
+{"tipo":"APOS_COMMIT","tentativa":2}
+```
+
+`tipo` admite `ANTES_ACEITACAO` ou `APOS_COMMIT`; `tentativa` é inteiro positivo
+até `Long.MAX_VALUE`, relativo às próximas recepções elegíveis daquele envio e
+assunto. Requisições inválidas/não autorizadas não contam. A saída de GET/PUT
+contém `chavePacote`, `assunto`, `tipo`, `tentativa`, `tentativas`, `consumida` e
+`recuperacaoPendente`. GET/DELETE não têm corpo; DELETE retorna 200 vazio.
+Plano ausente retorna 404; parâmetros/corpo inválidos, 400; assunto fora da
+cobertura, 422. PUT/DELETE exigem envio aberto; outro cenário retorna 404.
+Administração não renova atividade, executa tarefas ou avança relógio.
+
+Na tentativa escolhida, o servidor encerra a conexão **sem resposta HTTP**.
+ANTES_ACEITACAO confirma somente o consumo do controle, sem lote, valores,
+trabalho, atividade ou evento de aceitação. APOS_COMMIT confirma atomicamente
+payload/valores/vínculos/evento `LOTE_RECEBIDO`, incidente e marca de recuperação;
+o lote permanece `RECEBIDO`, sem processamento. Falha real de persistência
+retorna 500 sanitizado e reverte também contador/marca; não simula desconexão.
+
+Nova recepção do assunto marcado recebe 409 `SIM_ENVIO_ABERTO_SEM_PROCESSAMENTO`.
+Outros assuntos e múltiplos lotes normais continuam permitidos. PUT/DELETE do
+plano não contornam a marca: retornam 409 enquanto a recuperação estiver pendente.
+Descarte bem-sucedido do assunto remove seus dados ativos e limpa a marca na
+mesma transação; preserva plano consumido, eventos e bytes históricos. Reenvio
+usa a mesma chave com IDs novos, sem deduplicação por hash. Cancelamento integral
+limpa a marca e fecha a chave. Consultas não executam processamento.
+
+V12 acrescenta somente a tabela de planos por remessa/assunto/geração, com FK
+de cenário/UG; V1–V11 permanecem intactas. Reinício conserva seleção, consumo,
+marca e recebido. A interrupção usa o Tomcat incluído no Spring Boot, apenas no
+adaptador/composição; clientes com retry automático devem desativá-lo ao medir
+a tentativa de falha. Nenhuma instrução de teste entra no JSON do integrador.
+
+O [cliente de smoke](.scratch/issue-14-smoke.py) usa somente dados fictícios,
+socket sem retry e biblioteca padrão Python. Em instância/base **vazia e exclusiva**:
+
+```sh
+python3 .scratch/issue-14-smoke.py prepare --port 8080 --state /tmp/issue-14-ficticio.json
+# Reinicie a mesma instância conservando a base; depois:
+python3 .scratch/issue-14-smoke.py resume --port 8080 --state /tmp/issue-14-ficticio.json
+```
+
+Veja [evidência da #14](docs/evidencias/issue-14.md). Limpar RECEBIDO por descarte
+é aproximação expressa divergente do manual. T12 cobre estes dois limites;
+demora/500 adicionais, reset, expiração, regras fiscais, #8/E1 e T01/E3 continuam
+pendentes. Código aprovado por revisão independente;263 testes e51 verificações
+Docker Linux amd64 confirmados pela supervisão, com limites na evidência.

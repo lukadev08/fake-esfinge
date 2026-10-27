@@ -36,8 +36,12 @@ public final class RemessaController {
                     || (type.getCharset()!=null && !type.getCharset().equals(java.nio.charset.StandardCharsets.UTF_8))) throw invalid();
         } catch (IllegalArgumentException e) { throw invalid(); }
         var content=payload.read(request.getInputStream().readAllBytes());
-        var lote=remessas.receive(token,parameter(request,"chavePacote",true),content);
-        return new ReceiveResponse("RECEBIDO",lote.number(),lote.receivedAt(),lote.remessaId());
+        try {
+            var lote=remessas.receive(token,parameter(request,"chavePacote",true),content);
+            return new ReceiveResponse("RECEBIDO",lote.number(),lote.receivedAt(),lote.remessaId());
+        } catch(br.dev.luka.esfinge.remessas.domain.Reception.Interrupted interrupted) {
+            request.setAttribute(ReceptionAbortValve.INTERRUPTED,true);return null;
+        }
     }
     @PostMapping("/v6/tributario/finalizarEnvio")
     public void finish(HttpServletRequest request) throws IOException {

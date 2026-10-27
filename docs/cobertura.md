@@ -11,7 +11,8 @@ Artefato 0.1.0, issues [#1](https://github.com/lukadev08/fake-esfinge/issues/1) 
 [#10](https://github.com/lukadev08/fake-esfinge/issues/10) e
 [#11](https://github.com/lukadev08/fake-esfinge/issues/11) e
 [#12](https://github.com/lukadev08/fake-esfinge/issues/12) e
-[#13](https://github.com/lukadev08/fake-esfinge/issues/13).
+[#13](https://github.com/lukadev08/fake-esfinge/issues/13) e
+[#14](https://github.com/lukadev08/fake-esfinge/issues/14).
 Fontes: [contrato E0](contrato-e0.md), [pacote derivado](contratos/2026-v6-6.06/README.md)
 e [hashes das fontes](contratos/2026-v6-6.06/fontes.json), consolidados em 23/10/2026.
 Não há OpenAPI oficial nem ensaio independente do integrador/TCE. O manifesto
@@ -24,7 +25,7 @@ registra a evolução implementada.
 | Token | Vínculo usuário/UG/cenário, opaco, inválido/expirado 401 antes de efeito | `AuthenticationServiceTest`, `AuthenticationHttpTest`; parcela T10/T11 | Implementada |
 | Validade de token | 3600 segundos configuráveis, relógio substituível | Contrato E0; testes de limite e duração customizada | Aproximada; duração local aprovada, sem equivalência oficial |
 | Administração | GET `/__simulator/configuracao`, chave própria, inspeção sem segredos | `AuthenticationHttpTest`, `SimulatorSettingsTest` | Implementada; API exclusiva do simulador |
-| Persistência | SQLite real, migrações V1→V2→V3→V4→V5→V6→V7→V8→V9→V10→V11 com checksum/version, FK por conexão, reabertura, incompatibilidade sem recriar | `JdbcAuthenticationRepositoryTest`, `JdbcRemessaTest`, `JdbcCancellationTest` | Implementada para contexto/identidades/sessões/remessas/lotes/eventos; parcela de T13 |
+| Persistência | SQLite real, migrações V1→V2→V3→V4→V5→V6→V7→V8→V9→V10→V11→V12 com checksum/version, FK por conexão, reabertura, incompatibilidade sem recriar | `JdbcAuthenticationRepositoryTest`, `JdbcRemessaTest`, `JdbcCancellationTest`, `JdbcReceptionFailureTest` | Implementada para contexto/identidades/sessões/remessas/lotes/eventos/planos; parcela de T13 |
 | Erros e logs | Envelope próprio sanitizado, sem senha/token/SQL/stack trace | `InternalFailureHttpTest`, testes HTTP/configuração | Implementada; logs padrão desabilitados |
 | Fronteiras | Núcleo Java puro, domínio sem aplicação, capacidades sem ciclos | `ArchitectureTest`, análise de dependências de classes | Implementada na fatia atual |
 | Operações ainda indisponíveis | Token válido recebe 422 de cobertura, inválido 401; inexistente 404 | `AuthenticationHttpTest`, `RemessaHttpTest`; parcela de T18 | Cobertura ausente explícita; sem aprovação fiscal |
@@ -49,10 +50,12 @@ registra a evolução implementada.
 | Erro assíncrono injetado | Plano administrativo estrito por lote/geração, índice/null, imutável após início; descarte integral do alvo e aborto atômico dos seguintes pendentes do mesmo assunto/remessa/UG/cenário; consulta200 com diagnóstico, sem avançar | `ProcessamentoHttpTest`, `JdbcProcessingFailureTest`; parcelas T02/T04/T06/T10/T13/T15 | Aproximada; injeção própria, sem validar regra fiscal T04 |
 | Histórico de descartes/abortos | V10 aditiva em lotes, reconstrução restrita aos trabalhos preserva IDs/seq/tempos; bytes/hash originais imutáveis, linhas ativas removidas, inspeção histórica explícita e finalização só de ativos | `JdbcProcessingFailureTest`, `JdbcFinalizationTest`, `ProcessamentoHttpTest`; rollback statement/COMMIT, concorrência, guardas tardias, reinício/migração | Implementada para erro controlado; sem recuperação integral |
 | Descartar assunto / seis assuntos | POST com query estrita,200 vazio; guarda global da chave contra agendado/EM,404 isolado/409 fechado; remoção e inativação atômicas, sucesso histórico preservado, demais dados intactos, evento/atividade inclusive sem dados/repetição | E0 e fonte V6:188–198; `DescarteAssuntoHttpTest`, `JdbcSubjectDiscardTest`; parcelas T06/T07/T08/T10/T11/T13/T15/T18/T19 | Implementada no contrato derivado; sem garantia oficial de idempotência |
-| Limpeza de RECEBIDO sem trabalho | LOTE_DESCARTADO/SIM_DESCARTE_ASSUNTO/registro null, originais e plano históricos preservados; reenvio novo ID/ordem sem dedupe nem plano herdado, finalização somente dos ativos/efetivos | E0 aproximação expressa; `DescarteAssuntoHttpTest`, `JdbcSubjectDiscardTest`; parcelas T06/T07/T08 | Aproximada; diverge da restrição V6, sem implementar resposta perdida |
+| Limpeza de RECEBIDO sem trabalho | LOTE_DESCARTADO/SIM_DESCARTE_ASSUNTO/registro null, originais e plano históricos preservados; reenvio novo ID/ordem sem dedupe nem plano herdado, finalização somente dos ativos/efetivos | E0 aproximação expressa; `DescarteAssuntoHttpTest`, `JdbcSubjectDiscardTest`, `JdbcReceptionFailureTest`; parcelas T06/T07/T08/T12 | Aproximada; diverge da restrição V6, recuperação de resposta perdida incluída na #14 |
 | Cancelar envio aberto | POST query estrita/corpo vazio, 200 vazio; remove/inativa todo dado ativo, inclusive agendado/EM, preserva originais/sucessos/erros anteriores e outros contextos; nova chave na mesma competência; mutações repetidas/encerradas409 e consulta histórica sem atividade | `CancelamentoHttpTest`, `JdbcCancellationTest`; parcelas T08/T10/T11/T13/T14/T15/T18/T19 | Implementada no contrato derivado; não cancela concluído |
 | Controle de cancelamento | Pendentes ABORTADO/SIM_ENVIO_CANCELADO/registro null, sucesso histórico preservado; V11 distingue cancelamento/finalização, copia V10 inclusive diagnósticos/sequências e revalida resultado tardio sem mudar geração global | `JdbcCancellationTest`, `CancelamentoHttpTest`; rollback statement/COMMIT, corrida/pausa fora da transação, reinício/upgrade | Aproximada na situação/diagnóstico próprios do simulador, sem equivalência oficial |
-| Resposta perdida / reset / expiração de envio | Efeitos, geração e relógio administrativo; rota explícita de lote também indisponível | Issues #14–#17 | Não implementada |
+| Falhas de recepção antes/depois do commit | Plano administrativo por tentativa elegível e remessa/assunto/geração; socket real recebe zero bytes HTTP; antes confirma só consumo do controle sem lote/atividade/aceitação, depois conserva RECEBIDO/original/valores/evento e marca | `ReceptionTransportTest`, `JdbcReceptionFailureTest`; parcela T12, rollback statement/COMMIT, reabertura e duas instâncias | Aproximada; injeção própria do simulador, sem demora/500 adicionais |
+| Recuperar resposta perdida | Retry409 SIM_ENVIO_ABERTO_SEM_PROCESSAMENTO somente no assunto/contexto marcado; PUT/DELETE409 não contornam recuperação; descarte limpa marca e dados ativos atomicamente, reenvio novos IDs sem dedupe e finalização efetiva | `ReceptionTransportTest`, `JdbcReceptionFailureTest`; seis assuntos, bytes/decimais/multiplicidades/histórico e isolamento | Implementada no contrato derivado; descarte de RECEBIDO permanece aproximação divergente do manual |
+| Reset / bloqueio de competência / expiração de envio | Efeitos, geração e relógio administrativo; rota explícita de lote também indisponível | Issues #15–#17 | Não implementada |
 | Regras fiscais / vínculos entre assuntos / CONs | Evolução sem catálogo aprovado | Issue #27 | Não implementada |
 | Aceites humanos / T01 / E1–E5 | Integrador real, referência independente e reprodução | Issues #8, #19, #20, #22, #26 | Pendente |
 | Docker Linux amd64 | Imagem mínima, volume local e runtime Java21 | Dockerfile; supervisão da #2 com 178 verificações HTTP/reinício sem rede, imagem identificada na evidência | Implementada e exercitada localmente no jar da #2 |
@@ -162,4 +165,14 @@ reinício, conteúdo exato e agendador automático. Preparação anterior270+3 s
 Publicação/merge autorizados e concluídos no
 [PR #40](https://github.com/lukadev08/fake-esfinge/pull/40), head `c3714b9`, merge
 `566afda0c3ac9c6f1f623d752407616978b5cd93`; #13 completed, #8 aberta.
-Execução encerrada após a #13 a pedido do solicitante; #14 não iniciada.
+Execução foi encerrada após a #13 a pedido do solicitante e retomada em 27/10.
+
+Evidência da #14: [execução local](evidencias/issue-14.md). V12 aditiva preserva
+V1–V11, dados e sequências. Executor verify e supervisão clean verify: **263 testes**,
+zero falhas/erros/ignorados, exit0; 20 casos novos de transporte real/JDBC.
+**51 verificações de smoke** no jar local e outras **51 na imagem final Linux
+amd64**:22 de preparação e29 de recuperação/finalização por execução, com reinício.
+Revisão independente do código e conferência documental final aprovadas sem
+achados materiais. SQLite da imagem íntegro e sem violações de FK; imagem
+e jar identificados na evidência. Sem aceite humano #8/E1, T01/E3, CI remoto,
+regras fiscais ou homologação implícitos.

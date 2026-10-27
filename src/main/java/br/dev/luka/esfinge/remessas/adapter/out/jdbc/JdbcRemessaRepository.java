@@ -29,6 +29,43 @@ public final class JdbcRemessaRepository implements RemessaRepository {
                 (r,n) -> new Remessa(r.getLong("id"),r.getString("chave"),r.getString("cenario"),r.getString("ug"),r.getInt("competencia"),
                         Instant.parse(r.getString("abertura")),Instant.parse(r.getString("atividade")),r.getString("finalizada_em")==null?null:Instant.parse(r.getString("finalizada_em")),r.getString("cancelada_em")==null?null:Instant.parse(r.getString("cancelada_em"))),key,scenario,ug).stream().findFirst();
     }
+    public java.util.Optional<Remessa> find(String key,String scenario) {
+        var ugs=jdbc.queryForList("SELECT ug FROM remessas WHERE chave=? AND cenario=?",String.class,key,scenario);
+        return ugs.isEmpty()?java.util.Optional.empty():find(key,scenario,ugs.getFirst());
+    }
+    private long generation(Remessa remessa) {return jdbc.queryForObject("SELECT generation FROM scenarios WHERE id=?",Long.class,remessa.scenario());}
+    public java.util.Optional<Reception.Plan> receptionPlan(Remessa remessa,Assunto subject) {
+        return jdbc.query("SELECT tipo,tentativa,tentativas,consumida,recuperacao FROM falhas_recepcao WHERE remessa_id=? AND cenario=? AND ug=? AND assunto=? AND geracao=?",
+            (r,n)->new Reception.Plan(remessa.key(),subject,Reception.Type.valueOf(r.getString(1)),r.getLong(2),r.getLong(3),r.getBoolean(4),r.getBoolean(5)),remessa.id(),remessa.scenario(),remessa.ug(),subject.name(),generation(remessa)).stream().findFirst();
+    }
+    public void planReception(Remessa remessa,Assunto subject,Reception.Type type,long attempt,Instant now) {
+        requireOpen(remessa.id());var existing=receptionPlan(remessa,subject);
+        if(existing.isPresent() && existing.get().recuperacaoPendente()) throw new RemessaFailure(RemessaFailure.Kind.CONFLICT);
+        jdbc.update("INSERT INTO falhas_recepcao(remessa_id,cenario,ug,geracao,assunto,tipo,tentativa) VALUES(?,?,?,?,?,?,?) ON CONFLICT(remessa_id,assunto,geracao) DO UPDATE SET tipo=excluded.tipo,tentativa=excluded.tentativa,tentativas=0,consumida=0,recuperacao=0",
+            remessa.id(),remessa.scenario(),remessa.ug(),generation(remessa),subject.name(),type.name(),attempt);
+        receptionEvent(remessa,null,"FALHA_RECEPCAO_CONFIGURADA",now);
+    }
+    public void removeReceptionPlan(Remessa remessa,Assunto subject,Instant now) {
+        requireOpen(remessa.id());var plan=receptionPlan(remessa,subject).orElseThrow(()->new RemessaFailure(RemessaFailure.Kind.NOT_FOUND));
+        if(plan.recuperacaoPendente()) throw new RemessaFailure(RemessaFailure.Kind.CONFLICT);
+        jdbc.update("DELETE FROM falhas_recepcao WHERE remessa_id=? AND assunto=? AND geracao=?",remessa.id(),subject.name(),generation(remessa));
+        receptionEvent(remessa,null,"FALHA_RECEPCAO_REMOVIDA",now);
+    }
+    public Reception.Type receptionAttempt(Remessa remessa,Assunto subject) {
+        var current=receptionPlan(remessa,subject);if(current.isEmpty()) return null;var plan=current.get();
+        if(plan.recuperacaoPendente()) throw new RemessaFailure(RemessaFailure.Kind.RECOVERY_REQUIRED);
+        if(plan.consumida()) return null;
+        long attempt=plan.tentativas()+1;boolean selected=attempt==plan.tentativa();
+        jdbc.update("UPDATE falhas_recepcao SET tentativas=?,consumida=? WHERE remessa_id=? AND assunto=? AND geracao=?",attempt,selected?1:0,remessa.id(),subject.name(),generation(remessa));
+        return selected?plan.tipo():null;
+    }
+    public void responseLost(Remessa remessa,Lote lot,Instant now) {
+        jdbc.update("UPDATE falhas_recepcao SET recuperacao=1 WHERE remessa_id=? AND assunto=? AND geracao=?",remessa.id(),lot.subject().name(),generation(remessa));
+        receptionEvent(remessa,lot.number(),"RESPOSTA_LOTE_PERDIDA",now);
+    }
+    private void receptionEvent(Remessa remessa,Long lot,String type,Instant now) {
+        jdbc.update("INSERT INTO remessa_eventos(remessa_id,cenario,ug,lote_id,tipo,instante) VALUES(?,?,?,?,?,?)",remessa.id(),remessa.scenario(),remessa.ug(),lot,type,now.toString());
+    }
     public Lote receive(Remessa remessa,ReceivedContent content,String hash,Instant now) {
         remessa.requireOpen();
         requireOpen(remessa.id());
