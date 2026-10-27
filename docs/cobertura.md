@@ -8,7 +8,8 @@ Artefato 0.1.0, issues [#1](https://github.com/lukadev08/fake-esfinge/issues/1) 
 [#6](https://github.com/lukadev08/fake-esfinge/issues/6) e
 [#7](https://github.com/lukadev08/fake-esfinge/issues/7) e
 [#9](https://github.com/lukadev08/fake-esfinge/issues/9) e
-[#10](https://github.com/lukadev08/fake-esfinge/issues/10).
+[#10](https://github.com/lukadev08/fake-esfinge/issues/10) e
+[#11](https://github.com/lukadev08/fake-esfinge/issues/11).
 Fontes: [contrato E0](contrato-e0.md), [pacote derivado](contratos/2026-v6-6.06/README.md)
 e [hashes das fontes](contratos/2026-v6-6.06/fontes.json), consolidados em 23/10/2026.
 Não há OpenAPI oficial nem ensaio independente do integrador/TCE. O manifesto
@@ -21,7 +22,7 @@ registra a evolução implementada.
 | Token | Vínculo usuário/UG/cenário, opaco, inválido/expirado 401 antes de efeito | `AuthenticationServiceTest`, `AuthenticationHttpTest`; parcela T10/T11 | Implementada |
 | Validade de token | 3600 segundos configuráveis, relógio substituível | Contrato E0; testes de limite e duração customizada | Aproximada; duração local aprovada, sem equivalência oficial |
 | Administração | GET `/__simulator/configuracao`, chave própria, inspeção sem segredos | `AuthenticationHttpTest`, `SimulatorSettingsTest` | Implementada; API exclusiva do simulador |
-| Persistência | SQLite real, migrações V1→V2→V3→V4→V5→V6→V7→V8→V9 com checksum/version, FK por conexão, reabertura, incompatibilidade sem recriar | `JdbcAuthenticationRepositoryTest`, `JdbcRemessaTest` | Implementada para contexto/identidades/sessões/remessas/lotes/eventos; parcela de T13 |
+| Persistência | SQLite real, migrações V1→V2→V3→V4→V5→V6→V7→V8→V9→V10 com checksum/version, FK por conexão, reabertura, incompatibilidade sem recriar | `JdbcAuthenticationRepositoryTest`, `JdbcRemessaTest` | Implementada para contexto/identidades/sessões/remessas/lotes/eventos; parcela de T13 |
 | Erros e logs | Envelope próprio sanitizado, sem senha/token/SQL/stack trace | `InternalFailureHttpTest`, testes HTTP/configuração | Implementada; logs padrão desabilitados |
 | Fronteiras | Núcleo Java puro, domínio sem aplicação, capacidades sem ciclos | `ArchitectureTest`, análise de dependências de classes | Implementada na fatia atual |
 | Operações ainda indisponíveis | Token válido recebe 422 de cobertura, inválido 401; inexistente 404 | `AuthenticationHttpTest`, `RemessaHttpTest`; parcela de T18 | Cobertura ausente explícita; sem aprovação fiscal |
@@ -41,9 +42,11 @@ registra a evolução implementada.
 | Processamento estrutural | RECEBIDO→EM_PROCESSAMENTO→PROCESSADO_SUCESSO, revalidação existente, registros processados/efetivos por origem/índice, sem deduplicação | `ProcessamentoHttpTest`, `JdbcProcessingTest`; parcelas T02/T13/T18 | Implementada para seis assuntos; sem regras fiscais |
 | Controle de processamento | MANUAL/AUTOMATICO, latência persistida, avanço explícito do relógio compartilhado e passos, JSON estrito, chave própria e horizonte técnico dos timestamps/deslocamento validado antes dos efeitos e em cada leitura, inclusive após reinício | `ProcessamentoHttpTest`, `JdbcProcessingTest`; parcelas T10/T11/T13 | Aproximada; API interna e padrões MANUAL/1000ms derivados, sem equivalência oficial |
 | Persistência de processamento | V8 aditiva, upgrade V7 preenchida, reinício, ordem, concorrência, guarda de geração e rollback statement/COMMIT | `JdbcProcessingTest`, `ProcessamentoHttpTest`; parcela T13 | Implementada; avanço de tempo precede transições individualmente atômicas |
-| Finalização | POST JSON estrito com chave/17 totais, seis BigInteger versus linhas efetivas por assunto, onze strings zero; todos os lotes atuais em sucesso e pelo menos um; divergência/pendência409 sem efeitos, sucesso200 vazio | `FinalizationTest`, `FinalizacaoHttpTest`, `JdbcFinalizationTest`; parcelas T01/T03/T10/T13/T14/T15/T18 | Implementada no contrato derivado; todos os lotes atuais são ativos, sem recuperação ainda |
+| Finalização | POST JSON estrito com chave/17 totais, seis BigInteger versus linhas efetivas por assunto, onze strings zero; todos os lotes ativos em sucesso e pelo menos um ativo; divergência/pendência409 sem efeitos, sucesso200 vazio | `FinalizationTest`, `FinalizacaoHttpTest`, `JdbcFinalizationTest`; parcelas T01/T03/T10/T13/T14/T15/T18 | Implementada no contrato derivado; exclui históricos descartados/abortados, sem recuperação explícita ainda |
 | Fechamento e histórico | Marcador V9 aditivo, unicidade apenas da chave aberta por competência; mutações409, consulta histórica sem atividade/evento, reabertura sem cota, concorrência, rollback statement/COMMIT e preservação V8 | `FinalizacaoHttpTest`, `JdbcFinalizationTest`; parcelas T02/T03/T13/T14/T15 | Implementada; estado legado não determina sozinho a abertura |
-| Descarte / cancelamento / recuperação / reset / expiração de envio | Efeitos, geração e relógio administrativo | Issues #11–#17 | Não implementada |
+| Erro assíncrono injetado | Plano administrativo estrito por lote/geração, índice/null, imutável após início; descarte integral do alvo e aborto atômico dos seguintes pendentes do mesmo assunto/remessa/UG/cenário; consulta200 com diagnóstico, sem avançar | `ProcessamentoHttpTest`, `JdbcProcessingFailureTest`; parcelas T02/T04/T06/T10/T13/T15 | Aproximada; injeção própria, sem validar regra fiscal T04 |
+| Histórico de descartes/abortos | V10 aditiva em lotes, reconstrução restrita aos trabalhos preserva IDs/seq/tempos; bytes/hash originais imutáveis, linhas ativas removidas, inspeção histórica explícita e finalização só de ativos | `JdbcProcessingFailureTest`, `JdbcFinalizationTest`, `ProcessamentoHttpTest`; rollback statement/COMMIT, concorrência, guardas tardias, reinício/migração | Implementada para erro controlado; sem recuperação integral |
+| Descarte explícito / cancelamento / recuperação / reset / expiração de envio | Efeitos, geração e relógio administrativo | Issues #12–#17 | Não implementada |
 | Regras fiscais / vínculos entre assuntos / CONs | Evolução sem catálogo aprovado | Issue #27 | Não implementada |
 | Aceites humanos / T01 / E1–E5 | Integrador real, referência independente e reprodução | Issues #8, #19, #20, #22, #26 | Pendente |
 | Docker Linux amd64 | Imagem mínima, volume local e runtime Java21 | Dockerfile; supervisão da #2 com 178 verificações HTTP/reinício sem rede, imagem identificada na evidência | Implementada e exercitada localmente no jar da #2 |
@@ -110,4 +113,17 @@ quinze tabelas preservadas, reinício, 17 totalizadores, 10.001 créditos, conte
 efetivo exato, disputas e fechamento/histórico persistidos. As 538 verificações da
 preparação V8 e 3 do snapshot anterior são separadas. Sem regras fiscais,
 recuperação, sem movimento, T17 ou aceite humano implícitos; #8/E1 e T01/E3
-pendentes. Publicação/merge da #10 ainda não realizados.
+pendentes. Publicação/merge autorizados e concluídos no
+[PR #37](https://github.com/lukadev08/fake-esfinge/pull/37), head `d47c751`, merge
+`4de2ba5e8c799e388ecd5c6a89bcc1a33d32ff1f`; #10 completed, #8 aberta.
+
+
+Evidência da #11: [execução local](evidencias/issue-11.md), **186 testes** na suíte
+limpa do supervisor e revisão final aprovada após correção dos DTOs HTTP.
+**1.555 verificações na imagem final V10 Linux amd64 sem rede**, incluindo upgrade
+V9 real, quinze tabelas preservadas, plano/terminais após reinícios, primeiro/
+intermediário/último, diagnóstico, ativos/histórico, finalização e execução manual/
+automática concorrente. As 105 verificações de preparação V9 e3 de snapshot são
+separadas. Injeção aproximada; regra fiscal T04, integrador T01/E3, aceite #8/E1,
+recuperação integral, CI remoto e homologação não comprovados. Publicação/merge
+da #11 ainda não realizados.

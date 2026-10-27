@@ -1740,3 +1740,124 @@ localmente, revisão/suíte/Docker aprovados; publicação específica pendente.
 Obter autorização específica para push/PR/merge da #10 e decisão separada sobre
 exclusão do volume fictício. Depois de integrar, prosseguir à #11 dentro das
 dependências e supervisão autorizadas. Solicitante mantém #8/E1 pendente.
+
+## 2026-10-26 — Publicar e integrar #10; excluir ensaio autorizado
+
+Referência: autorização expressa de publicação/merge da #10 e exclusão de
+`fake-esfinge-issue10-supervisao`. Situação: PR #37 integrado, #10 completed;
+continuidade técnica para #11, com #8/E1 pendente.
+
+### O que foi feito
+
+- Push de `issue-10-finalizacao`, head revisado `d47c751`, criação do
+  [PR #37](https://github.com/lukadev08/fake-esfinge/pull/37) com corpo preparado
+  e anexo à tarefa. Base remota `eb376d0` reconfirmada; comparação de três commits
+  sem divergência e PR sem conflitos. Merge com SHA esperado produziu
+  `4de2ba5e8c799e388ecd5c6a89bcc1a33d32ff1f`.
+- GitHub confirmou PR merged, `main` no merge, #10 closed/completed e #8 aberta.
+  Checks/statuses vazios no head, sem CI executado. Evidências locais continuam
+  155 testes e 1.279 verificações Docker verdes, sem mudança de código após revisão.
+- Conferidos nome exato e ausência de containers usuários; excluído somente o
+  volume `fake-esfinge-issue10-supervisao` no contexto `orbstack`, exit0, com
+  ausência confirmada. Imagem/clientes preservados. Manifesto, evidência e registro
+  do PR atualizados; corpo publicado preservado.
+- Criada branch local `issue-11-erro-assincrono` sobre `origin/main` integrado.
+  #11 reconfirmada aberta `ready-for-agent`, sem comentários, dependente da #9
+  já concluída. Explorer próprio iniciado para erro assíncrono controlado.
+
+### O que deu errado
+
+Nenhuma falha de publicação, merge ou exclusão. Um trecho duplicado durante a
+edição documental foi removido antes de validar/commitar. Código não mudou;
+testes não repetidos nesta operação. Ensaio real #8/E1/T01/E3 e CI remoto pendentes.
+
+### Próximo passo
+
+Concluir exploração e tabelas de decisão da #11; implementar com equipe própria,
+TDD, revisão independente e supervisão do artefato final. Publicação da nova fatia
+continua exigindo autorização específica; #8/E1 permanece com o solicitante.
+
+## 2026-10-26 — Preparar implementação da #11
+
+Referência: continuação técnica E2 autorizada e
+[issue #11](https://github.com/lukadev08/fake-esfinge/issues/11). Situação: exploração
+e tabelas de decisão concluídas antes do código; implementação em seguida.
+
+### O que foi feito
+
+- Explorer próprio `grupo11_explorer`, papel configurado GPT-6 Luna/médio, leu
+  contrato/arquitetura/código. Corrigiu variante inicial inferida sem evidência.
+  Supervisor definiu [plano da #11](.scratch/issue-11-plan.md) com falha administrativa
+  por lote/índice, diagnóstico contratual e propagação atômica do mesmo assunto.
+- Decisões derivadas: falhar na conclusão sem commit parcial por registro;
+  conservar payload/hash como histórico, remover dados ativos e marcar lote inativo;
+  abortar seguintes não concluídos, inclusive EM_PROCESSAMENTO/fora do snapshot.
+  Outros assuntos/anteriores válidos permanecem; finalização considera só ativos.
+- Plano administrativo por lote/geração, imutável após início, separado do payload.
+  V10 preservará dados V9; reconstrução necessária restrita à tabela de trabalhos.
+  Reforçada ordem de exclusão das FKs e revalidação contra conclusão tardia.
+- Comandos existentes inspecionados, sem dependência/configuração novas. #11 aberta,
+  sem comentários; #9 concluída. #8/E1/T01/E3 e publicação da #11 pendentes.
+
+### O que deu errado
+
+Nenhuma execução de código/build/testes nesta preparação. Lacunas de API própria,
+arquivo histórico e ciclo do plano foram resolvidas por decisões documentadas do
+simulador, sem atribuir equivalência oficial. Identificação incorreta inicial do
+explorer foi corrigida; nenhuma alteração de fonte original ou dado real.
+
+### Próximo passo
+
+Executor próprio implementar em fatias TDD, seguido de revisão independente,
+correções delegadas e supervisão de suíte limpa/Docker sobre artefato final.
+
+## 2026-10-27 — Concluir implementação técnica local da #11
+
+Referência: continuação E2 autorizada e
+[issue #11](https://github.com/lukadev08/fake-esfinge/issues/11). Situação: pronta
+localmente, revisão/suíte/Docker finais verdes; publicação específica pendente.
+
+### O que foi feito
+
+- `grupo11_executor` implementou plano por lote/índice/geração, imutável após início,
+  falha/descarte do alvo e aborto atômico dos seguintes do mesmo assunto, inclusive
+  EM_PROCESSAMENTO/fora do snapshot. Inspeção e diagnóstico distinguem histórico
+  e dados ativos removidos; finalização usa só ativos. V10 conserva V9/bytes/FKs.
+- Equipe própria com explorer, executor, reviewer e corretor separados. Papéis
+  configurados GPT-6 Luna/médio, GPT-6.1 Sol/baixo, GPT-6.1 Sol/médio e GPT-6.1
+  Sol/baixo; runtime não inferido quando indisponível. Reviewer apontou P2 de
+  fronteira DTO HTTP/núcleo; `grupo11_correcao` mapeou explicitamente respostas.
+  Mesmo reviewer aprovou depois, sem achados materiais remanescentes.
+- TDD comprovou RED 404/200 e GREEN. Executor verify 186 verde (19,947s); corretor
+  verify 186 verde (19,833s). Supervisor clean verify: **186 testes**, zero falhas/
+  erros/ignorados, exit0,21,608s; 22 relatórios conferidos. Jar/imagem identificados
+  na [evidência sanitizada](docs/evidencias/issue-11.md).
+- **1.555 verificações na imagem final V10**, todas exit0: upgrade V9 real com
+  quinze tabelas preservadas, plano e terminais após reinícios, primeiro/intermediário/
+  último, diagnóstico 200/null, finais só de ativos, conteúdo/histórico exato e
+  disputa manual/automático sem duplicação. SQLite confirmou 26 controles, 16 ativos,
+  dez inativos, 10.016 processados/efetivos e 10.015 valores TEXT, com origem/FKs/
+  sequências preservadas. Preparação V9: 105 verificações + 3 de snapshot, separadas.
+- README, manifesto, plano e [rascunho do PR](.scratch/pr-issue-11.md) atualizados.
+  V1–V9/fontes/schemas/build/dependências intactos, .DS_Store preservados. Nenhum
+  código mudou após a suíte final; supervisor escreveu só registros e clientes
+  temporários de ensaio, sem alterar produção/testes.
+- Containers removidos, ausência confirmada; dois volumes fictícios
+  `fake-esfinge-issue11-supervisao` e `fake-esfinge-issue11-supervisao-auto`
+  preservados no contexto `orbstack`. #11 aberta sem comentários; #8 aberta
+  `ready-for-human`. #12 aberta, dependente de #10 concluída e #11 ainda pendente.
+
+### O que deu errado
+
+- Revisão encontrou objetos do núcleo diretamente nos DTOs de plano/diagnóstico.
+  Correção delegada preservou JSON e null explícito; testes comportamentais
+  existentes foram reutilizados, sem novo teste estrutural espelhando records.
+- Nenhuma falha funcional remanescente na suíte ou imagem final. Avisos herdados
+  de Mockito/ByteBuddy/JDK e SLF4J dos clientes não impediram validação. Injeção
+  não comprova regra fiscal T04; #8/E1/T01/E3 e CI remoto não executados.
+
+### Próximo passo
+
+Obter autorização específica para publicar/integrar a #11 e decisão separada sobre
+exclusão dos dois volumes fictícios. Após integração, prosseguir à #12 com equipe
+própria, dependências e supervisão. Solicitante mantém validação interna #8/E1.

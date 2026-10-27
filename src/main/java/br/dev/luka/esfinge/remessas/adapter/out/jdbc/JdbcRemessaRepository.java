@@ -63,10 +63,10 @@ public final class JdbcRemessaRepository implements RemessaRepository {
             throw new RemessaFailure(RemessaFailure.Kind.CONFLICT);
     }
     public Finalization.State finalization(Remessa remessa) {
-        long count=jdbc.queryForObject("SELECT COUNT(*) FROM lotes WHERE remessa_id=? AND cenario=? AND ug=?",Long.class,remessa.id(),remessa.scenario(),remessa.ug());
-        long success=jdbc.queryForObject("SELECT COUNT(*) FROM lotes l JOIN processamento_trabalhos t ON t.lote_id=l.numero AND t.remessa_id=l.remessa_id AND t.cenario=l.cenario AND t.ug=l.ug JOIN scenarios s ON s.id=t.cenario AND s.generation=t.geracao WHERE l.remessa_id=? AND l.cenario=? AND l.ug=? AND t.situacao='PROCESSADO_SUCESSO'",Long.class,remessa.id(),remessa.scenario(),remessa.ug());
+        long count=jdbc.queryForObject("SELECT COUNT(*) FROM lotes WHERE ativo=1 AND remessa_id=? AND cenario=? AND ug=?",Long.class,remessa.id(),remessa.scenario(),remessa.ug());
+        long success=jdbc.queryForObject("SELECT COUNT(*) FROM lotes l JOIN processamento_trabalhos t ON t.lote_id=l.numero AND t.remessa_id=l.remessa_id AND t.cenario=l.cenario AND t.ug=l.ug JOIN scenarios s ON s.id=t.cenario AND s.generation=t.geracao WHERE l.remessa_id=? AND l.cenario=? AND l.ug=? AND l.ativo=1 AND t.situacao='PROCESSADO_SUCESSO'",Long.class,remessa.id(),remessa.scenario(),remessa.ug());
         var effective=new java.util.EnumMap<Assunto,Long>(Assunto.class);
-        jdbc.query("SELECT l.assunto,COUNT(*) FROM registros_efetivos e JOIN lotes l ON l.numero=e.lote_id AND l.remessa_id=e.remessa_id AND l.cenario=e.cenario AND l.ug=e.ug WHERE e.remessa_id=? AND e.cenario=? AND e.ug=? GROUP BY l.assunto",r->{effective.put(Assunto.valueOf(r.getString(1)),r.getLong(2));},remessa.id(),remessa.scenario(),remessa.ug());
+        jdbc.query("SELECT l.assunto,COUNT(*) FROM registros_efetivos e JOIN lotes l ON l.numero=e.lote_id AND l.remessa_id=e.remessa_id AND l.cenario=e.cenario AND l.ug=e.ug WHERE l.ativo=1 AND e.remessa_id=? AND e.cenario=? AND e.ug=? GROUP BY l.assunto",r->{effective.put(Assunto.valueOf(r.getString(1)),r.getLong(2));},remessa.id(),remessa.scenario(),remessa.ug());
         return new Finalization.State(count,success,effective);
     }
     public void finish(Remessa remessa,Instant now) {

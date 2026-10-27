@@ -125,6 +125,22 @@ específica de exclusão; nenhuma tentativa de apagá-lo. Imagem e clientes em
 `/private/tmp/fake-esfinge-issue10-supervisao` preservados localmente. Push/PR/merge
 da #10, publicação de imagem e implantação não realizados.
 
+Após autorização específica posterior, o volume `fake-esfinge-issue10-supervisao`
+foi excluído no contexto `orbstack`, exit0, com ausência confirmada. Nenhum outro
+volume foi excluído; imagem/clientes locais preservados.
+
+## Publicação e integração
+
+Push da branch `issue-10-finalizacao`, criação e merge do
+[PR #37](https://github.com/lukadev08/fake-esfinge/pull/37) realizados com autorização
+específica. Head revisado `d47c751c593ff2f48ac423c62c04845db17851a3`, base
+`eb376d07fd8efe915d2588cb69e4a0f41b1dcf75`; comparação remota confirmou três commits
+preparados, sem divergência de base e sem conflitos. Merge protegido pelo SHA
+esperado produziu `4de2ba5e8c799e388ecd5c6a89bcc1a33d32ff1f`. GitHub confirmou
+PR merged, #10 completed, `main` no merge e #8 aberta. PR anexado à tarefa.
+Checks/statuses vazios no head; nenhuma evidência de CI executado. Código não
+mudou desde a suíte aprovada; não foi necessário repetir testes nesta publicação.
+
 ## Limites
 
 Parcelas cobertas: T01/T02/T03/T10/T13/T14/T15/T18. Testes fictícios não comprovam
@@ -132,5 +148,5 @@ T01 integral, aceite humano #8/E1, piloto E3, regras fiscais ou homologação of
 Descarte, cancelamento, recuperação, reset, expiração, sem movimento e T17
 permanecem fora da implementação #10. Recuperação futura deve integrar o filtro de
 lotes ativos e excluir descartados/abortados dos totais; esses estados ainda não
-existem nesta versão. CI remoto e integrador real não executados. A implementação
-técnica está pronta localmente, com publicação específica ainda pendente.
+existem nesta versão. CI remoto, integrador real, publicação de imagem e implantação
+não executados. Integração da #10 não encerra E2 integral nem os aceites humanos.

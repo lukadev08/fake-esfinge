@@ -407,7 +407,7 @@ limite de inteiro fixo; zeros iniciais são aceitos. Os onze assuntos sem suport
 exigem string exata `"0"`; positivo retorna422 de cobertura. Campos ausentes,
 nulos, tipos incorretos ou extras retornam422; JSON/mídia/query inválidos retornam400.
 
-Há pelo menos um lote e todos os lotes atuais devem estar em `PROCESSADO_SUCESSO`,
+Há pelo menos um lote ativo e todos os lotes ativos devem estar em `PROCESSADO_SUCESSO`,
 inclusive os recebidos após o último disparo. Totais contam linhas efetivas por
 assunto e envio, conservando duplicatas; não somam dinheiro nem usam a contagem
 de recepção. Pendência ou divergência retorna409 sem efeitos. Sucesso retorna200
@@ -419,7 +419,41 @@ novo evento de consulta. Uma abertura posterior da mesma UG/competência retorna
 chave nova e preserva o histórico, sem cota mensal adicional nesta fatia.
 Reinício conserva o fechamento; falha de statement/COMMIT reverte a finalização.
 
-Consulte [evidência da #10](docs/evidencias/issue-10.md). Todos os lotes atuais
-são ativos; descarte, cancelamento, recuperação, sem movimento e T17 ainda não
-estão implementados. Testes fictícios locais não encerram #8/E1, T01/E3 ou
+Consulte [evidência da #10](docs/evidencias/issue-10.md). Descarte explícito,
+cancelamento, recuperação, sem movimento e T17 ainda não estão implementados. Testes fictícios locais não encerram #8/E1, T01/E3 ou
 homologação oficial. Publicação da #10 permanece sem autorização.
+
+
+## Erro assíncrono controlado — #11
+
+GET/PUT/DELETE `/__simulator/falhas/processamento/{numeroLote}` usam
+`X-Simulator-Key` e nenhuma query. PUT exige JSON UTF-8 exato `{"registro": 0}`
+ou `{"registro": null}`; índice inteiro zero-based menor que o total original.
+GET/PUT retornam200 com `numeroLote` e `registro` explícito, inclusive null;
+DELETE retorna200 vazio. Plano ausente/outro cenário retorna404. Configurar ou
+remover exige envio aberto e lote ativo sem início (sem trabalho ou RECEBIDO);
+EM_PROCESSAMENTO, sucesso, terminais e chave fechada retornam409 sem efeitos.
+GET só lê; configuração não renova atividade. Plano persiste por lote/geração.
+
+Na conclusão, o alvo fica `LOTE_DESCARTADO` com `SIM_ERRO_INJETADO`. A mesma
+transação aborta seguintes não concluídos do mesmo assunto/remessa/UG/cenário,
+inclusive EM_PROCESSAMENTO e recebidos após o disparo, com
+`ABORTADO_ERRO_LOTE_ANTERIOR` e `SIM_ABORTADO_ERRO_LOTE_ANTERIOR`.
+O índice localiza o diagnóstico; todo o lote é descartado, sem commit parcial.
+Anteriores válidos, posteriores já concluídos e outros assuntos são preservados.
+Consulta mantém HTTP200 e acrescenta `retornoErros.erros` apenas nos terminais,
+com `codigo`, `mensagem` própria e `registro` (null presente quando não localizado).
+Consultas não avançam processamento. Ambos os modos usam a mesma porta.
+
+V10 mantém bytes/hash/quantidade original como arquivo histórico imutável,
+marca o lote inativo e remove dados ativos recebidos/processados/efetivos.
+Inspeção retorna `ativo`, `diagnostico`, contagens/listas ativas e
+`recebidosHistoricos`/`registrosHistoricos`; `bytesBase64` sempre representa o
+original histórico. Finalização conta somente ativos em sucesso e seus efetivos;
+somente históricos não permitem disparo nem finalização. Reinício conserva planos,
+diagnósticos e terminais; rollback reverte o grupo inteiro, inclusive exclusões.
+
+Esta é injeção aproximada do simulador, sem regra fiscal/CON ou mensagem oficial.
+Não implementa recuperação, descarte explícito, cancelamento ou reset. Veja
+[evidência da #11](docs/evidencias/issue-11.md); #8/E1, T01/E3 e homologação seguem
+pendentes. Publicação da #11 exige autorização específica.
