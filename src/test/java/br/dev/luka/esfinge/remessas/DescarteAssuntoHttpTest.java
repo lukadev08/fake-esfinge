@@ -84,7 +84,7 @@ class DescarteAssuntoHttpTest {
         for(var request:java.util.List.of(post(route).param("chavePacote",key),post(route).param("assunto","CADASTRO_CONTRIBUINTE"),post(route).param("chavePacote","").param("assunto","CADASTRO_CONTRIBUINTE"),post(route).param("chavePacote",key).param("assunto",""),post(route).param("chavePacote",key,key).param("assunto","CADASTRO_CONTRIBUINTE"),post(route).param("chavePacote",key).param("assunto","CADASTRO_CONTRIBUINTE","CADASTRO_CONTRIBUINTE"),post(route).param("chavePacote",key).param("assunto","CADASTRO_CONTRIBUINTE").param("extra","1"),post(route).param("chavePacote",key).param("assunto","CADASTRO_CONTRIBUINTE").content(" ")))
             http.perform(request.header("auth_token",token)).andExpect(status().isBadRequest());
         assertEquals(before,JdbcFinalizationTest.snapshot(jdbc));
-        for(String unsupported:new String[]{"/v6/tributario/descartar-lote","/servicosGerais/cancelarEnvioParcial"})http.perform(post(unsupported).header("auth_token",token)).andExpect(status().isUnprocessableEntity());
+        http.perform(post("/v6/tributario/descartar-lote").header("auth_token",token)).andExpect(status().isUnprocessableEntity());
     }
     @ParameterizedTest @ValueSource(booleans={false,true})
     void falhaStatementOuCommitAposExclusoesReverteTudo(boolean commit,CapturedOutput logs) throws Exception {

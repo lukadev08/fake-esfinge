@@ -41,6 +41,12 @@ public final class ProcessingController {
         catch(IllegalArgumentException failure) {throw new RemessaFailure(RemessaFailure.Kind.UNSUPPORTED);}
         processing.discard(token,key,subject);
     }
+    @PostMapping("/servicosGerais/cancelarEnvioParcial")
+    public void cancel(HttpServletRequest request) throws IOException {
+        String token=request.getHeader("auth_token");authentication.authenticate(token);
+        if(request.getInputStream().read()!=-1 || !request.getParameterMap().keySet().equals(Set.of("chavePacote"))) throw RemessaController.invalid();
+        processing.cancel(token,RemessaController.parameter(request,"chavePacote",true));
+    }
     @GetMapping("/__simulator/processamento")
     public ConfigurationResponse configuration(HttpServletRequest request) throws IOException {
         var config=processing.configuration(request.getHeader("X-Simulator-Key"));

@@ -2,8 +2,8 @@
 
 Data: 27/10/2026. Perfil: 2026/V6/6.06. Base funcional `0752366`, preparação
 `71907a4`, branch `issue-12-descarte-assunto`. Dados exclusivamente fictícios em
-SQLite temporário; sem acesso ao integrador, produção ou TCE. Publicação pendente
-de autorização específica.
+SQLite temporário; sem acesso ao integrador, produção ou TCE. Publicação/merge
+autorizados e concluídos no [PR #39](https://github.com/lukadev08/fake-esfinge/pull/39).
 
 ## Implementação
 
@@ -137,9 +137,9 @@ clientes e Mockito/ByteBuddy/JDK da suíte não impediram validação. Logs dos 
 containers finais continham apenas inicialização, sem erro ou dados recebidos.
 
 Containers temporários removidos, ausência confirmada. Três volumes fictícios
-preservados no contexto `orbstack`: `fake-esfinge-issue12-supervisao`,
+excluídos com autorização específica no contexto `orbstack`: `fake-esfinge-issue12-supervisao`,
 `fake-esfinge-issue12-supervisao-repro` e `fake-esfinge-issue12-supervisao-auto`.
-Exclusão depende de autorização específica. Clientes/logs permanecem temporários
+Exit0 e ausência confirmada; nenhum outro volume excluído. Clientes/logs permanecem temporários
 locais; nenhum token, payload, SQL ou dado original foi adicionado à evidência.
 
 ## Limites
@@ -147,4 +147,6 @@ locais; nenhum token, payload, SQL ou dado original foi adicionado à evidência
 #8/E1 e T01/E3 pendentes. Sem homologação oficial, ensaio do cliente ou CI remoto.
 Docker foi executado pela supervisão. Resposta perdida, cancelamento, reset, expiração e regras
 fiscais não implementados nesta fatia. Repetição200 não cria garantia oficial de
-idempotência. #12 segue aberta, sem comentários; push/PR/merge aguardam autorização.
+idempotência. PR #39 merged, head `a863140`, merge
+`f2d7e58aaaf1fd1021c6b05f9471560046963baa`; #12 closed/completed, #8 aberta.
+GitHub sem check-runs/statuses no head; resultados verdes são evidência local.

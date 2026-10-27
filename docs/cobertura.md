@@ -10,7 +10,8 @@ Artefato 0.1.0, issues [#1](https://github.com/lukadev08/fake-esfinge/issues/1) 
 [#9](https://github.com/lukadev08/fake-esfinge/issues/9) e
 [#10](https://github.com/lukadev08/fake-esfinge/issues/10) e
 [#11](https://github.com/lukadev08/fake-esfinge/issues/11) e
-[#12](https://github.com/lukadev08/fake-esfinge/issues/12).
+[#12](https://github.com/lukadev08/fake-esfinge/issues/12) e
+[#13](https://github.com/lukadev08/fake-esfinge/issues/13).
 Fontes: [contrato E0](contrato-e0.md), [pacote derivado](contratos/2026-v6-6.06/README.md)
 e [hashes das fontes](contratos/2026-v6-6.06/fontes.json), consolidados em 23/10/2026.
 Não há OpenAPI oficial nem ensaio independente do integrador/TCE. O manifesto
@@ -23,7 +24,7 @@ registra a evolução implementada.
 | Token | Vínculo usuário/UG/cenário, opaco, inválido/expirado 401 antes de efeito | `AuthenticationServiceTest`, `AuthenticationHttpTest`; parcela T10/T11 | Implementada |
 | Validade de token | 3600 segundos configuráveis, relógio substituível | Contrato E0; testes de limite e duração customizada | Aproximada; duração local aprovada, sem equivalência oficial |
 | Administração | GET `/__simulator/configuracao`, chave própria, inspeção sem segredos | `AuthenticationHttpTest`, `SimulatorSettingsTest` | Implementada; API exclusiva do simulador |
-| Persistência | SQLite real, migrações V1→V2→V3→V4→V5→V6→V7→V8→V9→V10 com checksum/version, FK por conexão, reabertura, incompatibilidade sem recriar | `JdbcAuthenticationRepositoryTest`, `JdbcRemessaTest` | Implementada para contexto/identidades/sessões/remessas/lotes/eventos; parcela de T13 |
+| Persistência | SQLite real, migrações V1→V2→V3→V4→V5→V6→V7→V8→V9→V10→V11 com checksum/version, FK por conexão, reabertura, incompatibilidade sem recriar | `JdbcAuthenticationRepositoryTest`, `JdbcRemessaTest`, `JdbcCancellationTest` | Implementada para contexto/identidades/sessões/remessas/lotes/eventos; parcela de T13 |
 | Erros e logs | Envelope próprio sanitizado, sem senha/token/SQL/stack trace | `InternalFailureHttpTest`, testes HTTP/configuração | Implementada; logs padrão desabilitados |
 | Fronteiras | Núcleo Java puro, domínio sem aplicação, capacidades sem ciclos | `ArchitectureTest`, análise de dependências de classes | Implementada na fatia atual |
 | Operações ainda indisponíveis | Token válido recebe 422 de cobertura, inválido 401; inexistente 404 | `AuthenticationHttpTest`, `RemessaHttpTest`; parcela de T18 | Cobertura ausente explícita; sem aprovação fiscal |
@@ -49,7 +50,9 @@ registra a evolução implementada.
 | Histórico de descartes/abortos | V10 aditiva em lotes, reconstrução restrita aos trabalhos preserva IDs/seq/tempos; bytes/hash originais imutáveis, linhas ativas removidas, inspeção histórica explícita e finalização só de ativos | `JdbcProcessingFailureTest`, `JdbcFinalizationTest`, `ProcessamentoHttpTest`; rollback statement/COMMIT, concorrência, guardas tardias, reinício/migração | Implementada para erro controlado; sem recuperação integral |
 | Descartar assunto / seis assuntos | POST com query estrita,200 vazio; guarda global da chave contra agendado/EM,404 isolado/409 fechado; remoção e inativação atômicas, sucesso histórico preservado, demais dados intactos, evento/atividade inclusive sem dados/repetição | E0 e fonte V6:188–198; `DescarteAssuntoHttpTest`, `JdbcSubjectDiscardTest`; parcelas T06/T07/T08/T10/T11/T13/T15/T18/T19 | Implementada no contrato derivado; sem garantia oficial de idempotência |
 | Limpeza de RECEBIDO sem trabalho | LOTE_DESCARTADO/SIM_DESCARTE_ASSUNTO/registro null, originais e plano históricos preservados; reenvio novo ID/ordem sem dedupe nem plano herdado, finalização somente dos ativos/efetivos | E0 aproximação expressa; `DescarteAssuntoHttpTest`, `JdbcSubjectDiscardTest`; parcelas T06/T07/T08 | Aproximada; diverge da restrição V6, sem implementar resposta perdida |
-| Cancelamento / resposta perdida / reset / expiração de envio | Efeitos, geração e relógio administrativo; rota explícita de lote também indisponível | Issues #13–#17 | Não implementada |
+| Cancelar envio aberto | POST query estrita/corpo vazio, 200 vazio; remove/inativa todo dado ativo, inclusive agendado/EM, preserva originais/sucessos/erros anteriores e outros contextos; nova chave na mesma competência; mutações repetidas/encerradas409 e consulta histórica sem atividade | `CancelamentoHttpTest`, `JdbcCancellationTest`; parcelas T08/T10/T11/T13/T14/T15/T18/T19 | Implementada no contrato derivado; não cancela concluído |
+| Controle de cancelamento | Pendentes ABORTADO/SIM_ENVIO_CANCELADO/registro null, sucesso histórico preservado; V11 distingue cancelamento/finalização, copia V10 inclusive diagnósticos/sequências e revalida resultado tardio sem mudar geração global | `JdbcCancellationTest`, `CancelamentoHttpTest`; rollback statement/COMMIT, corrida/pausa fora da transação, reinício/upgrade | Aproximada na situação/diagnóstico próprios do simulador, sem equivalência oficial |
+| Resposta perdida / reset / expiração de envio | Efeitos, geração e relógio administrativo; rota explícita de lote também indisponível | Issues #14–#17 | Não implementada |
 | Regras fiscais / vínculos entre assuntos / CONs | Evolução sem catálogo aprovado | Issue #27 | Não implementada |
 | Aceites humanos / T01 / E1–E5 | Integrador real, referência independente e reprodução | Issues #8, #19, #20, #22, #26 | Pendente |
 | Docker Linux amd64 | Imagem mínima, volume local e runtime Java21 | Dockerfile; supervisão da #2 com 178 verificações HTTP/reinício sem rede, imagem identificada na evidência | Implementada e exercitada localmente no jar da #2 |
@@ -142,4 +145,18 @@ Revisão independente aprovada; executor verify e supervisor clean verify com
 V10 Linux amd64 sem rede**, incluindo reabertura de16 tabelas, descarte/reenvio,
 reinício, conteúdo exato e agendador automático. Preparação anterior259+3 separada.
 Limpeza de RECEBIDO é aproximação expressa. Integrador real, #8/E1, T01/E3, CI
-remoto e homologação não demonstrados. Publicação da #12 aguarda autorização específica.
+remoto e homologação não demonstrados. Publicação/merge autorizados e concluídos
+no [PR #39](https://github.com/lukadev08/fake-esfinge/pull/39), head `a863140`, merge
+`f2d7e58aaaf1fd1021c6b05f9471560046963baa`; #12 completed, #8 aberta.
+
+Evidência da #13: [execução local](evidencias/issue-13.md). V11 acrescenta marcador
+de cancelamento separado da finalização e amplia o terminal ABORTADO, preservando
+V1–V10, dados, diagnósticos, planos e sequências históricas. HTTP/SQLite cobrem
+remoção integral, seis assuntos, nova chave/reenvio, rollback statement/COMMIT,
+concorrência e resultado de cálculo capturado antes do cancelamento. Integrador
+real, #8/E1, T01/E3, CI remoto e homologação não demonstrados. Revisão independente
+aprovada; executor verify e supervisor clean verify com **243 testes**, zero
+falhas/erros/ignorados, exit0. **1.807 verificações na imagem final V11 Linux amd64
+sem rede**, incluindo upgrade V10/16 tabelas, cancelamento/nova chave/reenvio,
+reinício, conteúdo exato e agendador automático. Preparação anterior270+3 separada.
+Publicação da #13 aguarda autorização específica.

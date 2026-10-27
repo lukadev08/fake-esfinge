@@ -1989,3 +1989,140 @@ Obter autorização específica para push/PR/merge da #12 e decisão separada so
 exclusão dos três volumes fictícios. Após integração, ler dependências/escopo da
 próxima issue e continuar com equipe própria/supervisão. Solicitante mantém o
 ensaio e aceite humano #8/E1; E2 completo não é concluído por esta fatia.
+
+## 2026-10-27 — Publicar e integrar #12; excluir ensaios autorizados
+
+Referência: autorização expressa de publicação/merge da #12 e exclusão dos três
+volumes fictícios identificados na pergunta. Situação: PR #39 integrado,
+#12 completed; continuidade técnica para #13.
+
+### O que foi feito
+
+- Push de `issue-12-descarte-assunto`, head revisado `a863140`, criação do
+  [PR #39](https://github.com/lukadev08/fake-esfinge/pull/39) com corpo preparado e
+  anexo à tarefa. Base `0752366` reconfirmada; comparação de três commits sem
+  divergência, PR sem conflitos e merge protegido pelo head esperado.
+  Merge: `f2d7e58aaaf1fd1021c6b05f9471560046963baa`.
+- GitHub confirmou PR merged, `main` no merge, #12 closed/completed e #8 aberta.
+  Check-runs/statuses vazios no head: resultados verdes continuam evidência local
+  (212 testes, 1.524 verificações Docker), sem CI executado.
+- Após conferir nomes exatos e ausência de containers usuários, excluídos somente
+  `fake-esfinge-issue12-supervisao`, `fake-esfinge-issue12-supervisao-repro` e
+  `fake-esfinge-issue12-supervisao-auto` no contexto `orbstack`, exit0 e ausência
+  confirmada. Imagem/clientes preservados; corpo publicado não alterado.
+- Branch local `issue-13-cancelamento-envio` criada sobre `origin/main` integrado.
+  #13 aberta `ready-for-agent`, sem comentários, dependências #10/#12 concluídas.
+  Explorer próprio iniciado para cancelamento integral/nova chave.
+
+### O que deu errado
+
+Nenhuma falha de publicação, merge ou exclusão. Código não mudou desde a suíte
+final; testes não repetidos nesta operação documental. #8/E1/T01/E3 e CI remoto
+seguem pendentes; integração da #12 não conclui E2 integral ou homologação.
+
+### Próximo passo
+
+Concluir exploração/tabelas de transição da #13 e implementar com equipe própria,
+TDD/revisão/supervisão e correções delegadas. Publicação da nova fatia exige
+autorização específica; solicitante mantém a pendência interna #8/E1.
+
+## 2026-10-27 — Preparar implementação da #13
+
+Referência: continuação técnica E2 autorizada e
+[issue #13](https://github.com/lukadev08/fake-esfinge/issues/13). Situação: exploração
+e decisões/transições concluídas antes do código; implementação em seguida.
+
+### O que foi feito
+
+- `grupo13_explorer`, configurado GPT-6 Luna/médio, concluiu somente leitura,
+  variante efetiva não exposta. Supervisor leu contrato/planejamento/arquitetura/
+  schema/código conectado e definiu [plano da #13](.scratch/issue-13-plan.md).
+- Cancelamento integral permite trabalho agendado/EM e invalida resultados
+  tardios; conserva sucesso histórico e usa ABORTADO/diagnóstico próprio para
+  pendentes. Cancelada difere de finalizada por timestamp próprio, sem atribuir
+  conclusão aos dados removidos. Nova chave na mesma competência é independente.
+- V11 necessária: coluna aditiva de cancelamento/índice aberto e reconstrução
+  restrita dos trabalhos para ABORTADO, preservando todas as colunas/diagnósticos/
+  IDs/sequências/FKs. V1–V10/fontes/schemas intactos; sem infraestrutura nova.
+- Caso de uso permanece em Processamento, reutiliza remoção/terminal/transações
+  e audita todos os chamadores/guardas. Não altera geração global do cenário.
+  #13 aberta, sem comentários, dependências #10/#12 concluídas; #8/E1 pendente.
+
+### O que deu errado
+
+Nenhuma execução de código/build/teste nesta preparação. Estado legado ABERTO
+e ausência de ABORTADO no schema exigiram decisão explícita. Reutilizar
+finalizada_em para cancelamento confundiria conclusão; definida migração mínima
+com marcador distinto, sem reconstrução de remessas ou enum externo novo.
+
+### Próximo passo
+
+Executor próprio implementar por fatias TDD, reviewer independente e correções
+delegadas quando necessárias; supervisão de suíte limpa e Docker sobre artefato
+final. Publicação da #13 continua sob autorização específica.
+
+## 2026-10-27 — Concluir implementação técnica local da #13
+
+Referência: continuação técnica E2 autorizada e
+[issue #13](https://github.com/lukadev08/fake-esfinge/issues/13). Situação: pronta
+localmente, revisão/suíte/Docker finais verdes; publicação específica pendente.
+
+### O que foi feito
+
+- Equipe própria com `grupo13_explorer`, `grupo13_executor` e
+  `grupo13_reviewer`: configurados GPT-6 Luna/médio, GPT-6.1 Sol/baixo e
+  GPT-6.1 Sol/médio; variante efetiva não inferida quando indisponível. Plano
+  anterior ao código reconferido pelo explorer; revisão independente aprovada
+  sem achados materiais, sem correção de produção posterior.
+- POST de cancelamento integral, query/corpo estritos e200 vazio, inclusive
+  agendado/EM. Transação fecha chave e remove/inativa dados ativos; sucesso
+  histórico permanece e pendentes viram ABORTADO/diagnóstico próprio/null.
+  Nova chave na mesma competência permite reenvio integral. Guardas de todos
+  os chamadores e gravação tardia verificam cancelamento sem mudar geração global.
+- V11 aditiva em remessas/índice e reconstrução restrita dos trabalhos preserva
+  todas as colunas/diagnósticos/IDs/seq/FKs. Finalização distinta de cancelamento;
+  históricos e demais contextos intactos. V1–V10/fontes/schemas/build/deps intactos.
+- TDD RED200/422 e GREEN comprovados.115 focais verdes; executor verify243,
+  exit0,27,730s. Supervisor clean verify: **243 testes**, zero falhas/erros/
+  ignorados, exit0,29,569s;26 relatórios conferidos. HTTP/JDBC cobrem seis
+  assuntos, rollback statement/COMMIT, concorrência e cálculo pausado fora da
+  transação, além de high-water acima de MAX mesmo em tabela vazia.
+- **1.807 verificações na imagem final V11**, todas exit0:22 upgrade V10,
+  838 cancelamento/reenvio,648 após reinício,112 SQLite somente leitura e187
+  automáticas. Preparação V10 com imagem #12:270+3 separadas. SQLite confirmou
+  33 lotes/18 ativos/15 inativos,10.017 processados/efetivos e10.021 valores
+  TEXT exatos; originais/diagnósticos/planos/FKs/high-water preservados.
+  Jar/imagem identificados na [evidência sanitizada](docs/evidencias/issue-13.md).
+- README, manifesto, plano e [rascunho do PR](.scratch/pr-issue-13.md) atualizados.
+  Nenhum código/teste mudou após a suíte final. Containers removidos, ausência
+  confirmada; três volumes fictícios preservados em `orbstack`, sem exclusão autorizada.
+- Mesmo reviewer aprovou consolidação documental sem achados materiais;
+  reconferiu26 relatórios/243 testes, hash do jar e88 links locais, sem Maven/
+  Docker ou edições. Resultados finais e limites consistentes.
+- #13 aberta sem comentários, dependências #10/#12 concluídas. Próxima fatia #14
+  aberta, sem comentários, depende da #12 concluída; #8/E1 continua pendente.
+
+### O que deu errado
+
+- Executor corrigiu somente fixtures: helper inexistente antes do RED, totais
+  incompletos/ordem dos ciclos e expectativa na corrida com segundo cancelamento
+  vencedor. Falhas intermediárias constam na evidência; produção permaneceu a
+  mesma desde GREEN inicial.
+- Primeira revisão interrompida por limite de uso; consulta fresca indicou uso
+  normal disponível e retomada concluiu aprovada, sem trocar modelo ou usar reset.
+- Cliente Docker temporário confundiu quantidade de trabalhos com maior ID;
+  fluxo concluído, asserção final incorreta. Leitura direta confirmou high-water117,
+  novo119 e SQLite íntegro. Corrigido só cliente; preparação/snapshot/ensaio
+  repetidos em volume novo, sem mudança de aplicação/testes. Primeira execução
+  e sondagens não entram no total final. Compilação do cliente também ajustou
+  assinatura de helper, sem efeito no artefato.
+- Nenhuma falha funcional remanescente na suíte/imagem final. Avisos herdados
+  Mockito/ByteBuddy/JDK/SLF4J não impediram validação. #8/E1, integrador T01/E3,
+  CI remoto e homologação não executados.
+
+### Próximo passo
+
+Obter autorização específica para push/PR/merge da #13 e decisão separada sobre
+exclusão dos três volumes fictícios. Após integrar, prosseguir para #14 com equipe
+própria/supervisão e suas dependências; solicitante mantém o ensaio/aceite #8/E1.
+E2 integral não é concluído por esta fatia.
