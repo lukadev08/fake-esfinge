@@ -9,7 +9,8 @@ Artefato 0.1.0, issues [#1](https://github.com/lukadev08/fake-esfinge/issues/1) 
 [#7](https://github.com/lukadev08/fake-esfinge/issues/7) e
 [#9](https://github.com/lukadev08/fake-esfinge/issues/9) e
 [#10](https://github.com/lukadev08/fake-esfinge/issues/10) e
-[#11](https://github.com/lukadev08/fake-esfinge/issues/11).
+[#11](https://github.com/lukadev08/fake-esfinge/issues/11) e
+[#12](https://github.com/lukadev08/fake-esfinge/issues/12).
 Fontes: [contrato E0](contrato-e0.md), [pacote derivado](contratos/2026-v6-6.06/README.md)
 e [hashes das fontes](contratos/2026-v6-6.06/fontes.json), consolidados em 23/10/2026.
 Não há OpenAPI oficial nem ensaio independente do integrador/TCE. O manifesto
@@ -42,11 +43,13 @@ registra a evolução implementada.
 | Processamento estrutural | RECEBIDO→EM_PROCESSAMENTO→PROCESSADO_SUCESSO, revalidação existente, registros processados/efetivos por origem/índice, sem deduplicação | `ProcessamentoHttpTest`, `JdbcProcessingTest`; parcelas T02/T13/T18 | Implementada para seis assuntos; sem regras fiscais |
 | Controle de processamento | MANUAL/AUTOMATICO, latência persistida, avanço explícito do relógio compartilhado e passos, JSON estrito, chave própria e horizonte técnico dos timestamps/deslocamento validado antes dos efeitos e em cada leitura, inclusive após reinício | `ProcessamentoHttpTest`, `JdbcProcessingTest`; parcelas T10/T11/T13 | Aproximada; API interna e padrões MANUAL/1000ms derivados, sem equivalência oficial |
 | Persistência de processamento | V8 aditiva, upgrade V7 preenchida, reinício, ordem, concorrência, guarda de geração e rollback statement/COMMIT | `JdbcProcessingTest`, `ProcessamentoHttpTest`; parcela T13 | Implementada; avanço de tempo precede transições individualmente atômicas |
-| Finalização | POST JSON estrito com chave/17 totais, seis BigInteger versus linhas efetivas por assunto, onze strings zero; todos os lotes ativos em sucesso e pelo menos um ativo; divergência/pendência409 sem efeitos, sucesso200 vazio | `FinalizationTest`, `FinalizacaoHttpTest`, `JdbcFinalizationTest`; parcelas T01/T03/T10/T13/T14/T15/T18 | Implementada no contrato derivado; exclui históricos descartados/abortados, sem recuperação explícita ainda |
+| Finalização | POST JSON estrito com chave/17 totais, seis BigInteger versus linhas efetivas por assunto, onze strings zero; todos os lotes ativos em sucesso e pelo menos um ativo; divergência/pendência409 sem efeitos, sucesso200 vazio | `FinalizationTest`, `FinalizacaoHttpTest`, `JdbcFinalizationTest`; parcelas T01/T03/T10/T13/T14/T15/T18 | Implementada no contrato derivado; exclui históricos inativos; recuperação por assunto na #12 |
 | Fechamento e histórico | Marcador V9 aditivo, unicidade apenas da chave aberta por competência; mutações409, consulta histórica sem atividade/evento, reabertura sem cota, concorrência, rollback statement/COMMIT e preservação V8 | `FinalizacaoHttpTest`, `JdbcFinalizationTest`; parcelas T02/T03/T13/T14/T15 | Implementada; estado legado não determina sozinho a abertura |
 | Erro assíncrono injetado | Plano administrativo estrito por lote/geração, índice/null, imutável após início; descarte integral do alvo e aborto atômico dos seguintes pendentes do mesmo assunto/remessa/UG/cenário; consulta200 com diagnóstico, sem avançar | `ProcessamentoHttpTest`, `JdbcProcessingFailureTest`; parcelas T02/T04/T06/T10/T13/T15 | Aproximada; injeção própria, sem validar regra fiscal T04 |
 | Histórico de descartes/abortos | V10 aditiva em lotes, reconstrução restrita aos trabalhos preserva IDs/seq/tempos; bytes/hash originais imutáveis, linhas ativas removidas, inspeção histórica explícita e finalização só de ativos | `JdbcProcessingFailureTest`, `JdbcFinalizationTest`, `ProcessamentoHttpTest`; rollback statement/COMMIT, concorrência, guardas tardias, reinício/migração | Implementada para erro controlado; sem recuperação integral |
-| Descarte explícito / cancelamento / recuperação / reset / expiração de envio | Efeitos, geração e relógio administrativo | Issues #12–#17 | Não implementada |
+| Descartar assunto / seis assuntos | POST com query estrita,200 vazio; guarda global da chave contra agendado/EM,404 isolado/409 fechado; remoção e inativação atômicas, sucesso histórico preservado, demais dados intactos, evento/atividade inclusive sem dados/repetição | E0 e fonte V6:188–198; `DescarteAssuntoHttpTest`, `JdbcSubjectDiscardTest`; parcelas T06/T07/T08/T10/T11/T13/T15/T18/T19 | Implementada no contrato derivado; sem garantia oficial de idempotência |
+| Limpeza de RECEBIDO sem trabalho | LOTE_DESCARTADO/SIM_DESCARTE_ASSUNTO/registro null, originais e plano históricos preservados; reenvio novo ID/ordem sem dedupe nem plano herdado, finalização somente dos ativos/efetivos | E0 aproximação expressa; `DescarteAssuntoHttpTest`, `JdbcSubjectDiscardTest`; parcelas T06/T07/T08 | Aproximada; diverge da restrição V6, sem implementar resposta perdida |
+| Cancelamento / resposta perdida / reset / expiração de envio | Efeitos, geração e relógio administrativo; rota explícita de lote também indisponível | Issues #13–#17 | Não implementada |
 | Regras fiscais / vínculos entre assuntos / CONs | Evolução sem catálogo aprovado | Issue #27 | Não implementada |
 | Aceites humanos / T01 / E1–E5 | Integrador real, referência independente e reprodução | Issues #8, #19, #20, #22, #26 | Pendente |
 | Docker Linux amd64 | Imagem mínima, volume local e runtime Java21 | Dockerfile; supervisão da #2 com 178 verificações HTTP/reinício sem rede, imagem identificada na evidência | Implementada e exercitada localmente no jar da #2 |
@@ -129,3 +132,14 @@ recuperação integral, CI remoto e homologação não comprovados. Publicação
 da #11 autorizados e concluídos no
 [PR #38](https://github.com/lukadev08/fake-esfinge/pull/38), head `1b435cf`, merge
 `075236636077093b4493952af0c4951824689433`; #11 completed, #8 aberta.
+
+
+Evidência da #12: [execução local](evidencias/issue-12.md). Sem migração nova:
+V1–V10 preservadas; SQLite real cobre exclusões com FK, rollback statement/COMMIT,
+reinício, reenvio com multiplicidade, seis assuntos e concorrência entre instâncias.
+Revisão independente aprovada; executor verify e supervisor clean verify com
+**212 testes**, zero falhas/erros/ignorados. **1.524 verificações na imagem final
+V10 Linux amd64 sem rede**, incluindo reabertura de16 tabelas, descarte/reenvio,
+reinício, conteúdo exato e agendador automático. Preparação anterior259+3 separada.
+Limpeza de RECEBIDO é aproximação expressa. Integrador real, #8/E1, T01/E3, CI
+remoto e homologação não demonstrados. Publicação da #12 aguarda autorização específica.

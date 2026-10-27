@@ -1931,3 +1931,61 @@ marcadas como decisões derivadas do simulador, sem equivalência oficial.
 
 Executor próprio implementar em fatias TDD, revisão independente, correções
 delegadas e supervisão de suíte limpa/imagem final antes da publicação específica.
+
+## 2026-10-27 — Concluir implementação técnica local da #12
+
+Referência: continuação técnica E2 autorizada e
+[issue #12](https://github.com/lukadev08/fake-esfinge/issues/12). Situação: pronta
+localmente, revisão/suíte/Docker finais verdes; publicação específica pendente.
+
+### O que foi feito
+
+- Equipe própria com `grupo12_explorer`, `grupo12_executor` e
+  `grupo12_reviewer`: papéis configurados GPT-6 Luna/médio, GPT-6.1 Sol/baixo e
+  GPT-6.1 Sol/médio; variante efetiva não inferida quando indisponível. Plano e
+  transições registrados antes do código; revisão independente aprovada sem
+  achados materiais. Não houve correção de produção após revisão.
+- POST de descarte por assunto, query/corpo estritos e200 vazio. Transação
+  IMMEDIATE remove só dados ativos selecionados, preserva chave/outros assuntos/
+  originais/controles, mantém sucesso histórico e permite reenvio com novos IDs.
+  Guarda global da chave rejeita agendado/EM, inclusive de outro assunto. Limpeza
+  de RECEBIDO sem trabalho é aproximação explícita de E0, sem resposta perdida.
+- TDD RED200/422 e GREEN comprovados. Executor verify:212 testes verdes, exit0,
+  26,814s; supervisor clean verify: **212 testes**, zero falhas/erros/ignorados,
+  exit0,25,328s,24 relatórios conferidos. HTTP/JDBC cobrem seis assuntos, rollback
+  statement/COMMIT, isolamento, concorrência entre instâncias e reinício.
+- **1.524 verificações na imagem final V10**, todas exit0:21 de preservação V10,
+  850 de recuperação,393 após reinício,99 SQLite somente leitura e161 automáticas.
+  Preparação com imagem #11:259+3 separadas. SQLite confirmou28 lotes/16 ativos/
+  12 inativos,10.015 processados/efetivos e10.025 valores TEXT exatos, conteúdo/
+  origem/FKs/high-water íntegros. Jar/imagem identificados na
+  [evidência sanitizada](docs/evidencias/issue-12.md).
+- README, manifesto, plano e [rascunho do PR](.scratch/pr-issue-12.md) atualizados.
+  V1–V10/fontes/schemas/build/dependências intactos; .DS_Store preservados. Nenhum
+  código/teste mudou após a suíte final. Containers removidos, ausência confirmada;
+  três volumes fictícios preservados em `orbstack`, sem exclusão autorizada.
+- `grupo12_docreviewer`, configurado GPT-6.1 Sol/médio, aprovou evidência,
+  manifesto e rascunho sem achados materiais; reconferiu relatórios/hash local,
+  sem Maven/Docker ou edições. Variante efetiva não exposta.
+- GitHub reconfirmou PR #38 merged e #12 aberta `ready-for-agent`, sem comentários,
+  dependências #10/#11 concluídas. #8/E1 continua pendente com o solicitante.
+
+### O que deu errado
+
+- Fixtures iniciais corrigidas pelo executor: inspeção inclui eventos da remessa
+  inteira e V10 tem16 tabelas incluindo sqlite_sequence. Sem mudança dinâmica
+  em produção. RED e falhas intermediárias documentados na evidência.
+- Saída da primeira execução Docker não ficou integralmente disponível; checkpoint
+  confirmou conclusão. Comparador anterior reaplicado à base já modificada acusou
+  diferença esperada. Repetidos preparação/snapshot/ensaio em volume independente,
+  com saída completa e sem mudar aplicação; só a repetição entra no total final.
+- Nenhuma falha funcional remanescente na suíte/imagem final. Avisos herdados
+  Mockito/ByteBuddy/JDK/SLF4J não impediram validação. Integrador real, #8/E1,
+  T01/E3, CI remoto e homologação não executados.
+
+### Próximo passo
+
+Obter autorização específica para push/PR/merge da #12 e decisão separada sobre
+exclusão dos três volumes fictícios. Após integração, ler dependências/escopo da
+próxima issue e continuar com equipe própria/supervisão. Solicitante mantém o
+ensaio e aceite humano #8/E1; E2 completo não é concluído por esta fatia.

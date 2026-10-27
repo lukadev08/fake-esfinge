@@ -1,6 +1,7 @@
 package br.dev.luka.esfinge.remessas.application.port.in;
 
 import br.dev.luka.esfinge.remessas.domain.Processing;
+import br.dev.luka.esfinge.remessas.domain.Assunto;
 
 public interface Processamento {
     Processing.Started start(String token,String key);
@@ -12,5 +13,6 @@ public interface Processamento {
     Processing.FailurePlan failurePlan(String adminKey,long number);
     Processing.FailurePlan planFailure(String adminKey,long number,Integer record);
     void removeFailure(String adminKey,long number);
+    void discard(String token,String key,Assunto subject);
     void tick();
 }

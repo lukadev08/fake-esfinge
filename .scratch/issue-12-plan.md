@@ -110,3 +110,16 @@ Comandos existentes inspecionados, Java21/Maven3.9.9, dependências públicas/ca
 local e SQLite temporário, sem produção/TCE. Focais `-Dtest=... test`, um verify do
 executor e clean verify da supervisão, sem Maven concorrente; RTK/proxy e handles/
 exit codes/diagnósticos preservados. E1/#8/T01/E3 e homologação não demonstrados.
+
+## Execução concluída localmente — 27/10/2026
+
+Executor próprio completou fatias HTTP/JDBC/TDD; reviewer independente aprovou
+sem achados materiais. Executor verify212 e supervisor clean verify212 verdes;
+24 relatórios, sem falhas/erros/ignorados. Imagem final sem rede passou1.524
+verificações: reabertura V10/16 tabelas, fluxo manual, reinício, SQLite exato e
+agendador automático. Preparação anterior259+3 é separada. Evidência completa e
+limites em [issue-12.md](../docs/evidencias/issue-12.md).
+
+Nenhuma migração, dependência ou configuração adicionada. Containers removidos;
+três volumes fictícios preservados. #12 aberta; publicação/merge e exclusão dos
+volumes dependem de autorização específica. #8/E1/T01/E3 permanecem pendentes.

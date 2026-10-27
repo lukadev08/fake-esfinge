@@ -419,8 +419,8 @@ novo evento de consulta. Uma abertura posterior da mesma UG/competência retorna
 chave nova e preserva o histórico, sem cota mensal adicional nesta fatia.
 Reinício conserva o fechamento; falha de statement/COMMIT reverte a finalização.
 
-Consulte [evidência da #10](docs/evidencias/issue-10.md). Descarte explícito,
-cancelamento, recuperação, sem movimento e T17 ainda não estão implementados. Testes fictícios locais não encerram #8/E1, T01/E3 ou
+Consulte [evidência da #10](docs/evidencias/issue-10.md). Descarte por assunto e
+reenvio estão na fatia #12 abaixo; cancelamento, sem movimento e T17 seguem pendentes. Testes fictícios locais não encerram #8/E1, T01/E3 ou
 homologação oficial. Publicação da #10 permanece sem autorização.
 
 
@@ -454,6 +454,43 @@ somente históricos não permitem disparo nem finalização. Reinício conserva 
 diagnósticos e terminais; rollback reverte o grupo inteiro, inclusive exclusões.
 
 Esta é injeção aproximada do simulador, sem regra fiscal/CON ou mensagem oficial.
-Não implementa recuperação, descarte explícito, cancelamento ou reset. Veja
+Recuperação por descarte de assunto/reenvio está na #12 abaixo; cancelamento,
+rota explícita de lote e reset seguem pendentes. Veja
 [evidência da #11](docs/evidencias/issue-11.md); #8/E1, T01/E3 e homologação seguem
 pendentes. Publicação da #11 exige autorização específica.
+
+
+## Descarte por assunto e reenvio — #12
+
+`POST /v6/tributario/descarteParcialPorAssunto` exige `auth_token`, query exata
+`chavePacote`/`assunto` e corpo vazio. Retorna200 com corpo vazio. `assunto` usa
+um dos seis identificadores exatos de `$defs.descarteQuery` no
+[schema derivado](docs/contratos/2026-v6-6.06/schemas.json), sem normalização.
+Parâmetros ausentes/vazios/duplicados/extras ou corpo não vazio retornam400;
+assunto fora da cobertura retorna422. Token inválido/expirado retorna401 antes
+de efeitos; chave desconhecida/de outra UG ou cenário404; chave fechada409.
+
+Qualquer trabalho RECEBIDO agendado ou EM_PROCESSAMENTO **da chave**, inclusive
+de outro assunto, impede descarte com409 sem efeitos. Outra chave não bloqueia.
+Sem ciclo ativo, a transação remove efetivos, processados e valores recebidos de
+todos os lotes ativos do assunto, inativando-os e preservando demais assuntos,
+chaves, UGs e cenários. Bytes/hash/quantidade original, planos e históricos são
+conservados em V10, sem migração nova.
+
+Sucesso histórico conserva `PROCESSADO_SUCESSO` sem diagnóstico, com evento
+`DADOS_LOTE_REMOVIDOS`. RECEBIDO sem trabalho recebe `LOTE_DESCARTADO`, código
+próprio `SIM_DESCARTE_ASSUNTO`, mensagem `Dados removidos por descarte do assunto`
+e registro null. Essa limpeza de RECEBIDO é aproximação aprovada, divergente do
+manual V6; não representa comportamento oficial nem implementa resposta perdida.
+Históricos já inativos não são reescritos.
+
+Assunto suportado sem dados ativos, inclusive repetição, retorna200 vazio e
+renova atividade/registro `ASSUNTO_DESCARTADO_<ASSUNTO>`. Não há garantia oficial
+de idempotência. Reenviar os mesmos bytes usa a mesma chave com novo ID/ordem,
+sem deduplicação nem herança de plano antigo. Finalização considera somente
+ativos em sucesso e seus efetivos; sem ativos retorna409.
+
+Veja [evidência da #12](docs/evidencias/issue-12.md). Ensaios locais fictícios não
+encerram #8/E1, T01/E3 ou homologação. Cancelamento, descarte explícito de lote,
+resposta perdida, reset e expiração continuam fora desta fatia. Publicação da #12
+não autorizada.
