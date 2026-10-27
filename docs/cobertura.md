@@ -126,4 +126,6 @@ intermediário/último, diagnóstico, ativos/histórico, finalização e execuç
 automática concorrente. As 105 verificações de preparação V9 e3 de snapshot são
 separadas. Injeção aproximada; regra fiscal T04, integrador T01/E3, aceite #8/E1,
 recuperação integral, CI remoto e homologação não comprovados. Publicação/merge
-da #11 ainda não realizados.
+da #11 autorizados e concluídos no
+[PR #38](https://github.com/lukadev08/fake-esfinge/pull/38), head `1b435cf`, merge
+`075236636077093b4493952af0c4951824689433`; #11 completed, #8 aberta.

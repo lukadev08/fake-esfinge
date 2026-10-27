@@ -165,8 +165,22 @@ Containers parados/removidos e ausência confirmada. Preservados no contexto
 `orbstack` os volumes fictícios `fake-esfinge-issue11-supervisao` e
 `fake-esfinge-issue11-supervisao-auto`, até autorização específica de exclusão.
 Imagem/clientes em `/private/tmp/fake-esfinge-issue11-supervisao` preservados
-localmente. Push/PR/merge, publicação de imagem e implantação da #11 não realizados.
+localmente. Após autorização específica posterior, os dois volumes foram excluídos,
+exit0, com ausência confirmada no contexto `orbstack`; nenhum outro volume excluído.
 
-Implementação técnica pronta para publicação específica. Injeção continua aproximação,
+## Publicação e integração
+
+Push de `issue-11-erro-assincrono`, criação e merge do
+[PR #38](https://github.com/lukadev08/fake-esfinge/pull/38) realizados com autorização
+específica. Head revisado `1b435cfc1cf16393ea6a5ee4bb841ec5e5ca1890`, base
+`4de2ba5e8c799e388ecd5c6a89bcc1a33d32ff1f`; comparação remota confirmou três commits
+preparados, sem divergência de base ou conflitos. Merge protegido pelo SHA esperado
+produziu `075236636077093b4493952af0c4951824689433`. GitHub confirmou PR merged,
+#11 completed, `main` no merge e #8 aberta. PR anexado à tarefa. Checks/statuses
+vazios no head, sem CI executado. Código não mudou desde a suíte aprovada;
+nenhuma repetição de testes necessária nesta publicação. Imagem não publicada
+e nenhuma implantação realizada.
+
+Implementação técnica integrada. Injeção continua aproximação,
 sem regra fiscal T04; #8/E1/T01/E3, recuperação integral, CI remoto e homologação
 oficial permanecem pendentes. A próxima recuperação por assunto pertence à #12.

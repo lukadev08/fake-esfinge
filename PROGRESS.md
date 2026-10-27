@@ -1861,3 +1861,39 @@ localmente, revisão/suíte/Docker finais verdes; publicação específica pende
 Obter autorização específica para publicar/integrar a #11 e decisão separada sobre
 exclusão dos dois volumes fictícios. Após integração, prosseguir à #12 com equipe
 própria, dependências e supervisão. Solicitante mantém validação interna #8/E1.
+
+## 2026-10-27 — Publicar e integrar #11; excluir ensaios autorizados
+
+Referência: autorização expressa de publicação/merge da #11 e exclusão dos volumes
+`fake-esfinge-issue11-supervisao`/`fake-esfinge-issue11-supervisao-auto`.
+Situação: PR #38 integrado, #11 completed; continuidade técnica para #12.
+
+### O que foi feito
+
+- Push de `issue-11-erro-assincrono`, head revisado `1b435cf`, criação do
+  [PR #38](https://github.com/lukadev08/fake-esfinge/pull/38) com corpo preparado e
+  anexo à tarefa. Base `4de2ba5` reconfirmada; comparação de três commits sem
+  divergência e PR sem conflitos. Merge protegido pelo SHA esperado produziu
+  `075236636077093b4493952af0c4951824689433`.
+- GitHub confirmou PR merged, `main` no merge, #11 closed/completed e #8 aberta.
+  Checks/statuses vazios no head: resultados verdes continuam evidência local
+  (186 testes, 1.555 verificações Docker), sem CI executado.
+- Após conferir nomes exatos e ausência de containers usuários, excluídos somente
+  os dois volumes autorizados no contexto `orbstack`, exit0, com ausência
+  confirmada. Imagem/clientes preservados. Manifesto, evidência e registro de PR
+  atualizados sem alterar corpo publicado.
+- Criada branch local `issue-12-descarte-assunto` sobre `origin/main` integrado.
+  #12 aberta `ready-for-agent`, sem comentários, dependências #10/#11 concluídas.
+  Explorer próprio iniciado para descarte de assunto e reenvio na mesma chave.
+
+### O que deu errado
+
+Nenhuma falha de publicação, merge ou exclusão. Código não mudou desde a suíte
+final; testes não repetidos nesta operação documental. #8/E1/T01/E3 e CI remoto
+seguem pendentes; integração da #11 não conclui E2 integral ou homologação.
+
+### Próximo passo
+
+Concluir exploração e tabelas de decisão da #12; implementar em equipe própria
+com TDD/revisão/supervisão e correções delegadas. Publicação da nova fatia continua
+sob autorização específica; solicitante mantém pendência interna #8/E1.
