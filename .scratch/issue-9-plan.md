@@ -121,3 +121,19 @@ rtk proxy env JAVA_HOME=/Users/luka/.sdkman/candidates/java/current \
 Depois, uma execução completa `verify` pelo executor; supervisor `clean verify`.
 Cache fora do workspace pode exigir escalada. Preservar exit codes/diagnósticos e
 handles; nenhum build duplicado enquanto outro estiver pendente.
+
+## Resultado da execução local
+
+Implementação técnica concluída, revisão aprovada após três correções P2 temporais
+delegadas. Snapshot completo valida todos os inícios/conclusões antes dos efeitos;
+avanço inválido não persiste offset. Cada leitura de Clock também recusa a janela
+técnica esgotada, inclusive em system após reinício, sem clamp ou mutação do tempo.
+Essa proteção é de representação contratual, sem limitar anos fiscais dos dados.
+
+Supervisor confirmou 137 testes no `clean verify` (15.930s) e 1.094 verificações na
+imagem final Linux amd64, todas verdes. Preparação V7: 1.879 verificações + 3 do
+snapshot anterior, separadas. Evidência completa, hashes e limites em
+[`docs/evidencias/issue-9.md`](../docs/evidencias/issue-9.md).
+Containers removidos; três volumes fictícios preservados até autorização específica.
+Rascunho de publicação em [pr-issue-9.md](pr-issue-9.md). Push/PR/merge não realizados;
+#8/E1, T01/E3 e demais capacidades E2 continuam pendentes.

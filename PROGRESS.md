@@ -1569,3 +1569,55 @@ Executor próprio implementar a #9 em fatias RED→GREEN, sem antecipar finaliza
 recuperação/reset/expiração ou regras fiscais. Reviewer independente avaliar,
 correções delegadas se necessárias; supervisor conferir suíte limpa e Docker
 antes de preparar publicação específica. #8/E1 continua pendente do solicitante.
+
+## 2026-10-26 — Concluir implementação técnica local da #9
+
+Referência: [issue #9](https://github.com/lukadev08/fake-esfinge/issues/9), pedido
+“Dê continuidade a implementação” e planejamento §13.1. Situação: implementação
+local revisada, testes e Docker finais verdes; publicação específica pendente.
+
+### O que foi feito
+
+- Disparo explícito, snapshot estável de elegíveis, estados/transições persistidos,
+  processamento estrutural dos seis assuntos e conjuntos recebidos/processados/
+  efetivos distinguíveis. Controle administrativo manual/automático usa a mesma
+  porta, Clock compartilhado e configuração persistida. V8 aditiva conserva V1–V7.
+- Executor próprio `grupo9_executor` GPT-6.1 Sol/baixo concluiu em TDD, após
+  exploração GPT-6 Luna/médio. Reviewer próprio GPT-6.1 Sol/médio encontrou limites
+  temporais; correções delegadas a `grupo9_correcao` GPT-6.1 Sol/baixo e depois
+  `grupo9_correcao_final`, identificado Codex/GPT-6 sem variante/esforço expostos.
+  Reavaliação final aprovou tecnicamente a #9, sem achados materiais remanescentes.
+- Supervisor confirmou **137 testes**, zero falhas/erros/ignorados, `clean verify`
+  exit0,15.930s. Jar final e imagem Linux amd64 identificados na
+  [evidência sanitizada](docs/evidencias/issue-9.md); hash interno do jar conferido.
+- **1.094 verificações na imagem final V8**, todas exit0: upgrade real V7 com
+  hashes/contagens de dez tabelas preservados, reinício, 10.001 créditos, dados
+  exatos/índices/origem, disputa manual/automático e limite de tempo system após
+  reabertura. Preparação V7:1.879 verificações +3 do snapshot anterior, separadas.
+- README, manifesto, plano e [rascunho do PR](.scratch/pr-issue-9.md) atualizados.
+  GitHub #9 reconfirmada aberta `ready-for-agent`, sem comentários; #8 e dependência
+  remota preservadas. Nenhum push/PR/merge ou publicação de imagem da #9 realizado.
+- Containers temporários removidos, ausência confirmada; três volumes fictícios
+  `fake-esfinge-issue9-supervisao`, `fake-esfinge-issue9-supervisao-final` e
+  `fake-esfinge-issue9-supervisao-auto` preservados no contexto `orbstack`.
+
+### O que deu errado
+
+- Revisão detectou conclusão temporal inalcançável e avanço aceitando timestamps
+  fora do contrato; três testes RED reproduziram os dois P2. Validação do snapshot
+  inteiro e do avanço corrigiu ambos. Nova revisão encontrou leitura system que
+  podia ultrapassar ano9999 após avanço da base; um RED determinístico comprovou
+  o terceiro P2, corrigido pela guarda em cada leitura sem mutar o deslocamento.
+- Limite de uso interrompeu a última rodada do primeiro corretor; novo agente
+  delegado concluiu a correção, sem perder alterações ou processos. Os ensaios
+  preliminares foram excluídos do total final; refeitos upgrade e Docker com jar
+  final após nova suíte limpa. Nenhuma falha remanescente observada.
+- Ensaio interno E1/#8 e integrador real continuam sem execução/aceite informado.
+  A implementação técnica da #9 não conclui E2 integral, E1/T01/E3 ou homologação.
+
+### Próximo passo
+
+Obter autorização específica para publicar/integrar a #9 com o rascunho concreto;
+exclusão dos três volumes requer decisão própria. Após integração, prosseguir à
+#10 e às demais fatias E2 dentro de suas dependências. Solicitante mantém o ensaio
+e aceite humano #8/E1 pendentes, sem data presumida.

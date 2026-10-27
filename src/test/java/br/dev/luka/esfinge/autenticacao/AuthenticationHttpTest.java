@@ -68,13 +68,13 @@ class AuthenticationHttpTest {
     }
     @Test void tokenExpiraSemEfeitosELoginPermiteRenovacao() throws Exception {
         String token = token();
-        http.perform(post("/v6/tributario/iniciar-processamento").header("auth_token", token)).andExpect(status().isUnprocessableEntity());
+        http.perform(post("/v6/tributario/finalizarEnvio").header("auth_token", token)).andExpect(status().isUnprocessableEntity());
         NOW.set(Instant.parse("2026-01-01T01:00:00Z"));
-        http.perform(post("/v6/tributario/iniciar-processamento").header("auth_token", token))
+        http.perform(post("/v6/tributario/finalizarEnvio").header("auth_token", token))
                 .andExpect(status().isUnauthorized()).andExpect(jsonPath("$.codigo").value("SIM_AUTENTICACAO_INVALIDA"));
-        http.perform(post("/v6/tributario/iniciar-processamento").header("auth_token", token())).andExpect(status().isUnprocessableEntity());
+        http.perform(post("/v6/tributario/finalizarEnvio").header("auth_token", token())).andExpect(status().isUnprocessableEntity());
         NOW.set(Instant.parse("2026-01-01T00:00:00Z"));
-        http.perform(post("/v6/tributario/iniciar-processamento").header("auth_token", token)).andExpect(status().isUnprocessableEntity());
+        http.perform(post("/v6/tributario/finalizarEnvio").header("auth_token", token)).andExpect(status().isUnprocessableEntity());
     }
     @Test void chavesAdministrativaECompativelNaoSeIntercambiam() throws Exception {
         String token = token();

@@ -6,7 +6,8 @@ Artefato 0.1.0, issues [#1](https://github.com/lukadev08/fake-esfinge/issues/1) 
 [#4](https://github.com/lukadev08/fake-esfinge/issues/4) e
 [#5](https://github.com/lukadev08/fake-esfinge/issues/5) e
 [#6](https://github.com/lukadev08/fake-esfinge/issues/6) e
-[#7](https://github.com/lukadev08/fake-esfinge/issues/7).
+[#7](https://github.com/lukadev08/fake-esfinge/issues/7) e
+[#9](https://github.com/lukadev08/fake-esfinge/issues/9).
 Fontes: [contrato E0](contrato-e0.md), [pacote derivado](contratos/2026-v6-6.06/README.md)
 e [hashes das fontes](contratos/2026-v6-6.06/fontes.json), consolidados em 23/10/2026.
 Não há OpenAPI oficial nem ensaio independente do integrador/TCE. O manifesto
@@ -19,10 +20,10 @@ registra a evolução implementada.
 | Token | Vínculo usuário/UG/cenário, opaco, inválido/expirado 401 antes de efeito | `AuthenticationServiceTest`, `AuthenticationHttpTest`; parcela T10/T11 | Implementada |
 | Validade de token | 3600 segundos configuráveis, relógio substituível | Contrato E0; testes de limite e duração customizada | Aproximada; duração local aprovada, sem equivalência oficial |
 | Administração | GET `/__simulator/configuracao`, chave própria, inspeção sem segredos | `AuthenticationHttpTest`, `SimulatorSettingsTest` | Implementada; API exclusiva do simulador |
-| Persistência | SQLite real, migrações V1→V2→V3→V4→V5→V6→V7 com checksum/version, FK por conexão, reabertura, incompatibilidade sem recriar | `JdbcAuthenticationRepositoryTest`, `JdbcRemessaTest` | Implementada para contexto/identidades/sessões/remessas/lotes/eventos; parcela de T13 |
+| Persistência | SQLite real, migrações V1→V2→V3→V4→V5→V6→V7→V8 com checksum/version, FK por conexão, reabertura, incompatibilidade sem recriar | `JdbcAuthenticationRepositoryTest`, `JdbcRemessaTest` | Implementada para contexto/identidades/sessões/remessas/lotes/eventos; parcela de T13 |
 | Erros e logs | Envelope próprio sanitizado, sem senha/token/SQL/stack trace | `InternalFailureHttpTest`, testes HTTP/configuração | Implementada; logs padrão desabilitados |
 | Fronteiras | Núcleo Java puro, domínio sem aplicação, capacidades sem ciclos | `ArchitectureTest`, análise de dependências de classes | Implementada na fatia atual |
-| Operações ainda indisponíveis | Token válido recebe 422 de cobertura, inválido 401; inexistente 404 | `AuthenticationHttpTest`, `RemessaHttpTest`; parcela de T18 | Cobertura ausente explícita; sem processamento/finalização |
+| Operações ainda indisponíveis | Token válido recebe 422 de cobertura, inválido 401; inexistente 404 | `AuthenticationHttpTest`, `RemessaHttpTest`; parcela de T18 | Cobertura ausente explícita; sem finalização ou aprovação fiscal |
 | Abrir envio | UG/cenário do token, mês de 2026, NAO; restrição única para abertura concorrente | `RemessaHttpTest`, `JdbcRemessaTest`; parcelas T10/T14 | Implementada no contrato derivado; SIM/omissão recebem 422 |
 | Receber contribuinte | Lista direta na raiz; schema, bytes/hash/ordem/contagem/evento atômicos; sem dedupe/limite de 10.000 | `RemessaHttpTest`, `JdbcRemessaTest`, `RemessaFailureHttpTest`; parcelas T01/T18 | Implementada estruturalmente; sem validação fiscal |
 | Receber crédito | Lista direta, schema `credito`, mês histórico válido, dinheiro BigDecimal/múltiplo exato de 0,01 sem coerção/arredondamento; TEXT por registro e bytes originais | `CreditoHttpTest`, `JdbcRemessaTest`, `RemessaFailureHttpTest`; parcelas T01/T02/T18 | Implementada estruturalmente; referências, cronologia, catálogos e cálculos tributários não implementados |
@@ -32,10 +33,14 @@ registra a evolução implementada.
 | Receber início do prazo prescricional | Lista direta `inicioPrazoPrescricional`, quatro obrigatórios, ano inteiro/código string/datas de calendário, conteúdo não monetário | `PrazoHttpTest`, `ReceivedContentTest`, `JdbcRemessaTest`, `RemessaFailureHttpTest`; parcelas T01/T02/T18 | Implementada estruturalmente no schema derivado aprovado sem DTO extraído; sem cronologia, prescrição fiscal ou vínculo ao crédito/dívida ativa |
 | Valores recebidos | Mapas imutáveis por registro e campo exato por assunto; V6 atribui nomes ao dinheiro antigo | `ReceivedContentTest`, `JdbcRemessaTest`; campos/precisão/cardinalidade/imutabilidade/migração | Implementada; quatro linhas por registro de saldo, uma nos três assuntos monetários anteriores |
 | `numeroParcelas` | Inteiro opcional/nulo no plural; singular `numeroParcela` rejeitado | Pacote derivado/relato do cliente; `ArrecadacaoHttpTest` | Aproximada; divergência da extração preservada explicitamente |
-| Consultar lote | RECEBIDO persistido, nomes contratuais, isolamento e atividade/evento sem processamento | `RemessaHttpTest`, `JdbcRemessaTest`, `RemessaExpiryHttpTest`; parcelas T02/T10/T13 | Implementada; recebidos não são efetivos |
-| Inspeção de lote | Chave administrativa, cenário atual, bytesBase64/registros/contagens/eventos | `RemessaHttpTest`, `CreditoHttpTest`, `ArrecadacaoHttpTest`, `BaixaHttpTest`, `SaldoHttpTest`, `PrazoHttpTest`, `RemessaFailureHttpTest` | Implementada para os seis assuntos com números exatos sob `/__simulator/lotes/{numeroLote}` |
+| Consultar lote | Estado persistido, nomes contratuais, isolamento e atividade/evento sem avançar processamento | `RemessaHttpTest`, `JdbcRemessaTest`, `RemessaExpiryHttpTest`; parcelas T02/T10/T13 | Implementada; recebidos não são efetivos |
+| Inspeção de lote | Chave administrativa, cenário atual, bytesBase64/registros/contagens/eventos e listas processadas/efetivas | `RemessaHttpTest`, `CreditoHttpTest`, `ArrecadacaoHttpTest`, `BaixaHttpTest`, `SaldoHttpTest`, `PrazoHttpTest`, `RemessaFailureHttpTest` | Implementada para os seis assuntos com números exatos sob `/__simulator/lotes/{numeroLote}` |
 | Falha de persistência | Rollback de statement/commit SQLite real, 500 sanitizado e nenhuma confirmação parcial | `JdbcRemessaTest`, `RemessaFailureHttpTest` | Implementada para abertura/recepção/consulta da fatia |
-| Disparo / finalização | Processar e concluir fluxo completo | Issues #9–#10 | Não implementada |
+| Disparo | Snapshot de todos os lotes elegíveis da chave, conflitos409, lotes posteriores aguardam novo disparo | `ProcessamentoHttpTest`, `JdbcProcessingTest`; parcelas T02/T10/T13/T14 | Implementada no contrato derivado |
+| Processamento estrutural | RECEBIDO→EM_PROCESSAMENTO→PROCESSADO_SUCESSO, revalidação existente, registros processados/efetivos por origem/índice, sem deduplicação | `ProcessamentoHttpTest`, `JdbcProcessingTest`; parcelas T02/T13/T18 | Implementada para seis assuntos; sem regras fiscais |
+| Controle de processamento | MANUAL/AUTOMATICO, latência persistida, avanço explícito do relógio compartilhado e passos, JSON estrito, chave própria e horizonte técnico dos timestamps/deslocamento validado antes dos efeitos e em cada leitura, inclusive após reinício | `ProcessamentoHttpTest`, `JdbcProcessingTest`; parcelas T10/T11/T13 | Aproximada; API interna e padrões MANUAL/1000ms derivados, sem equivalência oficial |
+| Persistência de processamento | V8 aditiva, upgrade V7 preenchida, reinício, ordem, concorrência, guarda de geração e rollback statement/COMMIT | `JdbcProcessingTest`, `ProcessamentoHttpTest`; parcela T13 | Implementada; avanço de tempo precede transições individualmente atômicas |
+| Finalização | Concluir envio | Issue #10 | Não implementada |
 | Descarte / cancelamento / recuperação / reset / expiração de envio | Efeitos, geração e relógio administrativo | Issues #11–#17 | Não implementada |
 | Regras fiscais / vínculos entre assuntos / CONs | Evolução sem catálogo aprovado | Issue #27 | Não implementada |
 | Aceites humanos / T01 / E1–E5 | Integrador real, referência independente e reprodução | Issues #8, #19, #20, #22, #26 | Pendente |
@@ -83,3 +88,12 @@ quando ausente no piloto continuam pendentes.
 A suíte automatizada destas fatias não conclui integralmente T10/T11 nem substitui
 renovação pelo integrador real. Recepção, processamento e regras ausentes não
 recebem aprovação fiscal ou homologação implícita.
+
+Evidência da #9: [execução local](evidencias/issue-9.md), **137 testes aprovados**
+na suíte limpa da supervisão, incluindo 32 novos casos HTTP/SQLite; revisão final
+aprovada após correções temporais. **1.094 verificações na imagem final V8 Linux
+amd64 sem rede**, incluindo migração real V7, reinício, 10.001 créditos processados,
+conteúdo/precisão/origem, concorrência manual/automático e limite temporal system.
+As 1.879 verificações de preparação V7 e 3 do snapshot anterior são separadas.
+Continuidade técnica E2 com #8 pendente; sem aceite humano E1/T01 ou validação
+fiscal implícitos. Publicação/merge da #9 ainda não realizados.

@@ -1,0 +1,9 @@
+CREATE TABLE processamento_config (cenario TEXT PRIMARY KEY REFERENCES scenarios(id), modo TEXT NOT NULL DEFAULT 'MANUAL' CHECK(modo IN ('MANUAL','AUTOMATICO')), latencia_ms INTEGER NOT NULL DEFAULT 1000 CHECK(latencia_ms>=0));
+INSERT INTO processamento_config(cenario) SELECT id FROM scenarios;
+CREATE TABLE relogio_negocio (cenario TEXT PRIMARY KEY REFERENCES scenarios(id), deslocamento_ms INTEGER NOT NULL DEFAULT 0 CHECK(deslocamento_ms>=0));
+INSERT INTO relogio_negocio(cenario) SELECT id FROM scenarios;
+CREATE TABLE processamento_trabalhos (id INTEGER PRIMARY KEY AUTOINCREMENT, lote_id INTEGER NOT NULL UNIQUE, remessa_id INTEGER NOT NULL, cenario TEXT NOT NULL, ug TEXT NOT NULL, geracao INTEGER NOT NULL, situacao TEXT NOT NULL CHECK(situacao IN ('RECEBIDO','EM_PROCESSAMENTO','PROCESSADO_SUCESSO')), devido_segundos INTEGER NOT NULL, devido_nanos INTEGER NOT NULL CHECK(devido_nanos BETWEEN 0 AND 999999999), latencia_ms INTEGER NOT NULL CHECK(latencia_ms>=0), FOREIGN KEY(lote_id,remessa_id,cenario,ug) REFERENCES lotes(numero,remessa_id,cenario,ug));
+CREATE INDEX trabalho_devido ON processamento_trabalhos(cenario,devido_segundos,devido_nanos,id);
+CREATE TABLE registros_processados (lote_id INTEGER NOT NULL, remessa_id INTEGER NOT NULL, cenario TEXT NOT NULL, ug TEXT NOT NULL, indice INTEGER NOT NULL CHECK(indice>=0), payload BLOB NOT NULL, PRIMARY KEY(lote_id,indice), FOREIGN KEY(lote_id,remessa_id,cenario,ug) REFERENCES lotes(numero,remessa_id,cenario,ug));
+CREATE TABLE registros_efetivos (lote_id INTEGER NOT NULL, remessa_id INTEGER NOT NULL, cenario TEXT NOT NULL, ug TEXT NOT NULL, indice INTEGER NOT NULL CHECK(indice>=0), payload BLOB NOT NULL, PRIMARY KEY(lote_id,indice), FOREIGN KEY(lote_id,remessa_id,cenario,ug) REFERENCES lotes(numero,remessa_id,cenario,ug), FOREIGN KEY(lote_id,indice) REFERENCES registros_processados(lote_id,indice));
+PRAGMA user_version=8;

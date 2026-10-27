@@ -26,7 +26,7 @@ public final class SqliteDatabase {
         } catch (Exception e) { throw new IllegalStateException("Base SQLite indisponivel ou incompativel; dados preservados"); }
     }
     private static void migrate(DataSource source) throws Exception {
-        String[] scripts = {"V1__authentication.sql", "V2__remessas.sql", "V3__creditos.sql", "V4__arrecadacao.sql", "V5__baixas.sql", "V6__saldo.sql", "V7__prazo.sql"};
+        String[] scripts = {"V1__authentication.sql", "V2__remessas.sql", "V3__creditos.sql", "V4__arrecadacao.sql", "V5__baixas.sql", "V6__saldo.sql", "V7__prazo.sql", "V8__processamento.sql"};
         try (var connection = source.getConnection()) {
             connection.setAutoCommit(false);
             try {
@@ -73,6 +73,8 @@ public final class SqliteDatabase {
                     var stored = auth.findAccount(settings.scenario, user.accessCode(), user.password()).orElseThrow(IllegalStateException::new);
                     if (!stored.user().equals(user.id()) || !stored.ugs().equals(user.ugs())) throw new IllegalStateException();
                 }
+                if (jdbc.queryForObject("SELECT COUNT(*) FROM processamento_config WHERE cenario=?",Integer.class,settings.scenario)!=1
+                        || jdbc.queryForObject("SELECT COUNT(*) FROM relogio_negocio WHERE cenario=?",Integer.class,settings.scenario)!=1) throw new IllegalStateException();
                 return;
             }
             jdbc.update("INSERT INTO scenarios(id, profile, seed, initial_time, clock_mode, token_seconds) VALUES (?, ?, ?, ?, ?, ?)",
@@ -83,6 +85,8 @@ public final class SqliteDatabase {
                         settings.scenario, user.id(), user.accessCode(), CredentialHash.password(user.password(), salt), salt);
                 for (String ug : user.ugs()) jdbc.update("INSERT INTO user_ugs(scenario_id, user_id, ug) VALUES (?, ?, ?)", settings.scenario, user.id(), ug);
             }
+            jdbc.update("INSERT INTO processamento_config(cenario) VALUES (?)",settings.scenario);
+            jdbc.update("INSERT INTO relogio_negocio(cenario) VALUES (?)",settings.scenario);
         });
     }
 }

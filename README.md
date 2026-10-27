@@ -12,8 +12,9 @@ E0 está concluído documentalmente no recorte inicial. As fatias E1
 [#6](https://github.com/lukadev08/fake-esfinge/issues/6) e
 [#7](https://github.com/lukadev08/fake-esfinge/issues/7) implementam autenticação
 fictícia, abertura de envio, recepção dos seis assuntos, consulta `RECEBIDO` e
-inspeção administrativa com persistência SQLite. Processamento, finalização,
-reset e painel ainda não estão implementados.
+inspeção administrativa com persistência SQLite. A fatia E2 #9 acrescenta disparo
+explícito e processamento estrutural persistido. Finalização, reset e painel
+ainda não estão implementados.
 A saída E1 depende do aceite humano da #8; testes locais não comprovam T01.
 A continuidade técnica E2 autorizada está delimitada na
 [seção 13.1 do planejamento](docs/planejamento-simulador-tributario.md#131-pendência-e1-e-continuidade-de-e2).
@@ -46,7 +47,7 @@ Dados originais do piloto permanecem no ambiente local controlado, fora do Git
 e de serviços externos. Exemplos e evidências compartilhadas exigem sanitização;
 credenciais e tokens do simulador serão fictícios.
 
-## Executar e validar as fatias #1–#7
+## Executar e validar as fatias #1–#9
 
 Requer JDK 21. O wrapper oficial fixa Maven 3.9.9; o primeiro uso baixa Maven e
 as dependências do Maven Central. O build fixa Spring Boot 3.5.10, SQLite JDBC
@@ -68,7 +69,8 @@ A V5 permite baixa, preservando lotes, eventos e dinheiro dos assuntos anteriore
 A V6 permite saldo inicial com quatro valores por registro e nomeia os valores
 antigos pelo assunto, mantendo TEXT e todos os dados. A V7 admite início do prazo
 prescricional, preservando os dados e os valores nomeados V6; prazo não gera
-linhas monetárias. Schema, migração ou configuração persistida incompatíveis
+linhas monetárias. A V8 acrescenta trabalhos, configuração, deslocamento de tempo e
+registros processados/efetivos sem reescrever V1–V7 ou o recebido. Schema, migração ou configuração persistida incompatíveis
 interrompem a inicialização sem recriar dados. Não há reset nesta
 fatia. Para outra execução, use outro arquivo/volume; preserve o anterior.
 
@@ -84,7 +86,7 @@ curl -i 'http://localhost:8080/__simulator/configuracao' \
 O login devolve `{"chave":"sim-..."}`; use esse valor em `auth_token`. Credenciais
 inválidas retornam 401; UG não autorizada, 403; parâmetros/corpo inválidos, 400.
 As rotas contratuais conhecidas ainda indisponíveis validam o token e retornam
-422 `SIM_COBERTURA_AUSENTE`; não processam ou finalizam remessas nem aprovam dados.
+422 `SIM_COBERTURA_AUSENTE`; não finalizam remessas nem aprovam dados.
 Recurso inexistente retorna 404. Erros têm `codigo`, `mensagem` sanitizada e `correlacao`.
 
 A inspeção administrativa usa exclusivamente `X-Simulator-Key`; não aceita o
@@ -116,8 +118,8 @@ argumentos Spring. Não versione arquivos locais com dados do piloto.
 Outros usuários usam índices consecutivos `[1]`, `[2]` etc. Senhas são guardadas
 com PBKDF2 e salt; tokens persistem somente por hash. Alterar configuração de um
 cenário já persistido exige arquivo/volume novo; esta fatia não migra identidades
-nem altera parâmetros de execução ativa. O avanço administrativo de tempo fica
-na #16; testes usam relógio substituível sem espera real.
+nem altera identidades da execução ativa. A #9 permite avanço de tempo pelo
+controle de processamento abaixo; o controle global da #16 continua pendente.
 
 ## Docker mínimo Linux amd64
 
@@ -338,3 +340,56 @@ Consulta mantém `RECEBIDO`; inspeção protegida mostra `INICIO_PRAZO_PRESCRICI
 registros e bytes, com processados/efetivos zero. Reinício conserva o recebido.
 Se prazo não aparecer no piloto, cenário complementar pelo integrador real
 continua necessário; esta fatia não encerra E1/T01 ou homologação oficial.
+
+
+## Disparar e avançar processamento — #9
+
+Após enviar os lotes, use POST `/v6/tributario/iniciar-processamento?chavePacote=<chave>`
+com `auth_token` e sem corpo. O disparo captura todos os lotes ainda não agendados
+da chave, sem escolher assunto. Retorna `situacao=RECEBIDO`, `dataEnvio` e
+`identificadorRemessaOnline`. Disparo ativo, repetido ou sem elegíveis recebe409.
+Lotes recebidos depois do disparo aguardam um novo disparo.
+
+O controle interno exige `X-Simulator-Key`. GET `/__simulator/processamento`
+consulta configuração e instante. PUT na mesma rota exige exatamente:
+
+```json
+{"modo":"MANUAL","latenciaMilissegundos":1000}
+```
+
+MANUAL/1000ms são padrões locais derivados. AUTOMATICO executa pela mesma porta,
+em tarefas do adaptador; a configuração nova não reagenda trabalhos existentes.
+POST `/__simulator/processamento/avancar` exige exatamente:
+
+```json
+{"milissegundos":1000,"passos":1}
+```
+
+`milissegundos` é inteiro não negativo; `passos` é inteiro positivo. Tipos, extras,
+campos duplicados e overflow são recusados. Avanço e disparo retornam400 quando
+um instante sai de `0000-01-01T00:00:00Z`–`9999-12-31T23:59:59.999999999Z`
+(ano de quatro dígitos do timestamp contratual), ou exige deslocamento além do
+`long` persistido. É limite técnico, sem restringir exercícios de créditos.
+O disparo verifica início e conclusão de todos os lotes antes de criar trabalhos,
+eventos ou alterar atividade; a latência configurada é conservada se rejeitado.
+O avanço inválido não altera o relógio nem executa passos. O avanço funciona nos dois modos e
+usa o mesmo relógio de negócio das sessões e remessas. O deslocamento persiste
+sobre o relógio `fixed` ou `system`, inclusive após reinício. Consultas não avançam
+esse relógio nem tarefas. Se o tempo real em `system` esgotar a janela técnica,
+leituras do relógio e operações dependentes retornam400, sem emitir timestamp
+incompatível nem alterar o deslocamento persistido, inclusive após reinício.
+Cada passo executa uma transição elegível: RECEBIDO →
+EM_PROCESSAMENTO → PROCESSADO_SUCESSO; início e conclusão são separados.
+O avanço do relógio é confirmado antes dos passos; falha posterior de tarefa
+reverte aquela transição, preservando o tempo já avançado e permitindo retomada.
+
+A inspeção administrativa acrescenta `registrosProcessados` e `registrosEfetivos`.
+Essas listas e suas contagens vêm de linhas persistidas por lote/índice, separadas
+do recebido. O processamento revalida a estrutura pelo validador existente e,
+sem regras fiscais nesta fatia, torna efetivos os registros estruturalmente válidos.
+Duplicatas permanecem; strings, zeros e decimais exatos são conservados. Bytes
+originais continuam imutáveis em `bytesBase64`. As descrições RECEBIDO/zero das
+fatias #2–#7 acima representam o estado anterior ao disparo.
+
+Consulte [evidência da #9](docs/evidencias/issue-9.md). A implementação técnica
+não encerra o aceite humano E1/#8, T01, E2 completo ou homologação oficial.
