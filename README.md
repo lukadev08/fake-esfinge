@@ -637,3 +637,5 @@ Linux amd64 passaram 51 verificações cada, com reinício. Código aprovado por
 revisão independente, sem achados; conferência documental final também aprovada.
 Ensaios fictícios
 não encerram #8/E1, T01/E3 ou homologação oficial.
+Publicação e merge concluídos em 27/10/2026 no
+[PR #42](https://github.com/lukadev08/fake-esfinge/pull/42); #15 encerrada.

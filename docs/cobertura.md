@@ -195,5 +195,9 @@ ignorados, exit0; 12 novos HTTP/SQLite. Smoke do jar local: **51 verificações*
 desbloqueio e decimal exato. Na imagem final Linux amd64, outras **51 verificações**
 passaram com reinício, integridade SQLite e hash do jar conferidos. Código aprovado
 por revisão independente sem achados; conferência documental final também
-aprovada. Publicação permanece pendente. Reset #17,
+aprovada. Publicação/merge concluídos no
+[PR #42](https://github.com/lukadev08/fake-esfinge/pull/42), head `70ee641`, merge
+`df77df16a131c5a419648ce472915a237a6a3c70`; #15 completed. Check rollup vazio,
+sem CI remoto; encerramento documental não alterou código ou repetiu testes.
+Próxima #16 explorada, ainda não implementada. Reset #17,
 #8/E1, T01/E3, CI remoto, regras fiscais e homologação não demonstrados.

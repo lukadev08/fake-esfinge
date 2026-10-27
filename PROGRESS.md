@@ -2423,3 +2423,31 @@ CI remoto e homologação continuam pendentes.
 
 Supervisão preparar commit/push/PR/merge da #15 nos limites da autorização
 vigente e retomar a coordenação da #16 com grupo próprio.
+
+## 2026-10-27 — Publicar e integrar a issue #15
+
+Referência: ciclo autorizado e
+[PR #42](https://github.com/lukadev08/fake-esfinge/pull/42).
+Situação: integrada; #15 closed/completed; #16 explorada, ainda não implementada.
+
+### O que foi feito
+
+- Supervisão publicou head `70ee641aed8449f52752d1787000e119c98e71e0` sobre base
+  `f4ba836` e integrou no merge `df77df16a131c5a419648ce472915a237a6a3c70`.
+  GitHub confirmou PR MERGED e #15 CLOSED/COMPLETED. Checkout alinhado ao merge
+  por fast-forward; check rollup vazio, sem execução de CI remoto.
+- Encerramento registrado somente em documentação. Código/testes/smoke/jar
+  permaneceram inalterados e corpo publicado exato preservado em
+  `.scratch/pr-issue-15.md`. Não houve nova execução de testes por estes registros.
+- Container ausente, nenhum volume Docker criado e bases fictícias tmp
+  preservadas; nenhuma limpeza destrutiva adicional.
+
+### O que deu errado
+
+Nenhuma falha de publicação ou merge informada. Aceites humanos #8/E1 e T01/E3,
+reset #17, CI remoto e homologação continuam pendentes; #15 não conclui E2 integral.
+
+### Próximo passo
+
+Supervisão retomar a coordenação da #16 com explorer/executor/reviewer próprios,
+reconferindo os pontos alterados pela #15 antes de implementar.
