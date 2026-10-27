@@ -3,7 +3,7 @@
 Data: 27/10/2026. Perfil derivado 2026/V6/leiaute6.06. Dados exclusivamente
 fictícios e SQLite temporário; nenhuma chamada ao TCE ou origem do integrador.
 Base funcional `df77df1` (PR #42), registro `9f58eae`, branch
-`codex/issue-16-expiracao`. Implementação local; código/testes aprovados por
+`codex/issue-16-expiracao`. Implementação integrada; código/testes aprovados por
 revisor independente sem achados materiais; conferência documental final aprovada.
 
 ## Comportamento entregue
@@ -83,7 +83,7 @@ Somente sondagens GET de prontidão tiveram conexão vazia durante startup; port
 efêmera foi reconferida após restart. Nenhum smoke falhou ou código mudou por
 esses incidentes. Revisor independente aprovou código/testes sem achados,
 conferiu 32 relatórios/304 testes e diff check. Conferência documental final também
-aprovada sem achados materiais. Publicação é a próxima etapa da supervisão.
+aprovada sem achados materiais. Publicação concluída conforme registro abaixo.
 
 ## Smoke local com reinício
 
@@ -110,3 +110,15 @@ Parcela técnica de T02/T11/T19, sem integrador real. #8/E1 e T01/E3 continuam
 pendentes. Reset #17, inspeção #18, regras fiscais/CONs, CI remoto e homologação não
 são comprovados. A política de duração/renovação/terminal é derivada. Não há API
 compatível nova nem TTL de envio configurável adicional.
+
+## Publicação e encerramento
+
+Publicação e merge concluídos em 27/10/2026 no
+[PR #43](https://github.com/lukadev08/fake-esfinge/pull/43). Head revisado
+`24287a8c906026aab38807c302929a6178d4bfa6`, base `df77df1`, merge
+`9411e16fb095170a405f57b3d9d66e287b88f232`. GitHub reconfirmou MERGED e
+#16 CLOSED/COMPLETED; checkout alinhado ao merge por fast-forward. Check rollup
+vazio, sem execução de CI remoto. Corpo publicado exato permanece em
+`.scratch/pr-issue-16.md`; encerramento documental não mudou código/testes/jar
+nem repetiu testes. Container ausente, nenhum volume criado e dados fictícios
+tmp preservados. A #17 está explorada, sem implementação nesta entrada.

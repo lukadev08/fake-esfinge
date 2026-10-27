@@ -2552,3 +2552,32 @@ T01/E3, regras fiscais, CI remoto e homologação continuam pendentes.
 
 Supervisão preparar commit/push/PR/merge da #16 nos limites da autorização e
 retomar a coordenação da #17 com grupo próprio.
+
+## 2026-10-27 — Publicar e integrar a issue #16
+
+Referência: ciclo autorizado e
+[PR #43](https://github.com/lukadev08/fake-esfinge/pull/43).
+Situação: integrada; #16 closed/completed; #17 explorada, ainda não implementada.
+
+### O que foi feito
+
+- Supervisão publicou head `24287a8c906026aab38807c302929a6178d4bfa6` sobre base
+  `df77df1` e integrou no merge `9411e16fb095170a405f57b3d9d66e287b88f232`.
+  GitHub reconfirmou PR MERGED e #16 CLOSED/COMPLETED. Checkout alinhado ao merge
+  por fast-forward; check rollup vazio, sem execução de CI remoto.
+- Encerramento registrado somente em documentação. Código/testes/smoke/jar
+  permaneceram inalterados e corpo publicado exato preservado em
+  `.scratch/pr-issue-16.md`. Não houve repetição de testes por estes registros.
+- Container ausente, nenhum volume criado e bases fictícias tmp preservadas;
+  nenhuma limpeza destrutiva adicional.
+
+### O que deu errado
+
+Nenhuma falha de publicação ou merge informada. Reset #17, inspeção #18, aceites
+humanos #8/E1 e T01/E3, regras fiscais, CI remoto e homologação continuam pendentes;
+esta fatia não conclui E2 integral.
+
+### Próximo passo
+
+Supervisão retomar a coordenação da #17 com equipe exclusiva, reconferindo os
+pontos alterados pela expiração antes de implementar o reset.

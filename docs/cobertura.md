@@ -216,4 +216,8 @@ falhas/erros/ignorados. Smoke no jar copiado e na imagem final Linux amd64:
 decimal exato. Jar interno conferido, SQLite íntegro/FKs sem violações.
 Código/testes e conferência documental final aprovados por revisão independente
 sem achados. Reset #17, inspeção #18, #8/E1, integrador/T01/E3, CI remoto, regras
-fiscais e homologação continuam pendentes. Publicação depende da supervisão.
+fiscais e homologação continuam pendentes. Publicação e merge concluídos no
+[PR #43](https://github.com/lukadev08/fake-esfinge/pull/43), head `24287a8`, merge
+`9411e16fb095170a405f57b3d9d66e287b88f232`; #16 completed. Check rollup vazio,
+sem CI remoto. Encerramento documental não alterou código ou repetiu testes;
+próxima #17 explorada, ainda não implementada.

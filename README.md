@@ -702,4 +702,5 @@ python3 .scratch/issue-16-smoke.py resume --port 8080 --state /tmp/issue-16-fict
 verificações cada, com avanço virtual, reinício, expiração e reenvio. Revisão
 independente do código e conferência documental final aprovadas sem achados.
 Reset #17, #8/E1, integrador/T01/E3, regras fiscais, CI remoto e homologação permanecem
-pendentes. Publicação é a próxima etapa, a cargo da supervisão.
+pendentes. Publicação e merge concluídos em 27/10/2026 no
+[PR #43](https://github.com/lukadev08/fake-esfinge/pull/43); #16 encerrada.
