@@ -40,7 +40,7 @@ class JdbcProcessingTest {
         var source=SqliteDatabase.open(settings(scenario));var clock=new JdbcBusinessClock(source,scenario,Clock.fixed(INITIAL,ZoneOffset.UTC));
         var auth=new AuthenticationService(new JdbcAuthenticationRepository(source),clock,scenario,Duration.ofHours(1));
         var inspection=new ScenarioService(new JdbcScenarioRepository(source),scenario,ADMIN,auth);var repository=new JdbcRemessaRepository(source);var tx=new JdbcTransactions(source);
-        var remessas=new RemessaService(auth,repository,tx,clock,inspection);
+        var remessas=new RemessaService(auth,repository,tx,clock,inspection,new JdbcProcessingRepository(source));
         return new Fixture(source,auth,remessas,new ProcessingService(auth,inspection,remessas,repository,new JdbcProcessingRepository(source),tx,clock,clock,new StructuralRecords(),scenario),clock);
     }
     @Test void horizonteDeConclusaoRejeitaSnapshotInteiroSemEfeitos() {
@@ -189,14 +189,14 @@ class JdbcProcessingTest {
         for(String ug:List.of("0001","0002")) jdbc.update("INSERT INTO user_ugs VALUES(?,?,?)",s.scenario,"usuario-ficticio",ug);
         var auth=new AuthenticationService(new JdbcAuthenticationRepository(source),Clock.fixed(INITIAL,ZoneOffset.UTC),s.scenario,s.tokenValidity);
         var inspection=new ScenarioService(new JdbcScenarioRepository(source),s.scenario,ADMIN,auth);var repository=new LegacyRemessaRepository(source);
-        var remessas=new RemessaService(auth,repository,new JdbcTransactions(source),Clock.fixed(INITIAL,ZoneOffset.UTC),inspection);String token=auth.login("acesso-ficticio","senha-ficticia","0001"),key=remessas.open(token,202601,"NAO").key();
+        var remessas=new RemessaService(auth,repository,new JdbcTransactions(source),Clock.fixed(INITIAL,ZoneOffset.UTC),inspection,new JdbcProcessingRepository(source));String token=auth.login("acesso-ficticio","senha-ficticia","0001"),key=remessas.open(token,202601,"NAO").key();
         var lots=new ArrayList<Lote>();for(String payload:List.of(RemessaHttpTest.PAYLOAD,CreditoHttpTest.PAYLOAD,ArrecadacaoHttpTest.PAYLOAD,BaixaHttpTest.PAYLOAD,SaldoHttpTest.PAYLOAD,PrazoHttpTest.PAYLOAD)) lots.add(remessas.receive(token,key,new LotePayload().read(payload.getBytes(StandardCharsets.UTF_8))));
         return new Legacy(source,token,key,lots,remessas.inspect(ADMIN,lots.getFirst().number()).events());
     }
     @Test void migraV7ComSeisAssuntosSemRecriarDadosOuExecutarTrabalhos() throws Exception {
         var old=legacySeven();var jdbc=new JdbcTemplate(old.source);var money=jdbc.queryForList("SELECT * FROM valores_recebidos ORDER BY lote_id,indice,campo");var sessions=jdbc.queryForList("SELECT * FROM sessions");var checksums=jdbc.queryForList("SELECT * FROM schema_migrations ORDER BY version");
         jdbc.update("UPDATE sqlite_sequence SET seq=42 WHERE name='lotes'");jdbc.update("UPDATE sqlite_sequence SET seq=77 WHERE name='remessa_eventos'");
-        var migrated=fixture("cenario-a");assertEquals(13,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(checksums,jdbc.queryForList("SELECT * FROM schema_migrations WHERE version<=7 ORDER BY version"));assertEquals(money,jdbc.queryForList("SELECT * FROM valores_recebidos ORDER BY lote_id,indice,campo"));assertEquals(sessions,jdbc.queryForList("SELECT * FROM sessions"));
+        var migrated=fixture("cenario-a");assertEquals(14,jdbc.queryForObject("PRAGMA user_version",Integer.class));assertEquals(checksums,jdbc.queryForList("SELECT * FROM schema_migrations WHERE version<=7 ORDER BY version"));assertEquals(money,jdbc.queryForList("SELECT * FROM valores_recebidos ORDER BY lote_id,indice,campo"));assertEquals(sessions,jdbc.queryForList("SELECT * FROM sessions"));
         for(var lot:old.lots) {var snapshot=migrated.processing.inspect(ADMIN,lot.number());assertEquals(Processing.State.RECEBIDO,snapshot.state());assertArrayEquals(lot.bytes(),snapshot.received().lote().bytes());assertEquals(lot.hash(),snapshot.received().lote().hash());assertEquals(lot.subject(),snapshot.received().lote().subject());assertEquals(old.events,snapshot.received().events());assertTrue(snapshot.effective().isEmpty());}
         assertEquals(Processing.Mode.MANUAL,migrated.processing.configuration(ADMIN).modo());assertEquals(1000,migrated.processing.configuration(ADMIN).latenciaMilissegundos());
         var next=migrated.receive(old.token,old.key,PrazoHttpTest.PAYLOAD);assertEquals(43,next.number());assertEquals(78,migrated.processing.inspect(ADMIN,next.number()).received().events().getLast().id());

@@ -121,7 +121,8 @@ Outros usuários usam índices consecutivos `[1]`, `[2]` etc. Senhas são guarda
 com PBKDF2 e salt; tokens persistem somente por hash. Alterar configuração de um
 cenário já persistido exige arquivo/volume novo; esta fatia não migra identidades
 nem altera identidades da execução ativa. A #9 permite avanço de tempo pelo
-controle de processamento abaixo; o controle global da #16 continua pendente.
+controle de processamento abaixo; a #16 acrescenta a expiração de envios pelo
+mesmo relógio, conforme a seção de expiração abaixo.
 
 ## Docker mínimo Linux amd64
 
@@ -639,3 +640,66 @@ Ensaios fictícios
 não encerram #8/E1, T01/E3 ou homologação oficial.
 Publicação e merge concluídos em 27/10/2026 no
 [PR #42](https://github.com/lukadev08/fake-esfinge/pull/42); #15 encerrada.
+
+## Expiração pelo relógio de negócio — #16
+
+O token continua válido por `simulator.token-seconds` (padrão 3600 segundos):
+no instante exato do prazo a chamada retorna 401 antes de efeitos. Novo login
+permite repetir a operação sem perder lote/envio. Login não renova a remessa.
+
+Envio aberto expira em `atividade + 72h`, inclusive no limite. Recepção, disparo,
+consulta compatível, descarte, finalização e cancelamento bem-sucedidos atualizam
+atividade e prazo na mesma transação. Rejeições e administração não renovam.
+A duração e a lista renovadora são políticas derivadas, sem equivalência oficial.
+
+Reutilize POST `/__simulator/processamento/avancar` com chave administrativa e
+JSON estrito já documentados. O avanço confirma o relógio primeiro e verifica a
+agenda antes dos passos; uma falha posterior de expiração não desfaz o tempo
+já avançado. `tick` verifica vencimentos nos dois modos, sem avançar tempo;
+somente AUTOMATICO executa passos de lote pelo tick. Em fixed, nada vence sem
+avanço explícito do relógio; em system, o tempo real também pode vencer a agenda,
+inclusive com processamento MANUAL. Isso não inicia processamento de lotes.
+
+A expiração encerra a chave com `expirada_em` distinto de cancelamento/finalização,
+remove os dados ativos e inativa os lotes. Bytes/hash/quantidade original,
+controles e eventos permanecem históricos. Pendentes sem trabalho, agendados e
+EM tornam-se ABORTADO com `SIM_ENVIO_EXPIRADO`, mensagem própria
+`Envio expirado no simulador` e registro null. Sucessos anteriores conservam a
+situação histórica, com processados/efetivos ativos removidos; isso não finaliza
+o envio nem aprova dados da execução expirada.
+
+Mutações da chave expirada retornam 409; nova abertura exige outra chave. Consulta
+compatível autorizada pode materializar a expiração já vencida e retorna200 com
+histórico, sem renovar atividade/eventos de consulta nem conduzir processamento.
+Autenticação e isolamento401/404 precedem a expiração. Em operações com chave,
+expiração precede bloqueio403; na nova abertura, bloqueio403 é verificado antes
+de expirar o envio anterior, sem efeitos de uma abertura rejeitada.
+
+GET administrativo continua somente leitura. Controles administrativos mutáveis
+que exigem chave aberta retornam 409 quando o prazo venceu, mesmo antes de existir
+o marcador; não materializam expiração nem renovam atividade. Trabalhos capturados
+antes do prazo revalidam deadline/marcador/geração na transação final e não podem
+reaplicar efeitos após o vencimento.
+
+V14 acrescenta deadline em segundos epoch+nanos e marcador separado; o backfill
+Java calcula `Instant.parse(atividade) + 72h` na transação da migração, preservando
+nanos, dados, checksums anteriores, FKs e sequências. Reinício conserva agenda,
+offset e atividade. Não se usa ponto flutuante ou comparação de strings de tempo.
+O prazo interno pode ultrapassar o ano 9999 sem restringir operações antes aceitas;
+o horizonte técnico do relógio/timestamps compatíveis permanece o mesmo.
+
+Smoke reproduzível em instância/base fictícias exclusivas, relógio fixed e
+`--simulator.users[0].ugs=0001,0002` (use aspas no shell):
+
+```sh
+python3 .scratch/issue-16-smoke.py prepare --port 8080 --state /tmp/issue-16-ficticio.json
+# Reinicie a mesma instância conservando a base; depois:
+python3 .scratch/issue-16-smoke.py resume --port 8080 --state /tmp/issue-16-ficticio.json
+```
+
+[Evidência da #16](docs/evidencias/issue-16.md): executor e supervisão confirmaram
+304 testes verdes; smoke no jar copiado e na imagem final Linux amd64 passaram 56
+verificações cada, com avanço virtual, reinício, expiração e reenvio. Revisão
+independente do código e conferência documental final aprovadas sem achados.
+Reset #17, #8/E1, integrador/T01/E3, regras fiscais, CI remoto e homologação permanecem
+pendentes. Publicação é a próxima etapa, a cargo da supervisão.

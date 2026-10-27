@@ -10,6 +10,8 @@ public interface RemessaRepository { Remessa open(String scenario, String ug, in
     void block(String scenario,String ug,int yearMonth,boolean blocked);
     Optional<Remessa> find(String key,String scenario,String ug);
     Optional<Remessa> find(String key,String scenario);
+    Optional<Remessa> findOpen(String scenario,String ug,int yearMonth);
+    List<Remessa> due(String scenario,Instant now);
     Optional<Reception.Plan> receptionPlan(Remessa remessa,Assunto subject);
     void planReception(Remessa remessa,Assunto subject,Reception.Type type,long attempt,Instant now);
     void removeReceptionPlan(Remessa remessa,Assunto subject,Instant now);

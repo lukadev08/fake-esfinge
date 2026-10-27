@@ -30,7 +30,7 @@ public class Composition {
     @Bean br.dev.luka.esfinge.remessas.application.port.in.Remessas remessas(Authentication authentication, DataSource source, Clock clock, br.dev.luka.esfinge.cenarios.application.port.in.InspectScenario inspection) {
         return new br.dev.luka.esfinge.remessas.application.RemessaService(authentication,
                 new br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcRemessaRepository(source),
-                new br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcTransactions(source), clock, inspection);
+                new br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcTransactions(source), clock, inspection,new br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcProcessingRepository(source));
     }
     @Bean br.dev.luka.esfinge.remessas.application.port.in.Processamento processamento(Authentication auth,DataSource source,Clock clock,
             br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcBusinessClock time,SimulatorSettings settings,
