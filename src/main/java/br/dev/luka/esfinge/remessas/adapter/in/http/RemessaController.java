@@ -51,13 +51,15 @@ public final class RemessaController {
         var body=new FinalizationPayload().read(request.getInputStream().readAllBytes());
         remessas.finish(token,body.key(),body.totals());
     }
-    public record ConsultResponse(String situacao,long identificadorRemessa,long numeroLote,java.time.Instant dataEnvio) {}
+    @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
+    public record ConsultResponse(String situacao,long identificadorRemessa,long numeroLote,java.time.Instant dataEnvio,Errors retornoErros) {}
+    public record Errors(List<DiagnosticResponse> erros) {}
     @GetMapping("/v6/tributario/consultarPorNumeroLote/{numeroLote}")
     public ConsultResponse consult(@PathVariable String numeroLote,HttpServletRequest request) throws IOException {
         String token=request.getHeader("auth_token"); authentication.authenticate(token);
         if (request.getInputStream().read()!=-1 || !request.getParameterMap().isEmpty()) throw invalid();
         var result=processing.consult(token,number(numeroLote));var lote=result.lote();
-        return new ConsultResponse(result.state().name(),lote.remessaId(),lote.number(),lote.receivedAt());
+        return new ConsultResponse(result.state().name(),lote.remessaId(),lote.number(),lote.receivedAt(),result.diagnostic()==null?null:new Errors(List.of(new DiagnosticResponse(result.diagnostic().codigo(),result.diagnostic().mensagem(),result.diagnostic().registro()))));
     }
     static long number(String number) {
         if (!number.matches("-?[0-9]+")) throw invalid();

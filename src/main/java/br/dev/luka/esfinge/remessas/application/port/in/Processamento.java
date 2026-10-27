@@ -9,5 +9,8 @@ public interface Processamento {
     Processing.Configuration configuration(String adminKey);
     Processing.Configuration configure(String adminKey,Processing.Mode mode,long latencyMillis);
     Processing.Advanced advance(String adminKey,long millis,int steps);
+    Processing.FailurePlan failurePlan(String adminKey,long number);
+    Processing.FailurePlan planFailure(String adminKey,long number,Integer record);
+    void removeFailure(String adminKey,long number);
     void tick();
 }

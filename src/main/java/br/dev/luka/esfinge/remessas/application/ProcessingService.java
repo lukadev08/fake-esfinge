@@ -41,10 +41,20 @@ public final class ProcessingService implements Processamento {
         });
     }
     public Processing.Consultation consult(String token,long number) {
-        return transactions.execute(()->{var lot=remessas.consult(token,number);return new Processing.Consultation(lot,repository.state(lot.number()));});
+        return transactions.execute(()->{var lot=remessas.consult(token,number);return new Processing.Consultation(lot,repository.state(lot.number()),repository.diagnostic(lot.number()));});
     }
     public Processing.Snapshot inspect(String adminKey,long number) {
-        return transactions.execute(()->{var received=remessas.inspect(adminKey,number);long lot=received.lote().number();return new Processing.Snapshot(received,repository.state(lot),repository.processed(lot),repository.effective(lot));});
+        return transactions.execute(()->{var received=remessas.inspect(adminKey,number);long lot=received.lote().number();return new Processing.Snapshot(received,repository.state(lot),repository.processed(lot),repository.effective(lot),repository.isActive(lot),repository.diagnostic(lot));});
+    }
+    public Processing.FailurePlan failurePlan(String key,long number) {
+        authorize(key);return transactions.execute(()->{var lot=remessas.inspect(key,number).lote();return repository.failurePlan(lot.number(),scenario,repository.generation(scenario)).orElseThrow(()->new RemessaFailure(NOT_FOUND));});
+    }
+    public Processing.FailurePlan planFailure(String key,long number,Integer record) {
+        authorize(key);if(number<=0 || record!=null && record<0) throw new RemessaFailure(INVALID_REQUEST);
+        return transactions.execute(()->{var lot=remessas.inspect(key,number).lote();if(record!=null && record>=lot.records()) throw new RemessaFailure(INVALID_REQUEST);repository.planFailure(lot,repository.generation(scenario),record,clock.instant());return new Processing.FailurePlan(number,record);});
+    }
+    public void removeFailure(String key,long number) {
+        authorize(key);transactions.execute(()->{var lot=remessas.inspect(key,number).lote();repository.removeFailure(lot,repository.generation(scenario),clock.instant());return null;});
     }
     private void authorize(String key) {if(!inspection.inspect(key).scenario().equals(scenario)) throw new RemessaFailure(NOT_FOUND);}
     public synchronized Processing.Configuration configuration(String key) {authorize(key);return transactions.execute(()->repository.configuration(scenario,clock.instant()));}
@@ -70,6 +80,8 @@ public final class ProcessingService implements Processamento {
         });
         if(candidate==null) return false;
         if(candidate.work().state()==Processing.State.RECEBIDO) return candidate.begun();
+        if(transactions.execute(()->repository.failurePlan(candidate.work().loteId(),scenario,candidate.work().geracao()).isPresent()))
+            return transactions.execute(()->repository.fail(candidate.work(),clock.instant()));
         var records=processor.process(candidate.lote());
         return transactions.execute(()->repository.complete(candidate.work(),records,clock.instant()));
     }

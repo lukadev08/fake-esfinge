@@ -59,7 +59,7 @@ Sem mensagens arbitrárias, regex de payload ou sorteio/infraestrutura novos.
 | Conclusão do alvo com plano da geração | LOTE_DESCARTADO, ativo0, diagnóstico SIM_ERRO_INJETADO, registro configurado/null; remover dados ativos e registrar evento |
 | Seguintes não concluídos do mesmo assunto | ABORTADO_ERRO_LOTE_ANTERIOR, ativo0, diagnóstico próprio SIM_ABORTADO_ERRO_LOTE_ANTERIOR com registro null; dados ativos removidos, controle/evento conservados |
 | Anteriores válidos / posteriores já concluídos / outros assuntos | Conteúdo/estado/efeitos preservados; pendentes de outros assuntos seguem o motor |
-| Consultar terminais | HTTP200, quatro campos contratuais mais retornoErros.erros com codigo/mensagem/registro; nenhum avanço de tarefa/relógio |
+| Consultar terminais | HTTP 200, quatro campos contratuais mais retornoErros.erros com codigo/mensagem/registro; nenhum avanço de tarefa/relógio |
 | Consultar estados bons | Exatamente o envelope atual, sem retornoErros nem campo null extra |
 | Inspecionar removido | Ativo false; contagens/listas ativas vazias; originais históricos, hash/bytes/diagnóstico/eventos distinguíveis |
 | Disparar só históricos / finalizar sem ativos | 409 sem sucesso vazio |
@@ -110,7 +110,7 @@ remessa fechada continua sem renovar atividade. Consulta nunca avança processam
   disparar/avançar, consultar200 com descarte/diagnóstico e aborto seguinte;
   conferir dados ativos versus arquivo histórico, anteriores e outro assunto.
 - Plano estrito: auth, cenário, índice0/último/null/fora/negativo/tipo/duplicatas,
-  PUT/DELETE antes do início e409 depois, reinício e geração. Nenhuma alteração
+  PUT/DELETE antes do início e 409 depois, reinício e geração. Nenhuma alteração
   de payload, atividade ou dados em rejeições; GET não avança nem grava evento.
 - Primeiro/intermediário/último lote, vários assuntos/UGs/envios, lotes posteriores
   fora do snapshot ou EM_PROCESSAMENTO, precedentes/sucessos preservados; índice
@@ -130,3 +130,18 @@ Focais `-Dtest=... test`; um verify do executor e clean verify do supervisor,
 sem Maven concorrente; RTK/proxy, exit codes/diagnósticos/handles preservados.
 Manifesto marca injeção como aproximação e T04 fiscal não implementado. Sem aceite
 humano #8/E1, T01/E3, recuperação integral ou homologação por estes ensaios.
+
+## Resultado local
+
+Implementação concluída. Reviewer encontrou P2 de objetos do núcleo usados em
+DTOs HTTP; corretor separado criou mapeamentos explícitos no adaptador. Mesmo
+reviewer aprovou a correção e o conjunto, sem achados materiais remanescentes.
+Supervisor confirmou 186 testes no clean verify (21,608s) e 1.555 verificações na
+imagem final V10, incluindo upgrade V9 real, reinícios, conteúdo/ativos/histórico
+e execução automática/disputa manual. Preparação V9: 105 verificações + 3 de snapshot,
+separadas. [Evidência completa](../docs/evidencias/issue-11.md) com hashes e limites.
+
+Containers removidos; dois volumes fictícios preservados até autorização específica.
+[Rascunho do PR](pr-issue-11.md) pronto; nenhum push/PR/merge da #11. #8/E1/T01/E3
+seguem pendentes. Após integração, #12 depende de #10 e #11 para recuperação por
+descarte de assunto/reenvio; não implementada nesta fatia.

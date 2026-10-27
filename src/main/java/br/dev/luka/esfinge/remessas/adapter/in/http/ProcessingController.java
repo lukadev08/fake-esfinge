@@ -20,6 +20,7 @@ public final class ProcessingController {
     public ProcessingController(Processamento processing,br.dev.luka.esfinge.autenticacao.application.port.in.Authentication authentication) {this.processing=processing;this.authentication=authentication;}
     public record StartResponse(String situacao,java.time.Instant dataEnvio,long identificadorRemessaOnline) {}
     public record ConfigurationResponse(String modo,long latenciaMilissegundos,java.time.Instant instante) {}
+    public record FailurePlanResponse(long numeroLote,Integer registro) {}
     public record AdvanceResponse(java.time.Instant instante,int passosExecutados) {}
     @PostMapping("/v6/tributario/iniciar-processamento")
     public StartResponse start(HttpServletRequest request) throws IOException {
@@ -49,15 +50,38 @@ public final class ProcessingController {
         var result=processing.advance(key,integer(body.get("milissegundos")),(int)steps);
         return new AdvanceResponse(result.instante(),result.passosExecutados());
     }
+    @GetMapping("/__simulator/falhas/processamento/{numeroLote}")
+    public FailurePlanResponse failurePlan(@PathVariable String numeroLote,HttpServletRequest request) throws IOException {
+        String key=request.getHeader("X-Simulator-Key");processing.configuration(key);empty(request);
+        var result=processing.failurePlan(key,positive(numeroLote));
+        return new FailurePlanResponse(result.numeroLote(),result.registro());
+    }
+    @PutMapping("/__simulator/falhas/processamento/{numeroLote}")
+    public FailurePlanResponse planFailure(@PathVariable String numeroLote,HttpServletRequest request) throws IOException {
+        String key=request.getHeader("X-Simulator-Key");processing.configuration(key);
+        var value=body(request,Set.of("registro"),true).get("registro");Integer record=null;
+        if(!value.isNull()) {if(!value.isIntegralNumber() || !value.canConvertToInt() || value.intValue()<0) throw RemessaController.invalid();record=value.intValue();}
+        var result=processing.planFailure(key,positive(numeroLote),record);
+        return new FailurePlanResponse(result.numeroLote(),result.registro());
+    }
+    @DeleteMapping("/__simulator/falhas/processamento/{numeroLote}")
+    public void removeFailure(@PathVariable String numeroLote,HttpServletRequest request) throws IOException {
+        String key=request.getHeader("X-Simulator-Key");processing.configuration(key);empty(request);processing.removeFailure(key,positive(numeroLote));
+    }
+    private void empty(HttpServletRequest request) throws IOException {if(request.getQueryString()!=null || !request.getParameterMap().isEmpty() || request.getInputStream().read()!=-1) throw RemessaController.invalid();}
+    private long positive(String value) {long number=RemessaController.number(value);if(number<=0) throw RemessaController.invalid();return number;}
     private ConfigurationResponse response(Processing.Configuration config) {return new ConfigurationResponse(config.modo().name(),config.latenciaMilissegundos(),config.instante());}
     private JsonNode body(HttpServletRequest request,Set<String> fields) throws IOException {
-        if(!request.getParameterMap().isEmpty()) throw RemessaController.invalid();
+        return body(request,fields,false);
+    }
+    private JsonNode body(HttpServletRequest request,Set<String> fields,boolean nullable) throws IOException {
+        if(request.getQueryString()!=null || !request.getParameterMap().isEmpty()) throw RemessaController.invalid();
         try {
             var type=org.springframework.http.MediaType.parseMediaType(request.getContentType());
             if(!type.getType().equalsIgnoreCase("application") || !type.getSubtype().equalsIgnoreCase("json") || (type.getCharset()!=null && !type.getCharset().equals(StandardCharsets.UTF_8))) throw RemessaController.invalid();
             String text=StandardCharsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT).onUnmappableCharacter(CodingErrorAction.REPORT).decode(ByteBuffer.wrap(request.getInputStream().readAllBytes())).toString();
             var root=json.readTree(text);if(root==null || !root.isObject() || root.size()!=fields.size()) throw RemessaController.invalid();
-            for(String name:fields) if(!root.hasNonNull(name)) throw RemessaController.invalid();return root;
+            for(String name:fields) if(!root.has(name) || !nullable && !root.hasNonNull(name)) throw RemessaController.invalid();return root;
         } catch(IllegalArgumentException|IOException failure) {throw RemessaController.invalid();}
     }
     private long integer(JsonNode value) {

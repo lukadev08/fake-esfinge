@@ -48,6 +48,48 @@ class ProcessamentoHttpTest {
         .content("{\"milissegundos\":"+millis+",\"passos\":"+steps+"}"));}
     ResultActions consult(String token,long id) throws Exception {return http.perform(get("/v6/tributario/consultarPorNumeroLote/"+id).header("auth_token",token));}
     JsonNode inspect(long id) throws Exception {return json.readTree(http.perform(get("/__simulator/lotes/"+id).header("X-Simulator-Key",ADMIN)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString());}
+    @Test void erroIntermediarioDescartaInteiroEAbortaSeguintesSemAtingirOutroAssunto() throws Exception {
+        configure("{\"modo\":\"MANUAL\",\"latenciaMilissegundos\":0}").andExpect(status().isOk());
+        String token=token("0001"),key=open(token,202601);
+        long first=receive(token,key,RemessaHttpTest.PAYLOAD),target=receive(token,key,CreditoHttpTest.PAYLOAD),later=receive(token,key,CreditoHttpTest.PAYLOAD),other=receive(token,key,PrazoHttpTest.PAYLOAD);
+        http.perform(put("/__simulator/falhas/processamento/"+target).header("X-Simulator-Key",ADMIN).contentType("application/json").content("{\"registro\":0}"))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.registro").value(0));
+        start(token,key).andExpect(status().isOk());advance(0,20).andExpect(status().isOk());
+        consult(token,target).andExpect(status().isOk()).andExpect(jsonPath("$.situacao").value("LOTE_DESCARTADO")).andExpect(jsonPath("$.retornoErros.erros[0].codigo").value("SIM_ERRO_INJETADO"));
+        consult(token,later).andExpect(status().isOk()).andExpect(jsonPath("$.situacao").value("ABORTADO_ERRO_LOTE_ANTERIOR"));
+        for(long id:new long[]{target,later}) {var snapshot=inspect(id);assertFalse(snapshot.get("ativo").asBoolean());assertEquals(0,snapshot.get("recebidos").asInt());assertEquals(1,snapshot.get("recebidosHistoricos").asInt());assertEquals(0,snapshot.get("efetivos").asInt());assertTrue(snapshot.get("registros").isEmpty());}
+        for(long id:new long[]{first,other}) consult(token,id).andExpect(status().isOk()).andExpect(jsonPath("$.situacao").value("PROCESSADO_SUCESSO")).andExpect(jsonPath("$.retornoErros").doesNotExist());
+    }
+    @Test void planoAdministrativoEstritoENullExplicitoSemMutarAtividade() throws Exception {
+        String token=token("0001"),key=open(token,202601);long id=receive(token,key,RemessaHttpTest.PAYLOAD);String route="/__simulator/falhas/processamento/"+id;
+        var jdbc=new org.springframework.jdbc.core.JdbcTemplate(source);var before=jdbc.queryForList("SELECT atividade FROM remessas");
+        http.perform(put(route).header("auth_token",token).contentType("application/json").content("{\"registro\":0}")).andExpect(status().isUnauthorized());
+        for(String body:new String[]{"{}","{\"registro\":-1}","{\"registro\":1}","{\"registro\":0.0}","{\"registro\":true}","{\"registro\":\"0\"}","{\"registro\":2147483648}","{\"registro\":0,\"extra\":1}","{\"registro\":0,\"registro\":0}","{\"registro\":0} {}"})
+            http.perform(put(route).header("X-Simulator-Key",ADMIN).contentType("application/json").content(body)).andExpect(status().isBadRequest());
+        http.perform(get(route).header("X-Simulator-Key",ADMIN)).andExpect(status().isNotFound());
+        http.perform(put(route).header("X-Simulator-Key",ADMIN).contentType("application/json").content("{\"registro\":null}")).andExpect(status().isOk());
+        var plan=json.readTree(http.perform(get(route).header("X-Simulator-Key",ADMIN)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString());assertEquals(2,plan.size());assertTrue(plan.has("registro"));assertTrue(plan.get("registro").isNull());
+        int events=inspect(id).get("eventos").size();http.perform(get(route).header("X-Simulator-Key",ADMIN)).andExpect(status().isOk());assertEquals(events,inspect(id).get("eventos").size());assertEquals(before,jdbc.queryForList("SELECT atividade FROM remessas"));
+        http.perform(get(route).header("X-Simulator-Key",ADMIN).param("extra","1")).andExpect(status().isBadRequest());
+        http.perform(delete(route).header("X-Simulator-Key",ADMIN)).andExpect(status().isOk()).andExpect(content().string(""));http.perform(delete(route).header("X-Simulator-Key",ADMIN)).andExpect(status().isNotFound());
+        start(token,key).andExpect(status().isOk());http.perform(put(route).header("X-Simulator-Key",ADMIN).contentType("application/json").content("{\"registro\":null}")).andExpect(status().isOk());advance(0,1).andExpect(status().isOk());
+        http.perform(put(route).header("X-Simulator-Key",ADMIN).contentType("application/json").content("{\"registro\":0}")).andExpect(status().isConflict());http.perform(delete(route).header("X-Simulator-Key",ADMIN)).andExpect(status().isConflict());
+        advance(1000,10).andExpect(status().isOk());var terminal=json.readTree(consult(token,id).andExpect(status().isOk()).andReturn().getResponse().getContentAsString());var error=terminal.get("retornoErros").get("erros").get(0);assertEquals(3,error.size());assertTrue(error.has("registro"));assertTrue(error.get("registro").isNull());
+        http.perform(delete(route).header("X-Simulator-Key",ADMIN)).andExpect(status().isConflict());
+    }
+    static java.util.stream.Stream<Arguments> injectedFailures() {return java.util.stream.Stream.of("FALHA_PROCESSAMENTO_CONFIGURADA","FALHA_PROCESSAMENTO_REMOVIDA","LOTE_DESCARTADO","ABORTADO_ERRO_LOTE_ANTERIOR").flatMap(type->java.util.stream.Stream.of(Arguments.of(type,false),Arguments.of(type,true)));}
+    @ParameterizedTest @MethodSource("injectedFailures")
+    void falhasAdministrativasEGrupoRetornam500SanitizadoComRollback(String event,boolean commit,CapturedOutput logs) throws Exception {
+        configure("{\"modo\":\"MANUAL\",\"latenciaMilissegundos\":0}").andExpect(status().isOk());String token=token("0001"),key=open(token,202601);long id=receive(token,key,SaldoHttpTest.PAYLOAD);receive(token,key,SaldoHttpTest.PAYLOAD);String route="/__simulator/falhas/processamento/"+id;
+        if(!event.equals("FALHA_PROCESSAMENTO_CONFIGURADA")) http.perform(put(route).header("X-Simulator-Key",ADMIN).contentType("application/json").content("{\"registro\":0}")).andExpect(status().isOk());
+        if(!event.startsWith("FALHA_")) {start(token,key).andExpect(status().isOk());advance(0,1).andExpect(status().isOk());}
+        var jdbc=new org.springframework.jdbc.core.JdbcTemplate(source);if(commit) {jdbc.execute("CREATE TABLE falha_commit(id INTEGER REFERENCES remessas(id) DEFERRABLE INITIALLY DEFERRED)");jdbc.execute("CREATE TRIGGER impedir AFTER INSERT ON remessa_eventos WHEN NEW.tipo='"+event+"' BEGIN INSERT INTO falha_commit VALUES(-1); END");}else jdbc.execute("CREATE TRIGGER impedir BEFORE INSERT ON remessa_eventos WHEN NEW.tipo='"+event+"' BEGIN SELECT RAISE(ABORT,'falha ficticia'); END");
+        var before=JdbcFinalizationTest.snapshot(jdbc);ResultActions response;
+        if(event.equals("FALHA_PROCESSAMENTO_CONFIGURADA")) response=http.perform(put(route).header("X-Simulator-Key",ADMIN).contentType("application/json").content("{\"registro\":0}"));else if(event.equals("FALHA_PROCESSAMENTO_REMOVIDA"))response=http.perform(delete(route).header("X-Simulator-Key",ADMIN));else response=advance(0,1);
+        String body=response.andExpect(status().isInternalServerError()).andExpect(jsonPath("$.codigo").value("SIM_ERRO_INTERNO")).andReturn().getResponse().getContentAsString();assertEquals(before,JdbcFinalizationTest.snapshot(jdbc));
+        for(String secret:new String[]{token,key,"senha-ficticia-a","SELECT ","INSERT ","Exception","stackTrace"}){assertFalse(body.contains(secret));assertFalse(logs.getAll().contains(secret));}
+        jdbc.execute("DROP TRIGGER impedir");
+    }
     @Test void disparoEAvancoManualPersistemEstadosERegistrosSemConsultaProcessar() throws Exception {
         String token=token("0001"),key=open(token,202601);long id=receive(token,key,RemessaHttpTest.PAYLOAD);
         var started=json.readTree(start(token,key).andExpect(status().isOk()).andExpect(jsonPath("$.situacao").value("RECEBIDO")).andReturn().getResponse().getContentAsString());
