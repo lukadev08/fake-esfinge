@@ -1658,3 +1658,35 @@ humano #8/E1, T01/E3 e CI remoto seguem pendentes; merge não comprova esses mar
 Concluir exploração e plano de transições da #10, implementar em equipe própria
 com TDD/revisão/supervisão, mantendo publicação da nova fatia sob autorização
 específica. Solicitante conserva a pendência interna #8/E1.
+
+## 2026-10-26 — Preparar implementação da #10
+
+Referência: continuação técnica E2 autorizada e
+[issue #10](https://github.com/lukadev08/fake-esfinge/issues/10), após merge da #9.
+Situação: exploração/plano concluídos antes do código; implementação em seguida.
+
+### O que foi feito
+
+- `grupo10_explorer`, identificado GPT-6 Luna/médio, concluiu leitura do contrato,
+  arquitetura, chamadas e persistência. Supervisor leu fontes pertinentes e
+  reconfirmou #10 aberta, sem comentários, com #9 completed e #8/E1 pendente.
+- [Plano da #10](.scratch/issue-10-plan.md) define17 totalizadores, precondições,
+  fechamento/transições, histórico, migração V9 e fatias TDD. Escolhido marcador
+  `finalizada_em` com índice parcial, preservando dados V8 e substituindo guardas
+  que dependiam só do estado legado. Sem reconstrução desnecessária de tabelas.
+- Planejados comparação numérica exata com linhas efetivas, erro409 sem efeitos,
+  sucesso200 vazio, consulta histórica sem renovar atividade e nova abertura
+  sem cota mensal. Recuperação e operações indisponíveis seguem explicitamente fora.
+- Comandos herdados inspecionados; nenhuma dependência/configuração nova necessária.
+  .DS_Store preexistentes preservados; nenhuma publicação da #10 autorizada.
+
+### O que deu errado
+
+Nenhuma falha executada. Estado ABERTO restrito pela V2 exigiu definir marcador
+persistido e revisar todas as guardas; não foi tratado como impedimento externo.
+Nenhum build/teste/código da #10 executado nesta preparação. E1 real permanece pendente.
+
+### Próximo passo
+
+Executor próprio implementar TDD da #10; revisão independente e correções delegadas,
+seguindo supervisão de suíte limpa e Docker no artefato final antes da publicação.
