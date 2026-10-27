@@ -15,7 +15,7 @@ final class LegacyRemessaRepository implements RemessaRepository {
     public java.util.Optional<Remessa> find(String key,String scenario,String ug) {
         return jdbc.query("SELECT id,chave,cenario,ug,competencia,abertura,atividade FROM remessas WHERE chave=? AND cenario=? AND ug=? AND estado='ABERTO'",
                 (r,n) -> new Remessa(r.getLong("id"),r.getString("chave"),r.getString("cenario"),r.getString("ug"),r.getInt("competencia"),
-                        Instant.parse(r.getString("abertura")),Instant.parse(r.getString("atividade")),null),key,scenario,ug).stream().findFirst();
+                        Instant.parse(r.getString("abertura")),Instant.parse(r.getString("atividade")),null,null),key,scenario,ug).stream().findFirst();
     }
     public Lote receive(Remessa remessa,ReceivedContent content,String hash,Instant now) {
         int order=jdbc.queryForObject("SELECT COALESCE(MAX(ordem),0)+1 FROM lotes WHERE remessa_id=?",Integer.class,remessa.id());

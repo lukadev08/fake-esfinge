@@ -420,7 +420,8 @@ chave nova e preserva o histórico, sem cota mensal adicional nesta fatia.
 Reinício conserva o fechamento; falha de statement/COMMIT reverte a finalização.
 
 Consulte [evidência da #10](docs/evidencias/issue-10.md). Descarte por assunto e
-reenvio estão na fatia #12 abaixo; cancelamento, sem movimento e T17 seguem pendentes. Testes fictícios locais não encerram #8/E1, T01/E3 ou
+reenvio estão na fatia #12 abaixo; cancelamento integral está na #13. Sem movimento
+e T17 seguem pendentes. Testes fictícios locais não encerram #8/E1, T01/E3 ou
 homologação oficial. Publicação da #10 permanece sem autorização.
 
 
@@ -454,8 +455,8 @@ somente históricos não permitem disparo nem finalização. Reinício conserva 
 diagnósticos e terminais; rollback reverte o grupo inteiro, inclusive exclusões.
 
 Esta é injeção aproximada do simulador, sem regra fiscal/CON ou mensagem oficial.
-Recuperação por descarte de assunto/reenvio está na #12 abaixo; cancelamento,
-rota explícita de lote e reset seguem pendentes. Veja
+Recuperação por descarte de assunto/reenvio está na #12 abaixo; cancelamento
+integral está na #13. Rota explícita de lote e reset seguem pendentes. Veja
 [evidência da #11](docs/evidencias/issue-11.md); #8/E1, T01/E3 e homologação seguem
 pendentes. Publicação da #11 exige autorização específica.
 
@@ -491,6 +492,36 @@ sem deduplicação nem herança de plano antigo. Finalização considera somente
 ativos em sucesso e seus efetivos; sem ativos retorna409.
 
 Veja [evidência da #12](docs/evidencias/issue-12.md). Ensaios locais fictícios não
-encerram #8/E1, T01/E3 ou homologação. Cancelamento, descarte explícito de lote,
+encerram #8/E1, T01/E3 ou homologação. Descarte explícito de lote,
 resposta perdida, reset e expiração continuam fora desta fatia. Publicação/merge
 da #12 autorizados e concluídos no [PR #39](https://github.com/lukadev08/fake-esfinge/pull/39).
+
+## Cancelamento integral e nova chave — #13
+
+`POST /servicosGerais/cancelarEnvioParcial` exige `auth_token`, query exata
+`chavePacote` e corpo vazio. Retorna 200 com corpo exatamente vazio. Parâmetro
+ausente/vazio/duplicado/extra ou corpo não vazio retorna 400; token inválido ou
+expirado retorna 401 antes de efeitos; chave desconhecida/de outra UG/cenário,
+404. Repetição e chave finalizada/cancelada retornam 409 sem efeitos.
+
+O cancelamento alcança todos os assuntos do envio aberto, inclusive recebidos
+sem trabalho, agendados e `EM_PROCESSAMENTO`. Uma transação encerra a chave,
+remove dados ativos recebidos/processados/efetivos e inativa os lotes. Bytes,
+hash, quantidade original, controles, planos e eventos permanecem históricos;
+outras chaves, UGs, cenários e envios concluídos são preservados. Sucessos
+históricos mantêm `PROCESSADO_SUCESSO` sem diagnóstico inventado. Pendentes
+tornam-se `ABORTADO`, com `SIM_ENVIO_CANCELADO`, mensagem fixa
+`Envio cancelado no simulador` e `registro: null`; essa política é derivada.
+
+V11 distingue `cancelada_em` de `finalizada_em`, preservando V1–V10 e seus dados.
+Trabalhos capturados antes do cancelamento revalidam a chave na gravação e não
+reaplicam efeitos, inclusive após reinício. A geração de outros envios não muda.
+Todas as mutações na chave cancelada retornam 409. Consulta histórica autorizada
+continua 200, sem renovar atividade/eventos nem avançar processamento.
+
+Nova abertura para a mesma UG/competência retorna chave distinta e permite
+reenvio integral com novos IDs, sem deduplicação por hash ou herança de planos.
+Envio aberto sem lotes também pode ser cancelado; envio já finalizado não pode.
+Veja [evidência da #13](docs/evidencias/issue-13.md). Testes fictícios não encerram
+#8/E1, T01/E3 ou homologação. Cancelamento automático, resposta perdida, reset,
+expiração e regras fiscais ficam fora da fatia. Publicação da #13 não autorizada.

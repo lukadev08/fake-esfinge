@@ -6,7 +6,7 @@ import java.util.List;
 public final class Processing {
     private Processing() {}
     public enum Mode { MANUAL, AUTOMATICO }
-    public enum State { RECEBIDO, EM_PROCESSAMENTO, PROCESSADO_SUCESSO, LOTE_DESCARTADO, ABORTADO_ERRO_LOTE_ANTERIOR }
+    public enum State { RECEBIDO, EM_PROCESSAMENTO, PROCESSADO_SUCESSO, LOTE_DESCARTADO, ABORTADO_ERRO_LOTE_ANTERIOR, ABORTADO }
     public record Configuration(Mode modo,long latenciaMilissegundos,Instant instante) {}
     public record Started(String situacao,Instant dataEnvio,long identificadorRemessaOnline) {}
     public record Advanced(Instant instante,int passosExecutados) {}

@@ -14,5 +14,6 @@ public interface Processamento {
     Processing.FailurePlan planFailure(String adminKey,long number,Integer record);
     void removeFailure(String adminKey,long number);
     void discard(String token,String key,Assunto subject);
+    void cancel(String token,String key);
     void tick();
 }

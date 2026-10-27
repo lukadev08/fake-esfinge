@@ -1,0 +1,13 @@
+ALTER TABLE remessas ADD COLUMN cancelada_em TEXT;
+DROP INDEX remessa_aberta_unica;
+CREATE UNIQUE INDEX remessa_aberta_unica ON remessas(cenario,ug,competencia) WHERE estado='ABERTO' AND finalizada_em IS NULL AND cancelada_em IS NULL;
+CREATE TEMP TABLE trabalho_sequencia AS SELECT seq FROM sqlite_sequence WHERE name='processamento_trabalhos';
+ALTER TABLE processamento_trabalhos RENAME TO processamento_trabalhos_antigos;
+DROP INDEX trabalho_devido;
+CREATE TABLE processamento_trabalhos (id INTEGER PRIMARY KEY AUTOINCREMENT, lote_id INTEGER NOT NULL UNIQUE, remessa_id INTEGER NOT NULL, cenario TEXT NOT NULL, ug TEXT NOT NULL, geracao INTEGER NOT NULL, situacao TEXT NOT NULL CHECK(situacao IN ('RECEBIDO','EM_PROCESSAMENTO','PROCESSADO_SUCESSO','LOTE_DESCARTADO','ABORTADO_ERRO_LOTE_ANTERIOR','ABORTADO')), devido_segundos INTEGER NOT NULL, devido_nanos INTEGER NOT NULL CHECK(devido_nanos BETWEEN 0 AND 999999999), latencia_ms INTEGER NOT NULL CHECK(latencia_ms>=0), codigo TEXT, mensagem TEXT, registro INTEGER CHECK(registro>=0), FOREIGN KEY(lote_id,remessa_id,cenario,ug) REFERENCES lotes(numero,remessa_id,cenario,ug));
+INSERT INTO processamento_trabalhos(id,lote_id,remessa_id,cenario,ug,geracao,situacao,devido_segundos,devido_nanos,latencia_ms,codigo,mensagem,registro) SELECT id,lote_id,remessa_id,cenario,ug,geracao,situacao,devido_segundos,devido_nanos,latencia_ms,codigo,mensagem,registro FROM processamento_trabalhos_antigos;
+UPDATE sqlite_sequence SET seq=MAX(seq,COALESCE((SELECT seq FROM trabalho_sequencia),0)) WHERE name='processamento_trabalhos';
+DROP TABLE processamento_trabalhos_antigos;
+DROP TABLE trabalho_sequencia;
+CREATE INDEX trabalho_devido ON processamento_trabalhos(cenario,devido_segundos,devido_nanos,id);
+PRAGMA user_version=11;

@@ -119,3 +119,18 @@ Focais `-Dtest=... test`, verify do executor e clean verify da supervisão, sem 
 concorrente. RTK/proxy, exit codes e diagnósticos preservados. Cancelamento
 automático/SIM, resposta perdida, reset, expiração, regras fiscais e UI fora da #13.
 #8/E1, T01/E3 e homologação não comprovados; nenhum dado original será usado.
+
+## Execução concluída localmente — 27/10/2026
+
+Explorer reconferiu o plano sem conflito material. Executor próprio completou
+fatias TDD e reviewer independente aprovou sem achados materiais. Executor
+verify243 e supervisor clean verify243 verdes;26 relatórios, sem falhas/erros/
+ignorados. Imagem final V11 sem rede passou1.807 verificações: upgrade V10/16
+tabelas, cancelamento/nova chave/reenvio, reinício, SQLite exato e agendador
+automático. Preparação anterior270+3 é separada; primeira execução do cliente
+com expectativa de ID incorreta foi descartada da contagem e repetida integralmente.
+Evidência completa em [issue-13.md](../docs/evidencias/issue-13.md).
+
+V1–V10/fontes/schemas/build/dependências intactos; somente V11 nova. Containers
+removidos, três volumes fictícios preservados. #13 aberta; publicação/merge e
+exclusão dos volumes dependem de autorização específica. #8/E1/T01/E3 pendentes.
