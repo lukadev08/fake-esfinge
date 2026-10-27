@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.*;
 public final class RemessaController {
     private final Remessas remessas;
     private final Authentication authentication;
+    private final br.dev.luka.esfinge.remessas.application.port.in.Processamento processing;
     private final LotePayload payload=new LotePayload();
-    public RemessaController(Remessas remessas, Authentication authentication) { this.remessas=remessas; this.authentication=authentication; }
+    public RemessaController(Remessas remessas, Authentication authentication,br.dev.luka.esfinge.remessas.application.port.in.Processamento processing) { this.remessas=remessas; this.authentication=authentication;this.processing=processing; }
     public record OpenResponse(String chavePacote) {}
     @GetMapping("/v6/tributario/iniciarEnvio")
     public OpenResponse open(HttpServletRequest request) throws IOException {
@@ -43,8 +44,8 @@ public final class RemessaController {
     public ConsultResponse consult(@PathVariable String numeroLote,HttpServletRequest request) throws IOException {
         String token=request.getHeader("auth_token"); authentication.authenticate(token);
         if (request.getInputStream().read()!=-1 || !request.getParameterMap().isEmpty()) throw invalid();
-        var lote=remessas.consult(token,number(numeroLote));
-        return new ConsultResponse("RECEBIDO",lote.remessaId(),lote.number(),lote.receivedAt());
+        var result=processing.consult(token,number(numeroLote));var lote=result.lote();
+        return new ConsultResponse(result.state().name(),lote.remessaId(),lote.number(),lote.receivedAt());
     }
     static long number(String number) {
         if (!number.matches("-?[0-9]+")) throw invalid();

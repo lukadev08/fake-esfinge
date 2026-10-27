@@ -1,7 +1,7 @@
 ---
 title: "Simulador e-Sfinge Tributário"
 subtitle: "Planejamento do escopo de desenvolvimento"
-date: "23 de outubro de 2026 · versão 1.6"
+date: "26 de outubro de 2026 · versão 1.7"
 lang: pt-BR
 ---
 
@@ -15,7 +15,7 @@ Este documento entrega o planejamento de desenvolvimento. Não contém uma imple
 
 **Revisão documental de 23/10/2026, versão 1.5:** incorpora a rodada de pergunta/resposta e o plano de consolidação aprovado pelo usuário. O [contrato E0](contrato-e0.md) e o [pacote contratual](contratos/2026-v6-6.06/README.md) definem o contrato derivado inicial com fontes, schemas, exemplos e aproximações. Os [tickets locais](../.scratch/wayfinder-e0/map.md) preservam as respostas anteriores e a atualização. O solicitante confirmou 21.770 lançamentos de crédito no cliente 14 / 202609, encerrando a pendência documental de volume; o critério de E0 foi revisado com autorização do solicitante: roteiro e critérios ficam definidos em E0, com preparação da referência e conferência local em E3 por compliance, sem exigir fornecimento de SQL/estrutura do banco/resultados. E0 está concluído documentalmente para o recorte; aceite do piloto permanece pendente. O tamanho de referência foi corrigido pelo solicitante de 1.000 para 10.000 por lote, por lembrança de outro cliente com cerca de 240 mil registros; a previsão de 3 lotes ainda exige execução. HTML, PDF e DOCX não foram regenerados e representam versão anterior.
 
-**Restrições confirmadas pelo usuário:** integrador em Java 21 e **Spring Boot 3.5.10**, URL e credenciais configuráveis; operação inicial do simulador em Docker **Linux amd64**, uma instância e volume local por execução. Não há aplicação nem ensaio de compatibilidade. As confirmações são por relato, não inspeção independente do código do cliente.
+**Restrições confirmadas pelo usuário:** integrador em Java 21 e **Spring Boot 3.5.10**, URL e credenciais configuráveis; operação inicial do simulador em Docker **Linux amd64**, uma instância e volume local por execução. Na consolidação de 23/10/2026, não havia aplicação nem ensaio de compatibilidade. As confirmações são por relato, não inspeção independente do código do cliente.
 
 **Recorte funcional confirmado:** seis assuntos, em lotes com uma única lista não vazia, omitindo as demais. Um envio pertence a uma UG/competência; a UG vem da autenticação e a `chavePacote` é retornada pela abertura, sem geração/transformação no cliente. Envia todos os lotes do assunto, dispara e consulta cada um até `PROCESSADO_SUCESSO` antes do próximo assunto; finaliza uma vez ao término. `situacao_lote` é campo interno; o JSON usa `situacao`. A premissa de um assunto por remessa foi retirada em 22/10. A equivalência operacional remessa/envio/chave está definida para este contrato derivado por relato em 23/10; comprovação independente pertence aos ensaios futuros. Cancelamento integral do envio aberto exige nova chave; descarte de assunto preserva chave e outros assuntos. Descarte explícito de lote fica fora do contrato inicial, preservado o descarte automático em erro.
 
@@ -25,6 +25,11 @@ Este documento entrega o planejamento de desenvolvimento. Não contém uma imple
 painel web local (RF13, seção 4.4 e E5), por solicitação do usuário. Sua
 implementação depende da conclusão do backend no recorte contratado, com saídas
 E1–E4 comprovadas. A inclusão é documental; não inicia implementação.
+
+**Revisão de sequência de 26/10/2026, versão 1.7:** registra a pendência do aceite
+humano E1 e a autorização para continuar somente o desenvolvimento técnico E2,
+nos limites da [seção 13.1](#131-pendência-e1-e-continuidade-de-e2). HTML, PDF e DOCX
+permanecem nas versões anteriores.
 
 # 2. Problema e evidências verificadas
 
@@ -417,10 +422,39 @@ não implementadas. E3 pendente ou saída E4 não demonstrada mantém E5 bloquea
 
 O solicitante confirmou que gerará o esperado por SQL, executará o piloto e conferirá os resultados. Permanecem sugeridas: desenvolvimento cuida do simulador e contrato; responsável pelo integrador esclarece chamadas; especialista tributário seleciona regras na evolução. O preparo da entrada continua externo ao simulador. As estimativas acima são do MVP completo original e devem ser revistas após fechar E0 para o recorte inicial; não são prazo atualizado desta revisão.
 
-Situação atual: contrato derivado inicial consolidado, fontes/schemas reproduzíveis e nenhum ensaio executado. E0 está concluído documentalmente no recorte aprovado após revisão autorizada do critério de saída; preparação concreta da referência e conferência local continuam pendentes de E3. E1–E4 não foram implementados. Guias operacionais, imagem/Compose, CI e relatórios reais serão produzidos nas etapas correspondentes, a partir dos comandos e artefatos que existirem.
+Histórico da consolidação de 23/10/2026: contrato derivado inicial consolidado, fontes/schemas reproduzíveis e nenhum ensaio executado naquela entrega. E0 estava concluído documentalmente no recorte aprovado após revisão autorizada do critério de saída; preparação concreta da referência e conferência local permaneciam pendentes de E3. E1–E4 ainda não tinham sido implementados. Guias operacionais, imagem/Compose, CI e relatórios reais seriam produzidos nas etapas correspondentes, a partir dos comandos e artefatos existentes.
+
+Atualização de 26/10/2026: as fatias técnicas E1 #1–#7 estão implementadas e
+exercitadas localmente, conforme o [manifesto de cobertura](cobertura.md).
+A validação humana da #8 permanece pendente. Esta revisão documental não
+implementa E2; a continuidade autorizada está delimitada na seção 13.1 abaixo.
 
 RF13/E5 está incluído e não implementado; sua dependência de conclusão do backend
 permanece aberta. O painel não antecipa nem encerra aceite E3/T01.
+
+## 13.1 Pendência E1 e continuidade de E2
+
+**Decisão vigente do solicitante em 26/10/2026:** após informar que não teve tempo
+de executar o ensaio E1, autorizou registrar a pendência e continuar o desenvolvimento
+técnico E2. Essa decisão substitui a decisão anterior da mesma data que mantinha
+o início de E2 aguardando o aceite E1.
+
+A [issue #8](https://github.com/lukadev08/fake-esfinge/issues/8) continua aberta.
+O solicitante permanece responsável pelo ensaio no ambiente interno controlado e
+pelo aceite expresso de E1, ambos **pendentes, sem data estabelecida**. O
+[roteiro da #8](../.scratch/issue-8-roteiro.md) mantém os critérios desse aceite.
+
+A liberação abrange somente o desenvolvimento técnico E2, começando pela
+[issue #9](https://github.com/lukadev08/fake-esfinge/issues/9), respeitando as demais
+dependências e o ciclo de equipe por tarefa: explorer → executor → reviewer,
+correções delegadas quando necessárias e testes verdes verificados pela supervisão.
+A próxima execução da #9 deve começar pelas tabelas de transição e abordar modos
+manual/automático, disparo explícito e estados persistidos, conforme seu escopo.
+
+Esta exceção local supera somente o bloqueio da #8 para iniciar tecnicamente a
+#9. O rastreador GitHub permanece inalterado nesta revisão: a #9 ainda registra
+`Blocked by: #8`; nenhuma dependência remota foi removida. A liberação não aprova
+E1, não encerra #8/T01/E3 e não dispensa os aceites de E4/E5 nem altera seus critérios.
 
 # 14. Critérios de conclusão do MVP
 

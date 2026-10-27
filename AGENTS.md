@@ -39,6 +39,8 @@ tarefa autorizada. E0 deve fechar o inventário do cliente e o contrato das
 operações prioritárias antes da implementação compatível. Registre lacunas e
 peça os insumos necessários quando afetarem o comportamento; prossiga apenas
 com trabalho independente delas.
+Para iniciar E2 com a #8 pendente, consulte a exceção autorizada na
+[seção 13.1 do planejamento](docs/planejamento-simulador-tributario.md#131-pendência-e1-e-continuidade-de-e2).
 
 Java 21 e Spring Boot 3.5.10 descrevem o integrador confirmado por relato do
 usuário em 23/10/2026, sem inspeção independente do cliente. A stack adotada para

@@ -1426,3 +1426,198 @@ nova evidência de execução interna do solicitante.
 Publicar e integrar o PR documental autorizado com head verificado, mantendo
 #8 aberta. A implementação E2 aguarda execução/aceite E1 ou decisão expressa
 do solicitante permitindo antecipá-la; não inferir aceite nem encerrar #8.
+
+## 2026-10-25 — Publicar e integrar o roteiro de apoio ao aceite E1
+
+Referência: autorização do usuário para o próximo merge/publicação com testes
+verdes, [PR #35](https://github.com/lukadev08/fake-esfinge/pull/35) e issue #8.
+Situação: publicação documental concluída; #8 aberta; decisão sobre antecipar E2 pendente.
+
+### O que foi feito
+
+- Commit local `2bc1444` salvou o corpo exato de PR e a validação supervisionada.
+  Publicada `issue-8-aceite-e1` e criado PR #35 contra `main`, com `Refs #8`, sem
+  fechamento automático ou afirmação de saída E1. PR anexado à tarefa.
+- Conferidos head esperado, base e merge possível. Merge normal autorizado
+  gerou `ddf84875a5afd5a336537ca631afe04ef9ebfd1c`; PR merged e `main` remoto
+  reconfirmados. #8 continua aberta, sem comentários ou resultado real fornecido.
+- Nenhum status de CI publicado; verdes locais: 105 testes no novo verify
+  supervisionado/11,123s e verificações documentais. Fonte/testes/build/Dockerfile
+  permanecem iguais a `53814c6`. Não foi repetido o ensaio Docker da #7.
+- Branch local sincronizada por fast-forward com `origin/main`. Atualizado o
+  registro do PR, mantendo o roteiro e seus cinco critérios PENDENTES.
+
+### O que deu errado
+
+Nenhuma falha na publicação ou integração, sem contorno de proteção. A autorização
+de continuação foi recebida, mas o ensaio/aceite real E1 segue sem evidência e a
+pergunta específica sobre adiar a dependência E1→E2 permanece sem resposta.
+Não iniciada implementação E2, não fechado o aceite #8, sem implantação ou
+publicação de imagem. Este registro posterior ao merge permanece local.
+
+### Próximo passo
+
+Receber conclusão sanitizada e aceite E1 após execução interna, ou decisão
+expressa permitindo antecipar E2 com #8 pendente. Na segunda hipótese, registrar
+a exceção de sequência e retomar a próxima implementação em equipe própria,
+preservando #8/T01/E3 como pendentes e supervisão/revisão/testes por tarefa.
+
+## 2026-10-26 — Manter E2 aguardando o aceite humano E1
+
+Referência: resposta expressa do solicitante “Manter E2 aguardando o aceite E1”
+à definição sobre antecipar E2 com a [issue #8](https://github.com/lukadev08/fake-esfinge/issues/8) pendente.
+Situação: sequência E1→E2 mantida; execução interna e aceite humano E1 pendentes.
+
+### O que foi feito
+
+- Registrada a decisão de não antecipar E2. #8 reconfirmada aberta; nenhuma
+  conclusão do ensaio real ou aprovação de saída E1 foi fornecida.
+- Atualizado somente o registro local da autorização. Roteiro revisado permanece
+  disponível em [.scratch/issue-8-roteiro.md](.scratch/issue-8-roteiro.md), com os
+  critérios de execução e aceite pendentes; corpo publicado do PR #35 preservado.
+
+### O que deu errado
+
+Nenhuma falha. Não há impedimento técnico novo; a implementação aguarda o marco
+humano mantido pelo solicitante. Sem mudanças na aplicação, novos testes,
+publicação ou início de E2 nesta decisão.
+
+### Próximo passo
+
+Solicitante executar e conferir o ensaio no ambiente interno controlado. Quando
+permitido, retornar somente versão do artefato/contrato, conclusão sanitizada,
+lacunas e decisão expressa sobre E1. Retomar E2 após o aceite, mantendo detalhes
+e dados originais internos e sem declarar T01/E3 integral por esse marco.
+
+## 2026-10-26 — Registrar pendência E1 e autorizar continuidade técnica E2
+
+Referência: solicitação do usuário para registrar a validação interna E1 ainda
+não executada e direcionar E2, alterando apenas a documentação relacionada.
+Situação: #8/E1 pendente; início técnico de E2 autorizado; documentação revisada.
+
+### O que foi feito
+
+- A nova decisão substitui a orientação anterior, registrada na mesma data, de
+  manter E2 aguardando o aceite E1. A exceção de sequência está centralizada na
+  [seção 13.1 do planejamento](docs/planejamento-simulador-tributario.md#131-pendência-e1-e-continuidade-de-e2),
+  revisão 1.7. E1 conserva critérios, responsável solicitante e execução no
+  ambiente interno controlado, sem data definida ou aprovação presumida.
+- Direcionada a próxima implementação para a #9, começando pelas tabelas de
+  transição, com equipe própria, revisão, correções delegadas e testes verificados.
+  Mantidos os demais critérios e dependências de aceite E1/T01/E3/E4/E5.
+- Alinhados ponteiros em AGENTS, README, manifesto e roteiro da #8; atualizado
+  somente o registro atual fora do corpo publicado do PR #35. Histórico anterior,
+  referência do artefato E1 e cinco critérios PENDENTES do roteiro preservados.
+- Grupo8 retomado para esta atualização documental: explorer GPT-6 Luna/médio,
+  executor GPT-6.1 Sol/baixo e reviewer GPT-6.1 Sol/médio, identificados. Revisão
+  aprovada sem achados materiais. Aplicado `writing-for-agents` ao ajuste de
+  AGENTS, com ponteiro curto para a decisão central.
+- Verificações estáticas aprovadas: sete referências válidas à seção 13.1,
+  versão/data do planejamento, whitespace, cinco critérios E1 PENDENTES e corpo
+  publicado do PR #35 idêntico ao anterior. Diff restrito aos sete documentos.
+- GitHub consultado somente para leitura: #8 aberta `ready-for-human`; #9 aberta
+  `ready-for-agent`, sem comentários e ainda com `Blocked by: #8`. A exceção
+  documental autoriza seu início técnico; nenhuma dependência remota foi removida.
+
+### O que deu errado
+
+Nenhuma falha de execução informada; o ensaio E1 segue sem validação real por
+indisponibilidade do solicitante. A liberação de desenvolvimento E2 não demonstra
+compatibilidade nem encerra E1/T01/E3. Nenhum código, teste, build, dado do piloto,
+arquivo de apresentação ou estado do rastreador foi alterado nesta tarefa.
+
+### Próximo passo
+
+Prosseguir em execução posterior com a implementação técnica da #9, dentro do
+escopo e ciclo de supervisão autorizados. O solicitante realizará a pendência
+#8 internamente e retornará, quando permitido, versão do artefato/contrato,
+conclusão sanitizada, lacunas e decisão expressa sobre E1. Reconciliar divergências
+do ensaio antes de declarar esse aceite; os demais marcos continuam obrigatórios.
+
+## 2026-10-26 — Iniciar implementação técnica da #9
+
+Referência: pedido do usuário “Dê continuidade a implementação”,
+[issue #9](https://github.com/lukadev08/fake-esfinge/issues/9) e exceção de sequência
+da seção 13.1 do planejamento. Situação: exploração concluída; transições/desenho
+registrados antes do código; #8/E1 permanece pendente.
+
+### O que foi feito
+
+- Preservada em commit local `abad882` a documentação já revisada que autoriza
+  E2 técnico com E1 pendente; criada branch `issue-9-processamento-assuntos`.
+  `main` remoto permanece `ddf8487`; nenhum push/PR da #9 realizado.
+- Issue #9 reconfirmada aberta `ready-for-agent`, sem comentários. Dependência
+  remota #8 preservada; exceção do solicitante autoriza este início técnico.
+- Novo grupo exclusivo: `grupo9_explorer`, identificado GPT-6 Luna/médio,
+  concluiu somente leitura. Supervisor leu arquitetura/contrato/código e inspecionou
+  comandos de build/testes; não há CONTEXT.md/ADRs locais nesta árvore, sem recriá-los.
+- [Plano da #9](.scratch/issue-9-plan.md) registra tabelas de transição, interfaces
+  e fatias TDD. Disparo usa snapshot dos pendentes da chave conforme fonte V6,
+  sem seleção implícita de assunto; recebidos posteriores aguardam novo disparo.
+  Reutilizados os seams já confirmados em E0 e vocabulário de `codebase-design`.
+
+### O que deu errado
+
+Uma busca inicial citou arquivo de operações inexistente; o pacote foi inventariado
+e as rotas/schemas reais consultados, sem criar artefato substituto. Nenhum build,
+teste, aplicação ou alteração de código realizado na preparação. Ensaio interno
+E1 permanece não executado; não há aceite presumido ou homologação oficial.
+
+### Próximo passo
+
+Executor próprio implementar a #9 em fatias RED→GREEN, sem antecipar finalização,
+recuperação/reset/expiração ou regras fiscais. Reviewer independente avaliar,
+correções delegadas se necessárias; supervisor conferir suíte limpa e Docker
+antes de preparar publicação específica. #8/E1 continua pendente do solicitante.
+
+## 2026-10-26 — Concluir implementação técnica local da #9
+
+Referência: [issue #9](https://github.com/lukadev08/fake-esfinge/issues/9), pedido
+“Dê continuidade a implementação” e planejamento §13.1. Situação: implementação
+local revisada, testes e Docker finais verdes; publicação específica pendente.
+
+### O que foi feito
+
+- Disparo explícito, snapshot estável de elegíveis, estados/transições persistidos,
+  processamento estrutural dos seis assuntos e conjuntos recebidos/processados/
+  efetivos distinguíveis. Controle administrativo manual/automático usa a mesma
+  porta, Clock compartilhado e configuração persistida. V8 aditiva conserva V1–V7.
+- Executor próprio `grupo9_executor` GPT-6.1 Sol/baixo concluiu em TDD, após
+  exploração GPT-6 Luna/médio. Reviewer próprio GPT-6.1 Sol/médio encontrou limites
+  temporais; correções delegadas a `grupo9_correcao` GPT-6.1 Sol/baixo e depois
+  `grupo9_correcao_final`, identificado Codex/GPT-6 sem variante/esforço expostos.
+  Reavaliação final aprovou tecnicamente a #9, sem achados materiais remanescentes.
+- Supervisor confirmou **137 testes**, zero falhas/erros/ignorados, `clean verify`
+  exit0,15.930s. Jar final e imagem Linux amd64 identificados na
+  [evidência sanitizada](docs/evidencias/issue-9.md); hash interno do jar conferido.
+- **1.094 verificações na imagem final V8**, todas exit0: upgrade real V7 com
+  hashes/contagens de dez tabelas preservados, reinício, 10.001 créditos, dados
+  exatos/índices/origem, disputa manual/automático e limite de tempo system após
+  reabertura. Preparação V7:1.879 verificações +3 do snapshot anterior, separadas.
+- README, manifesto, plano e [rascunho do PR](.scratch/pr-issue-9.md) atualizados.
+  GitHub #9 reconfirmada aberta `ready-for-agent`, sem comentários; #8 e dependência
+  remota preservadas. Nenhum push/PR/merge ou publicação de imagem da #9 realizado.
+- Containers temporários removidos, ausência confirmada; três volumes fictícios
+  `fake-esfinge-issue9-supervisao`, `fake-esfinge-issue9-supervisao-final` e
+  `fake-esfinge-issue9-supervisao-auto` preservados no contexto `orbstack`.
+
+### O que deu errado
+
+- Revisão detectou conclusão temporal inalcançável e avanço aceitando timestamps
+  fora do contrato; três testes RED reproduziram os dois P2. Validação do snapshot
+  inteiro e do avanço corrigiu ambos. Nova revisão encontrou leitura system que
+  podia ultrapassar ano9999 após avanço da base; um RED determinístico comprovou
+  o terceiro P2, corrigido pela guarda em cada leitura sem mutar o deslocamento.
+- Limite de uso interrompeu a última rodada do primeiro corretor; novo agente
+  delegado concluiu a correção, sem perder alterações ou processos. Os ensaios
+  preliminares foram excluídos do total final; refeitos upgrade e Docker com jar
+  final após nova suíte limpa. Nenhuma falha remanescente observada.
+- Ensaio interno E1/#8 e integrador real continuam sem execução/aceite informado.
+  A implementação técnica da #9 não conclui E2 integral, E1/T01/E3 ou homologação.
+
+### Próximo passo
+
+Obter autorização específica para publicar/integrar a #9 com o rascunho concreto;
+exclusão dos três volumes requer decisão própria. Após integração, prosseguir à
+#10 e às demais fatias E2 dentro de suas dependências. Solicitante mantém o ensaio
+e aceite humano #8/E1 pendentes, sem data presumida.
