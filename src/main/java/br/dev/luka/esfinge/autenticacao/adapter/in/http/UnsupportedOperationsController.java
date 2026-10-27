@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.*;
 public final class UnsupportedOperationsController {
     private final Authentication authentication;
     public UnsupportedOperationsController(Authentication authentication) { this.authentication = authentication; }
-    @PostMapping({"/v6/tributario/finalizarEnvio",
-            "/v6/tributario/descarteParcialPorAssunto", "/v6/tributario/descartar-lote", "/servicosGerais/cancelarEnvioParcial"})
+    @PostMapping({"/v6/tributario/descarteParcialPorAssunto", "/v6/tributario/descartar-lote", "/servicosGerais/cancelarEnvioParcial"})
     public ResponseEntity<ErrorResponses.ErrorBody> write(HttpServletRequest request) { return unsupported(request); }
     private ResponseEntity<ErrorResponses.ErrorBody> unsupported(HttpServletRequest request) {
         authentication.authenticate(request.getHeader("auth_token"));

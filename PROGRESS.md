@@ -1690,3 +1690,53 @@ Nenhum build/teste/código da #10 executado nesta preparação. E1 real permanec
 
 Executor próprio implementar TDD da #10; revisão independente e correções delegadas,
 seguindo supervisão de suíte limpa e Docker no artefato final antes da publicação.
+
+## 2026-10-26 — Concluir implementação técnica local da #10
+
+Referência: continuação E2 autorizada e
+[issue #10](https://github.com/lukadev08/fake-esfinge/issues/10). Situação: pronta
+localmente, revisão/suíte/Docker aprovados; publicação específica pendente.
+
+### O que foi feito
+
+- Executor próprio `grupo10_executor`, identificado GPT-6.1 Sol/baixo, implementou
+  finalização com 17 totalizadores estritos, comparação BigInteger com linhas
+  efetivas por origem e fechamento/evento/atividade atômicos. V9 aditiva e guardas
+  conservam histórico, recusam mutações fechadas e liberam nova chave por competência.
+  Recuperação/descartes não foram antecipados.
+- Reviewer próprio `grupo10_reviewer` concluiu leitura independente de produção,
+  testes/fixtures e migração, sem achados materiais. Papel configurado reviewer
+  GPT-6.1 Sol/médio; autodeclarou Codex/GPT-6 sem variante/esforço expostos. Nenhuma
+  correção adicional de produção foi necessária; supervisor não editou código.
+- TDD nominal comprovou RED 200/422 e GREEN. Executor verify 155 testes verdes,
+  exit0,16,413s. Supervisor repetiu `clean verify`: **155 testes**, zero falhas/
+  erros/ignorados, exit0,17,517s; 21 relatórios Surefire conferidos e jar identificado
+  na [evidência](docs/evidencias/issue-10.md).
+- **1.279 verificações na imagem final V9**, todas exit0: quinze tabelas V8
+  preservadas, estados em fases distintas retomados, rejeições sem efeitos,
+  seis assuntos, 17 campos, 10.001 créditos, concorrência, 200 vazio, consulta histórica
+  sem renovar atividade e nova chave após reinício. SQLite confirmou três
+  fechamentos/eventos, 21 trabalhos, 10.021 registros/efeitos e10.016 valores TEXT
+  com conteúdo/origem exatos. Preparação V8: 538 verificações +3 de snapshot, separadas.
+- README, manifesto, plano e [rascunho de PR](.scratch/pr-issue-10.md) atualizados.
+  V1–V8/fontes/schemas/build/dependências intactos; .DS_Store preexistentes preservados.
+  Container removido e ausência confirmada; volume fictício
+  `fake-esfinge-issue10-supervisao` preservado no contexto `orbstack`.
+
+### O que deu errado
+
+- Duas expectativas intermediárias de teste foram corrigidas: token do cenário B
+  deve autenticar no serviço B para provar 404 sobre chave A; contagem monetária
+  de saldo continuava oito, enquanto a versão de schema avançava para 9.
+  Fixtures antigas passaram a usar SQL legado somente em testes para semear
+  schemas V2–V8 sem marcador; produção não detecta schema dinamicamente.
+- Nenhuma falha remanescente na revisão, suíte ou imagem final. Avisos herdados
+  de Mockito/ByteBuddy/JDK e SLF4J dos clientes não falharam validação. Nenhum
+  integrador real, aceite #8/E1/T01/E3 ou CI remoto executado; conclusão técnica
+  da #10 não encerra E2 integral ou homologação oficial.
+
+### Próximo passo
+
+Obter autorização específica para push/PR/merge da #10 e decisão separada sobre
+exclusão do volume fictício. Depois de integrar, prosseguir à #11 dentro das
+dependências e supervisão autorizadas. Solicitante mantém #8/E1 pendente.

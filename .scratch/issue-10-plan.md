@@ -14,7 +14,7 @@ CONTEXT.md/ADRs locais; não recriar. Fontes/schemas e V1–V8 permanecem imutá
 
 `POST /v6/tributario/finalizarEnvio`, `auth_token`, JSON UTF-8, sem query. Corpo
 exato com `chavePacote` não vazia e os 17 totalizadores obrigatórios; não aceitar
-headers administrativos como autenticação compatível. Sucesso200, corpo vazio.
+headers administrativos como autenticação compatível. Sucesso 200, corpo vazio.
 JSON/mídia/query malformados:400; schema/campos/tipos inválidos:422, conforme
 padrão da recepção. Duplicatas/documentos extras/UTF-8 inválido:400.
 
@@ -90,7 +90,7 @@ outras violações:422 estrutural. Não alterar o schema para aceitar `"00"` nes
 Seams confirmados em E0: HTTP compatível, administração separada, núcleo/SQLite
 real e integrador real/esperado independente (último permanece pendente).
 
-- RED→GREEN nominal HTTP: receber/processar, finalizar com17 totais,200 vazio;
+- RED→GREEN nominal HTTP: receber/processar, finalizar com 17 totais,200 vazio;
   conferir conteúdo e marker/evento, repetição409 e nova chave na mesma competência.
 - Parser estrito e seis assuntos em ciclos/múltiplos lotes/duplicatas; zeros
   iniciais e total enorme divergente sem overflow;11 ausentes/positivos/tipos/extras.
@@ -110,3 +110,16 @@ Focal com `-Dtest=FinalizacaoHttpTest,JdbcFinalizationTest test`, um `verify` do
 executor e `clean verify` da supervisão. Sem execuções concorrentes de Maven.
 Usar RTK/proxy e preservar saídas, exit codes e handles. Sem publicação da #10,
 reset, sem movimento, T17, regras fiscais, E1/T01 integral ou homologação.
+
+## Resultado local
+
+Implementação concluída conforme o desenho; reviewer independente aprovou sem
+achados materiais. Supervisor confirmou 155 testes na suíte limpa (17,517s) e
+1.279 verificações na imagem final V9 Linux amd64, incluindo upgrade V8 real,
+quinze tabelas preservadas, reinício, conteúdo e rejeições sem efeitos. Preparação
+V8: 538 verificações + 3 do snapshot anterior, contabilizadas separadamente.
+Hashes, comandos e limites em [evidência](../docs/evidencias/issue-10.md).
+
+Container removido; volume fictício `fake-esfinge-issue10-supervisao` preservado
+até autorização específica. [Rascunho do PR](pr-issue-10.md) preparado; nenhum
+push/PR/merge da #10. #8/E1 e T01/E3 continuam pendentes do solicitante.

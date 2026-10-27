@@ -29,10 +29,20 @@ public final class RemessaService implements Remessas {
         if (content==null || content.records()<1 || content.bytes().length==0) throw new RemessaFailure(INVALID_STRUCTURE);
         return transactions.execute(() -> {
             var remessa=repository.find(key,session.scenario(),session.ug()).orElseThrow(() -> new RemessaFailure(NOT_FOUND));
+            remessa.requireOpen();
             try {
                 String hash=java.util.HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(content.bytes()));
                 return repository.receive(remessa,content,hash,clock.instant());
             } catch (java.security.NoSuchAlgorithmException e) { throw new IllegalStateException(); }
+        });
+    }
+    public void finish(String token,String key,Finalization totals) {
+        var session=authentication.authenticate(token);
+        if(key==null || key.isEmpty()) throw new RemessaFailure(INVALID_STRUCTURE);
+        if(totals==null) throw new RemessaFailure(INVALID_STRUCTURE);
+        transactions.execute(()->{
+            var remessa=repository.find(key,session.scenario(),session.ug()).orElseThrow(()->new RemessaFailure(NOT_FOUND));
+            remessa.requireOpen();totals.verify(repository.finalization(remessa));repository.finish(remessa,clock.instant());return null;
         });
     }
     public Lote consult(String token,long number) {

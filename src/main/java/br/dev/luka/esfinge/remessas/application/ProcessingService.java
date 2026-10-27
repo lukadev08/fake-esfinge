@@ -26,6 +26,7 @@ public final class ProcessingService implements Processamento {
         var session=auth.authenticate(token);if(key==null || key.isEmpty()) throw new RemessaFailure(INVALID_REQUEST);
         return transactions.execute(()->{
             var remessa=lots.find(key,session.scenario(),session.ug()).orElseThrow(()->new RemessaFailure(NOT_FOUND));
+            remessa.requireOpen();
             long generation=repository.generation(session.scenario());
             if(repository.active(remessa.id(),generation)) throw new RemessaFailure(CONFLICT);
             var pending=repository.eligible(remessa);if(pending.isEmpty()) throw new RemessaFailure(CONFLICT);
