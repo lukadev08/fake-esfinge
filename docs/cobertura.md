@@ -142,4 +142,6 @@ Revisão independente aprovada; executor verify e supervisor clean verify com
 V10 Linux amd64 sem rede**, incluindo reabertura de16 tabelas, descarte/reenvio,
 reinício, conteúdo exato e agendador automático. Preparação anterior259+3 separada.
 Limpeza de RECEBIDO é aproximação expressa. Integrador real, #8/E1, T01/E3, CI
-remoto e homologação não demonstrados. Publicação da #12 aguarda autorização específica.
+remoto e homologação não demonstrados. Publicação/merge autorizados e concluídos
+no [PR #39](https://github.com/lukadev08/fake-esfinge/pull/39), head `a863140`, merge
+`f2d7e58aaaf1fd1021c6b05f9471560046963baa`; #12 completed, #8 aberta.

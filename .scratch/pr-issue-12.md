@@ -1,6 +1,8 @@
 # Rascunho local — issue #12
 
-Situação: pronto localmente, revisão/suíte/Docker verdes; publicação não autorizada.
+Situação: publicado e integrado com autorização específica no
+[PR #39](https://github.com/lukadev08/fake-esfinge/pull/39), head `a863140`, merge
+`f2d7e58aaaf1fd1021c6b05f9471560046963baa`; #12 completed, #8/E1 pendente.
 Destino: `lukadev08/fake-esfinge`; base `main`; head `issue-12-descarte-assunto`.
 Base funcional `0752366` (PR #38/#11), plano anterior ao código `71907a4`.
 Inclui registro documental da integração/limpeza autorizada da #11 (`54265cb`).
@@ -36,10 +38,12 @@ Refs #8
 
 ## Limite de publicação
 
-Preparado para push da branch acima, criação de PR contra `main` e merge após
-autorização específica. Nenhuma mensagem externa/publicação da #12 realizada.
-Não há publicação de imagem nem implantação nesta proposta.
+Push da branch acima, PR contra `main` e merge realizados após autorização
+específica. GitHub confirmou head revisado, ausência de conflitos, merge,
+`main` no merge e #12 completed. Check-runs/statuses vazios no head, sem CI
+executado. Corpo publicado acima preservado; nenhuma imagem publicada ou implantação.
 
-Containers removidos. Volumes fictícios preservados no contexto `orbstack`:
+Containers removidos. Volumes fictícios excluídos com autorização no contexto `orbstack`:
 `fake-esfinge-issue12-supervisao`, `fake-esfinge-issue12-supervisao-repro` e
-`fake-esfinge-issue12-supervisao-auto`. Exclusão depende de autorização separada.
+`fake-esfinge-issue12-supervisao-auto`. Exit0 e ausência confirmada; nenhum outro
+volume excluído. Continuidade técnica para #13 dentro das dependências/supervisão.

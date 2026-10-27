@@ -492,5 +492,5 @@ ativos em sucesso e seus efetivos; sem ativos retorna409.
 
 Veja [evidência da #12](docs/evidencias/issue-12.md). Ensaios locais fictícios não
 encerram #8/E1, T01/E3 ou homologação. Cancelamento, descarte explícito de lote,
-resposta perdida, reset e expiração continuam fora desta fatia. Publicação da #12
-não autorizada.
+resposta perdida, reset e expiração continuam fora desta fatia. Publicação/merge
+da #12 autorizados e concluídos no [PR #39](https://github.com/lukadev08/fake-esfinge/pull/39).

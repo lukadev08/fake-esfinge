@@ -1989,3 +1989,39 @@ Obter autorização específica para push/PR/merge da #12 e decisão separada so
 exclusão dos três volumes fictícios. Após integração, ler dependências/escopo da
 próxima issue e continuar com equipe própria/supervisão. Solicitante mantém o
 ensaio e aceite humano #8/E1; E2 completo não é concluído por esta fatia.
+
+## 2026-10-27 — Publicar e integrar #12; excluir ensaios autorizados
+
+Referência: autorização expressa de publicação/merge da #12 e exclusão dos três
+volumes fictícios identificados na pergunta. Situação: PR #39 integrado,
+#12 completed; continuidade técnica para #13.
+
+### O que foi feito
+
+- Push de `issue-12-descarte-assunto`, head revisado `a863140`, criação do
+  [PR #39](https://github.com/lukadev08/fake-esfinge/pull/39) com corpo preparado e
+  anexo à tarefa. Base `0752366` reconfirmada; comparação de três commits sem
+  divergência, PR sem conflitos e merge protegido pelo head esperado.
+  Merge: `f2d7e58aaaf1fd1021c6b05f9471560046963baa`.
+- GitHub confirmou PR merged, `main` no merge, #12 closed/completed e #8 aberta.
+  Check-runs/statuses vazios no head: resultados verdes continuam evidência local
+  (212 testes, 1.524 verificações Docker), sem CI executado.
+- Após conferir nomes exatos e ausência de containers usuários, excluídos somente
+  `fake-esfinge-issue12-supervisao`, `fake-esfinge-issue12-supervisao-repro` e
+  `fake-esfinge-issue12-supervisao-auto` no contexto `orbstack`, exit0 e ausência
+  confirmada. Imagem/clientes preservados; corpo publicado não alterado.
+- Branch local `issue-13-cancelamento-envio` criada sobre `origin/main` integrado.
+  #13 aberta `ready-for-agent`, sem comentários, dependências #10/#12 concluídas.
+  Explorer próprio iniciado para cancelamento integral/nova chave.
+
+### O que deu errado
+
+Nenhuma falha de publicação, merge ou exclusão. Código não mudou desde a suíte
+final; testes não repetidos nesta operação documental. #8/E1/T01/E3 e CI remoto
+seguem pendentes; integração da #12 não conclui E2 integral ou homologação.
+
+### Próximo passo
+
+Concluir exploração/tabelas de transição da #13 e implementar com equipe própria,
+TDD/revisão/supervisão e correções delegadas. Publicação da nova fatia exige
+autorização específica; solicitante mantém a pendência interna #8/E1.
