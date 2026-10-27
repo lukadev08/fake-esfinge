@@ -2025,3 +2025,38 @@ seguem pendentes; integração da #12 não conclui E2 integral ou homologação.
 Concluir exploração/tabelas de transição da #13 e implementar com equipe própria,
 TDD/revisão/supervisão e correções delegadas. Publicação da nova fatia exige
 autorização específica; solicitante mantém a pendência interna #8/E1.
+
+## 2026-10-27 — Preparar implementação da #13
+
+Referência: continuação técnica E2 autorizada e
+[issue #13](https://github.com/lukadev08/fake-esfinge/issues/13). Situação: exploração
+e decisões/transições concluídas antes do código; implementação em seguida.
+
+### O que foi feito
+
+- `grupo13_explorer`, configurado GPT-6 Luna/médio, concluiu somente leitura,
+  variante efetiva não exposta. Supervisor leu contrato/planejamento/arquitetura/
+  schema/código conectado e definiu [plano da #13](.scratch/issue-13-plan.md).
+- Cancelamento integral permite trabalho agendado/EM e invalida resultados
+  tardios; conserva sucesso histórico e usa ABORTADO/diagnóstico próprio para
+  pendentes. Cancelada difere de finalizada por timestamp próprio, sem atribuir
+  conclusão aos dados removidos. Nova chave na mesma competência é independente.
+- V11 necessária: coluna aditiva de cancelamento/índice aberto e reconstrução
+  restrita dos trabalhos para ABORTADO, preservando todas as colunas/diagnósticos/
+  IDs/sequências/FKs. V1–V10/fontes/schemas intactos; sem infraestrutura nova.
+- Caso de uso permanece em Processamento, reutiliza remoção/terminal/transações
+  e audita todos os chamadores/guardas. Não altera geração global do cenário.
+  #13 aberta, sem comentários, dependências #10/#12 concluídas; #8/E1 pendente.
+
+### O que deu errado
+
+Nenhuma execução de código/build/teste nesta preparação. Estado legando ABERTO
+e ausência de ABORTADO no schema exigiram decisão explícita. Reutilizar
+finalizada_em para cancelamento confundiria conclusão; definida migração mínima
+com marcador distinto, sem reconstrução de remessas ou enum externo novo.
+
+### Próximo passo
+
+Executor próprio implementar por fatias TDD, reviewer independente e correções
+delegadas quando necessárias; supervisão de suíte limpa e Docker sobre artefato
+final. Publicação da #13 continua sob autorização específica.
