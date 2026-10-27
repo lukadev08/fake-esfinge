@@ -96,4 +96,6 @@ amd64 sem rede**, incluindo migração real V7, reinício, 10.001 créditos proc
 conteúdo/precisão/origem, concorrência manual/automático e limite temporal system.
 As 1.879 verificações de preparação V7 e 3 do snapshot anterior são separadas.
 Continuidade técnica E2 com #8 pendente; sem aceite humano E1/T01 ou validação
-fiscal implícitos. Publicação/merge da #9 ainda não realizados.
+fiscal implícitos. Publicação/merge autorizados e concluídos no
+[PR #36](https://github.com/lukadev08/fake-esfinge/pull/36), head `5e9e8a4`, merge
+`eb376d07fd8efe915d2588cb69e4a0f41b1dcf75`; #9 completed, #8 aberta.

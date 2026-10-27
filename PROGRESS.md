@@ -1621,3 +1621,40 @@ Obter autorização específica para publicar/integrar a #9 com o rascunho concr
 exclusão dos três volumes requer decisão própria. Após integração, prosseguir à
 #10 e às demais fatias E2 dentro de suas dependências. Solicitante mantém o ensaio
 e aceite humano #8/E1 pendentes, sem data presumida.
+
+## 2026-10-26 — Publicar e integrar #9; limpar ensaios autorizados
+
+Referência: respostas expressas “Autorizar publicação e merge” da #9 e
+“Autorizar exclusão dos três volumes”. Situação: PR #36 integrado; #9 completed;
+continuidade técnica para #10, com #8/E1 pendente.
+
+### O que foi feito
+
+- Push de `issue-9-processamento-assuntos`, head revisado `5e9e8a4`, criação do
+  [PR #36](https://github.com/lukadev08/fake-esfinge/pull/36) com corpo preparado e
+  anexo à tarefa. Base remota reconfirmada `ddf8487`; comparação sem divergência
+  e PR sem conflitos. Merge com SHA esperado produziu
+  `eb376d07fd8efe915d2588cb69e4a0f41b1dcf75`.
+- GitHub confirmou PR merged, `main` no merge, #9 closed/completed e #8 aberta.
+  Checks/statuses do head vazios, sem CI executado; 137 testes e 1.094 verificações
+  Docker verdes continuam evidência local do artefato revisado.
+- Após conferir nomes e ausência de containers usuários, excluídos somente os
+  volumes `fake-esfinge-issue9-supervisao`, `fake-esfinge-issue9-supervisao-final`
+  e `fake-esfinge-issue9-supervisao-auto` no contexto `orbstack`, exit0; ausência
+  confirmada. Imagem/clientes preservados. Evidência, manifesto e registro do PR
+  atualizados sem alterar o corpo publicado.
+- Criada branch local `issue-10-finalizacao` sobre `origin/main` integrado.
+  #10 reconfirmada aberta `ready-for-agent`, sem comentários, dependente apenas
+  da #9 agora concluída. Iniciada exploração própria para finalização/totalizadores.
+
+### O que deu errado
+
+Nenhuma falha de publicação, merge ou exclusão. Nenhum código mudou desde a suíte
+final; testes não repetidos nesta operação documental. Ensaio real e aceite
+humano #8/E1, T01/E3 e CI remoto seguem pendentes; merge não comprova esses marcos.
+
+### Próximo passo
+
+Concluir exploração e plano de transições da #10, implementar em equipe própria
+com TDD/revisão/supervisão, mantendo publicação da nova fatia sob autorização
+específica. Solicitante conserva a pendência interna #8/E1.
