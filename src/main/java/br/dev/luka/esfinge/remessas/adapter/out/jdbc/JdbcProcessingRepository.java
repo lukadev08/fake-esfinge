@@ -60,6 +60,7 @@ public final class JdbcProcessingRepository implements ProcessingRepository {
                 event(remessa.id(),remessa.scenario(),remessa.ug(),lot,"DADOS_LOTE_REMOVIDOS",now);
             }
         }
+        jdbc.update("UPDATE falhas_recepcao SET recuperacao=0 WHERE remessa_id=? AND cenario=? AND ug=? AND assunto=? AND geracao=?",remessa.id(),remessa.scenario(),remessa.ug(),subject.name(),generation);
         jdbc.update("UPDATE remessas SET atividade=? WHERE id=?",now.toString(),remessa.id());
         event(remessa.id(),remessa.scenario(),remessa.ug(),null,"ASSUNTO_DESCARTADO_"+subject.name(),now);
     }
@@ -77,6 +78,7 @@ public final class JdbcProcessingRepository implements ProcessingRepository {
                 event(remessa.id(),remessa.scenario(),remessa.ug(),lot,"DADOS_LOTE_REMOVIDOS",now);
             }
         }
+        jdbc.update("UPDATE falhas_recepcao SET recuperacao=0 WHERE remessa_id=? AND cenario=? AND ug=? AND geracao=?",remessa.id(),remessa.scenario(),remessa.ug(),generation);
         event(remessa.id(),remessa.scenario(),remessa.ug(),null,"ENVIO_CANCELADO",now);
     }
     public boolean isActive(long lot) {return jdbc.queryForObject("SELECT ativo FROM lotes WHERE numero=?",Integer.class,lot)==1;}

@@ -11,6 +11,9 @@ import org.springframework.core.env.Environment;
 @Configuration
 @org.springframework.scheduling.annotation.EnableScheduling
 public class Composition {
+    @Bean org.springframework.boot.web.server.WebServerFactoryCustomizer<org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory> receptionAbort() {
+        return factory->factory.addContextValves(new br.dev.luka.esfinge.remessas.adapter.in.http.ReceptionAbortValve());
+    }
     @Bean SimulatorSettings settings(Environment environment) { return SimulatorSettings.load(environment); }
     @Bean DataSource dataSource(SimulatorSettings settings) { return SqliteDatabase.open(settings); }
     @Bean br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcBusinessClock businessClock(SimulatorSettings settings,DataSource source) {

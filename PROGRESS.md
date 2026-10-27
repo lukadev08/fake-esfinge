@@ -2126,3 +2126,171 @@ Obter autorização específica para push/PR/merge da #13 e decisão separada so
 exclusão dos três volumes fictícios. Após integrar, prosseguir para #14 com equipe
 própria/supervisão e suas dependências; solicitante mantém o ensaio/aceite #8/E1.
 E2 integral não é concluído por esta fatia.
+
+## 2026-10-27 — Integrar #13, excluir ensaios e encerrar a pedido
+
+Referência: autorização expressa de push/PR/merge da #13, exclusão dos três
+volumes fictícios e orientação para parar após a #13 e resumir o trabalho.
+Situação: PR #40 integrado, #13 completed; implementação encerrada, #14 não iniciada.
+
+### O que foi feito
+
+- Push de `issue-13-cancelamento-envio`, head revisado `c3714b9`, criação do
+  [PR #40](https://github.com/lukadev08/fake-esfinge/pull/40) com corpo preparado e
+  anexo à tarefa. Base `f2d7e58` reconfirmada; comparação de três commits sem
+  divergência, PR sem conflitos e merge protegido pelo head esperado.
+  Merge: `566afda0c3ac9c6f1f623d752407616978b5cd93`.
+- GitHub confirmou PR merged, `main` no merge e #13 closed/completed. Inventário
+  confirmou #1–#7/#9–#13 encerradas; #8 e #14–#27 abertas. Check-runs/statuses
+  vazios no head:243 testes/1.807 verificações Docker são evidência local, sem CI.
+- Conferidos nomes exatos e ausência de containers usuários; excluídos somente
+  `fake-esfinge-issue13-supervisao`, `fake-esfinge-issue13-supervisao-repro` e
+  `fake-esfinge-issue13-supervisao-auto` no contexto `orbstack`, exit0 e ausência
+  confirmada. Imagem/clientes preservados; corpo publicado não alterado.
+- Checkout alinhado ao merge por fast-forward, sem branch/tarefa #14. Registros
+  de publicação/limpeza atualizados e [resumo](.scratch/resumo-ate-issue-13.md)
+  preparado localmente, sem nova publicação documental. Nenhum código/teste mudou.
+- Orientação mais recente de parar após a #13 substitui a continuação anterior
+  para #14; aprovação de publicação da #13 não foi interpretada como revogação
+  dessa parada. Nenhuma implementação da #14 foi iniciada.
+- Verificação documental local:94 links sem destino ausente, whitespace válido
+  e corpo publicado do PR preservado. Resumo e registros finais não publicados.
+
+### O que deu errado
+
+Nenhuma falha de publicação, merge ou exclusão. Não foram repetidos testes para
+o encerramento documental; código validado permanece o mesmo. #8/E1/T01/E3 e
+CI remoto continuam pendentes; não há homologação ou conclusão integral do MVP.
+
+### Próximo passo
+
+Entregar o resumo e parar. Aguardar nova orientação antes de retomar implementação.
+O solicitante mantém o ensaio/aceite interno #8/E1 pendente, sem data estabelecida.
+
+## 2026-10-27 — Retomar coordenação e preparar a issue #14
+
+Referência: solicitação atual de retomar a implementação com equipe exclusiva
+por tarefa e [issue #14](https://github.com/lukadev08/fake-esfinge/issues/14).
+Situação: exploração concluída; plano local preparado antes da produção.
+
+### O que foi feito
+
+- A nova solicitação supera a parada após a #13. Inspeção confirmou PR #40
+  integrado e #13 encerrada; #14 aberta, sem comentários, depende da #12 concluída.
+  Branch `codex/issue-14-resposta-perdida` preserva o registro documental local.
+- Explorer e executor próprios da #14 inspecionaram recepção, persistência,
+  controle administrativo e comandos existentes. O [plano](.scratch/issue-14-plan.md)
+  define seleção por tentativa elegível, fronteiras antes/depois do commit,
+  contrato administrativo, transporte real e recuperação por descarte.
+- O executor aguarda revisão do desenho pela supervisão antes de alterar produção.
+
+### O que deu errado
+
+Nenhum build/teste ou código de produção executado nesta preparação. MockMvc não
+comprova perda real da resposta; a fatia exige servidor/socket reais sem retry.
+
+### Próximo passo
+
+Supervisão revisar o plano; executor implementar por fatias TDD, seguido de
+revisor independente. #8/E1 e T01/E3 continuam pendentes; demais fatias não iniciadas.
+
+## 2026-10-27 — Implementar a issue #14 e validar localmente
+
+Referência: retomada da coordenação e
+[issue #14](https://github.com/lukadev08/fake-esfinge/issues/14).
+Situação: implementação local pronta; revisão e smoke Docker finais pendentes.
+
+### O que foi feito
+
+- Grupo próprio: explorer `grupo14_explorer` e executor `grupo14_executor`.
+  Supervisão revisou o desenho antes do código. V12 aditiva, plano por tentativa
+  elegível/contexto/geração, seleção e persistência transacionais; duas falhas
+  distintas produzem interrupção real de transporte sem confirmação HTTP.
+- APOS_COMMIT mantém RECEBIDO/original/valores/vínculos/eventos e marca409 do
+  assunto. PUT/DELETE não contornam recuperação; descarte limpa marca/dados
+  ativos atomicamente e conserva histórico, reenvio/finalização sem deduplicação.
+  Cancelamento limpa marca e fecha contexto. Nenhum parâmetro de teste no payload.
+- TDD RED404 no plano ausente, GREEN inicial e focal20 verdes. Executor verify
+  **263 testes**, zero falhas/erros/ignorados, exit0,31,344s; supervisão clean
+  verify confirmou o mesmo total, exit0,32,779s. Produção/testes congelados.
+- Socket/SQLite reais cobrem seis assuntos, tentativas inválidas, isolamento,
+  rollback statement/COMMIT, reabertura, duas instâncias concorrentes, migração
+  V11 preenchida e falha de migração V12. V1–V11/fontes/schemas/build/deps intactos.
+- Cliente fictício de smoke validado no jar local:22+29 verificações verdes,
+  com reinício, duas desconexões, recuperação, histórico e decimal grande exato.
+  Processo temporário18194 encerrado; listener ausente e base fictícia em tmp
+  preservada. [Evidência](docs/evidencias/issue-14.md), README, cobertura e
+  [rascunho de PR](.scratch/pr-issue-14.md) preparados.
+
+### O que deu errado
+
+Primeiro comando sem cache tmp falhou ao tentar criar `.m2/wrapper` fora do
+diretório gravável; wrapper/cache tmp existentes resolveram sem alterar build.
+Essa falha é de preparação, não RED de comportamento. Nenhuma falha funcional
+remanescente na suíte local; avisos herdados de instrumentação/log não impediram
+validação. Revisão independente e smoke Docker ainda não concluídos nesta entrada.
+
+### Próximo passo
+
+Revisor independente avaliar a alteração; correções, se necessárias, devem ir a
+outro executor e outro reviewer. Supervisão concluir Docker sobre o jar final,
+reconferir documentação e só então preparar publicação conforme autorização.
+#8/E1 e T01/E3 permanecem pendentes; esta fatia não conclui E2 integral.
+
+## 2026-10-27 — Concluir revisão de código e supervisão Docker da #14
+
+Referência: continuidade da [issue #14](https://github.com/lukadev08/fake-esfinge/issues/14).
+Situação: código aprovado e validação final verde; conferência documental pendente.
+
+### O que foi feito
+
+- Revisor exclusivo da #14 aprovou o código sem achados materiais; não houve
+  correção de produção após o congelamento. Executor consolidou apenas documentos.
+- Supervisão clean verify:263 testes, zero falhas/erros/ignorados, exit0,32,779s.
+  Jar final `0bef0ddd0a5f966cf6be025be4a3c2077df462609d51bc366687cf5483e004be`.
+- Imagem `fake-esfinge:issue-14-local`, Linux amd64,
+  `sha256:ef0dc4cbff813dddeff7a6dc3eff8a7d90c2242d06b542cff0c77e38c68ab71d`;
+  build sem rede/pull e runtime bridge com publicação somente em127.0.0.1.
+  Jar na imagem conferido. Smoke final22+29=51 verificações exit0, com reinício,
+  duas desconexões, recuperação/finalização, histórico e decimal exato.
+- SQLite somente leitura íntegro e sem violações de FK. Container temporário
+  parado/removido, ausência confirmada; nenhum volume Docker criado. Bindmount
+  fictício em `/private/tmp/fake-esfinge-issue14-supervisor.oUHCFG` preservado.
+- README, cobertura, plano, rascunho de PR e evidência incorporam resultados e
+  limites. Diffcheck e48 referências locais com destino existente aprovados.
+
+### O que deu errado
+
+Harness iniciou primeiro prepare antes da prontidão: desconexão no login, sem
+aceitação. Depois do restart, Docker remapeou porta e sondagem antiga falhou;
+consultar a publicação corrigiu o alvo. Execuções contabilizadas passaram após
+prontidão; sondagens/tentativas anteriores não contam como aceite. Sem bug
+funcional, mudança de código ou repetição de Maven por esses incidentes.
+
+### Próximo passo
+
+Revisor conferir a consolidação documental. Supervisão verificar o diff final e
+prosseguir ao PR/merge nos limites da autorização; depois coordenar a #15 com
+grupo próprio. Aceites humanos #8/E1 e T01/E3 permanecem pendentes.
+
+## 2026-10-27 — Aprovar consolidação documental final da #14
+
+Referência: revisão independente da [issue #14](https://github.com/lukadev08/fake-esfinge/issues/14).
+Situação: código e documentos aprovados; pronta para publicação pela supervisão.
+
+### O que foi feito
+
+Revisor exclusivo aprovou a conferência documental final sem achados materiais.
+Executor atualizou somente os marcadores de revisão em evidência, plano,
+rascunho de PR e cobertura, mantendo os resultados e limites comprovados.
+Código, testes, smoke e jar permaneceram intactos; diffcheck aprovado.
+
+### O que deu errado
+
+Nenhuma falha ou correção funcional solicitada. #8/E1, T01/E3, CI remoto e
+homologação permanecem pendentes; aprovação desta fatia não conclui E2 integral.
+
+### Próximo passo
+
+Supervisão realizar commit/push/PR/merge da #14 conforme o ciclo autorizado e
+retomar a coordenação da #15 com grupo próprio.
