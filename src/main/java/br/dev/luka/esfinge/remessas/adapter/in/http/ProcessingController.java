@@ -2,6 +2,8 @@ package br.dev.luka.esfinge.remessas.adapter.in.http;
 
 import br.dev.luka.esfinge.remessas.application.port.in.Processamento;
 import br.dev.luka.esfinge.remessas.domain.Processing;
+import br.dev.luka.esfinge.remessas.domain.Assunto;
+import br.dev.luka.esfinge.remessas.domain.RemessaFailure;
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +30,16 @@ public final class ProcessingController {
         if(request.getInputStream().read()!=-1 || !request.getParameterMap().keySet().equals(Set.of("chavePacote"))) throw RemessaController.invalid();
         var result=processing.start(request.getHeader("auth_token"),RemessaController.parameter(request,"chavePacote",true));
         return new StartResponse(result.situacao(),result.dataEnvio(),result.identificadorRemessaOnline());
+    }
+    @PostMapping("/v6/tributario/descarteParcialPorAssunto")
+    public void discard(HttpServletRequest request) throws IOException {
+        String token=request.getHeader("auth_token");authentication.authenticate(token);
+        if(request.getInputStream().read()!=-1 || !request.getParameterMap().keySet().equals(Set.of("chavePacote","assunto"))) throw RemessaController.invalid();
+        String key=RemessaController.parameter(request,"chavePacote",true),value=RemessaController.parameter(request,"assunto",true);
+        Assunto subject;
+        try {subject=Assunto.valueOf(value);}
+        catch(IllegalArgumentException failure) {throw new RemessaFailure(RemessaFailure.Kind.UNSUPPORTED);}
+        processing.discard(token,key,subject);
     }
     @GetMapping("/__simulator/processamento")
     public ConfigurationResponse configuration(HttpServletRequest request) throws IOException {

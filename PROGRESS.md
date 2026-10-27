@@ -1861,3 +1861,131 @@ localmente, revisão/suíte/Docker finais verdes; publicação específica pende
 Obter autorização específica para publicar/integrar a #11 e decisão separada sobre
 exclusão dos dois volumes fictícios. Após integração, prosseguir à #12 com equipe
 própria, dependências e supervisão. Solicitante mantém validação interna #8/E1.
+
+## 2026-10-27 — Publicar e integrar #11; excluir ensaios autorizados
+
+Referência: autorização expressa de publicação/merge da #11 e exclusão dos volumes
+`fake-esfinge-issue11-supervisao`/`fake-esfinge-issue11-supervisao-auto`.
+Situação: PR #38 integrado, #11 completed; continuidade técnica para #12.
+
+### O que foi feito
+
+- Push de `issue-11-erro-assincrono`, head revisado `1b435cf`, criação do
+  [PR #38](https://github.com/lukadev08/fake-esfinge/pull/38) com corpo preparado e
+  anexo à tarefa. Base `4de2ba5` reconfirmada; comparação de três commits sem
+  divergência e PR sem conflitos. Merge protegido pelo SHA esperado produziu
+  `075236636077093b4493952af0c4951824689433`.
+- GitHub confirmou PR merged, `main` no merge, #11 closed/completed e #8 aberta.
+  Checks/statuses vazios no head: resultados verdes continuam evidência local
+  (186 testes, 1.555 verificações Docker), sem CI executado.
+- Após conferir nomes exatos e ausência de containers usuários, excluídos somente
+  os dois volumes autorizados no contexto `orbstack`, exit0, com ausência
+  confirmada. Imagem/clientes preservados. Manifesto, evidência e registro de PR
+  atualizados sem alterar corpo publicado.
+- Criada branch local `issue-12-descarte-assunto` sobre `origin/main` integrado.
+  #12 aberta `ready-for-agent`, sem comentários, dependências #10/#11 concluídas.
+  Explorer próprio iniciado para descarte de assunto e reenvio na mesma chave.
+
+### O que deu errado
+
+Nenhuma falha de publicação, merge ou exclusão. Código não mudou desde a suíte
+final; testes não repetidos nesta operação documental. #8/E1/T01/E3 e CI remoto
+seguem pendentes; integração da #11 não conclui E2 integral ou homologação.
+
+### Próximo passo
+
+Concluir exploração e tabelas de decisão da #12; implementar em equipe própria
+com TDD/revisão/supervisão e correções delegadas. Publicação da nova fatia continua
+sob autorização específica; solicitante mantém pendência interna #8/E1.
+
+## 2026-10-27 — Preparar implementação da #12
+
+Referência: continuação técnica E2 autorizada e
+[issue #12](https://github.com/lukadev08/fake-esfinge/issues/12). Situação: exploração
+e decisões/transições concluídas antes do código; implementação em seguida.
+
+### O que foi feito
+
+- `grupo12_explorer`, papel configurado GPT-6 Luna/médio, concluiu somente leitura.
+  Supervisor leu contrato/fonte V6/arquitetura/código e registrou
+  [plano da #12](.scratch/issue-12-plan.md), reconferido pelo explorer sem conflito.
+- Decisões: guarda global de ciclo ativo na chave (RECEBIDO agendado/EM), exceção
+  derivada para RECEBIDO sem trabalho, sucesso preservado quando inativado e
+  históricos anteriores intactos. Sucesso vazio/repetição de assunto suportado
+  segue fonte, com atividade/evento próprios e sem promessa de idempotência oficial.
+- Operação permanece no módulo remessas via Processamento, reutilizando V10 e
+  menor remoção JDBC, sem migração/infraestrutura novas. Reenvio conserva chave
+  com IDs próprios; finalização só de ativos. Cancelamento/rota de lote/falha de
+  resposta perdida continuam fora do escopo.
+- #12 aberta sem comentários, dependências #10/#11 concluídas, #8/E1 pendente.
+  Comandos de build/teste herdados inspecionados; nenhuma publicação da #12 autorizada.
+
+### O que deu errado
+
+Nenhuma execução de código/build/teste nesta preparação. A chave de schema foi
+inventariada como `descarteQuery`, evitando supor outra definição. Lacunas de
+RECEBIDO/atividade/estado histórico foram resolvidas a partir da fonte/E0 e
+marcadas como decisões derivadas do simulador, sem equivalência oficial.
+
+### Próximo passo
+
+Executor próprio implementar em fatias TDD, revisão independente, correções
+delegadas e supervisão de suíte limpa/imagem final antes da publicação específica.
+
+## 2026-10-27 — Concluir implementação técnica local da #12
+
+Referência: continuação técnica E2 autorizada e
+[issue #12](https://github.com/lukadev08/fake-esfinge/issues/12). Situação: pronta
+localmente, revisão/suíte/Docker finais verdes; publicação específica pendente.
+
+### O que foi feito
+
+- Equipe própria com `grupo12_explorer`, `grupo12_executor` e
+  `grupo12_reviewer`: papéis configurados GPT-6 Luna/médio, GPT-6.1 Sol/baixo e
+  GPT-6.1 Sol/médio; variante efetiva não inferida quando indisponível. Plano e
+  transições registrados antes do código; revisão independente aprovada sem
+  achados materiais. Não houve correção de produção após revisão.
+- POST de descarte por assunto, query/corpo estritos e200 vazio. Transação
+  IMMEDIATE remove só dados ativos selecionados, preserva chave/outros assuntos/
+  originais/controles, mantém sucesso histórico e permite reenvio com novos IDs.
+  Guarda global da chave rejeita agendado/EM, inclusive de outro assunto. Limpeza
+  de RECEBIDO sem trabalho é aproximação explícita de E0, sem resposta perdida.
+- TDD RED200/422 e GREEN comprovados. Executor verify:212 testes verdes, exit0,
+  26,814s; supervisor clean verify: **212 testes**, zero falhas/erros/ignorados,
+  exit0,25,328s,24 relatórios conferidos. HTTP/JDBC cobrem seis assuntos, rollback
+  statement/COMMIT, isolamento, concorrência entre instâncias e reinício.
+- **1.524 verificações na imagem final V10**, todas exit0:21 de preservação V10,
+  850 de recuperação,393 após reinício,99 SQLite somente leitura e161 automáticas.
+  Preparação com imagem #11:259+3 separadas. SQLite confirmou28 lotes/16 ativos/
+  12 inativos,10.015 processados/efetivos e10.025 valores TEXT exatos, conteúdo/
+  origem/FKs/high-water íntegros. Jar/imagem identificados na
+  [evidência sanitizada](docs/evidencias/issue-12.md).
+- README, manifesto, plano e [rascunho do PR](.scratch/pr-issue-12.md) atualizados.
+  V1–V10/fontes/schemas/build/dependências intactos; .DS_Store preservados. Nenhum
+  código/teste mudou após a suíte final. Containers removidos, ausência confirmada;
+  três volumes fictícios preservados em `orbstack`, sem exclusão autorizada.
+- `grupo12_docreviewer`, configurado GPT-6.1 Sol/médio, aprovou evidência,
+  manifesto e rascunho sem achados materiais; reconferiu relatórios/hash local,
+  sem Maven/Docker ou edições. Variante efetiva não exposta.
+- GitHub reconfirmou PR #38 merged e #12 aberta `ready-for-agent`, sem comentários,
+  dependências #10/#11 concluídas. #8/E1 continua pendente com o solicitante.
+
+### O que deu errado
+
+- Fixtures iniciais corrigidas pelo executor: inspeção inclui eventos da remessa
+  inteira e V10 tem16 tabelas incluindo sqlite_sequence. Sem mudança dinâmica
+  em produção. RED e falhas intermediárias documentados na evidência.
+- Saída da primeira execução Docker não ficou integralmente disponível; checkpoint
+  confirmou conclusão. Comparador anterior reaplicado à base já modificada acusou
+  diferença esperada. Repetidos preparação/snapshot/ensaio em volume independente,
+  com saída completa e sem mudar aplicação; só a repetição entra no total final.
+- Nenhuma falha funcional remanescente na suíte/imagem final. Avisos herdados
+  Mockito/ByteBuddy/JDK/SLF4J não impediram validação. Integrador real, #8/E1,
+  T01/E3, CI remoto e homologação não executados.
+
+### Próximo passo
+
+Obter autorização específica para push/PR/merge da #12 e decisão separada sobre
+exclusão dos três volumes fictícios. Após integração, ler dependências/escopo da
+próxima issue e continuar com equipe própria/supervisão. Solicitante mantém o
+ensaio e aceite humano #8/E1; E2 completo não é concluído por esta fatia.

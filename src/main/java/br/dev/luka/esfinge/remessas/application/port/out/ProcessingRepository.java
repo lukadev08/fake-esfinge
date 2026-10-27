@@ -18,6 +18,7 @@ public interface ProcessingRepository {
     void planFailure(Lote lot,long generation,Integer record,Instant now);
     void removeFailure(Lote lot,long generation,Instant now);
     boolean fail(Processing.Work work,Instant now);
+    void discard(Remessa remessa,Assunto subject,long generation,Instant now);
     boolean isActive(long lot);
     Processing.Diagnostic diagnostic(long lot);
     Processing.State state(long lot);

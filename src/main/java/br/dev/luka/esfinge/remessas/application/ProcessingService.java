@@ -40,6 +40,15 @@ public final class ProcessingService implements Processamento {
             return new Processing.Started("RECEBIDO",now,remessa.id());
         });
     }
+    public synchronized void discard(String token,String key,Assunto subject) {
+        var session=auth.authenticate(token);if(key==null || key.isEmpty() || subject==null) throw new RemessaFailure(INVALID_REQUEST);
+        transactions.execute(()->{
+            var remessa=lots.find(key,session.scenario(),session.ug()).orElseThrow(()->new RemessaFailure(NOT_FOUND));
+            remessa.requireOpen();long generation=repository.generation(session.scenario());
+            if(repository.active(remessa.id(),generation)) throw new RemessaFailure(CONFLICT);
+            repository.discard(remessa,subject,generation,clock.instant());return null;
+        });
+    }
     public Processing.Consultation consult(String token,long number) {
         return transactions.execute(()->{var lot=remessas.consult(token,number);return new Processing.Consultation(lot,repository.state(lot.number()),repository.diagnostic(lot.number()));});
     }

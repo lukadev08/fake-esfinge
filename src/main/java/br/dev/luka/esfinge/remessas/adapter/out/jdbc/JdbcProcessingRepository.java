@@ -49,6 +49,20 @@ public final class JdbcProcessingRepository implements ProcessingRepository {
         jdbc.update("UPDATE processamento_trabalhos SET situacao='PROCESSADO_SUCESSO' WHERE id=?",work.id());
         event(work.remessaId(),work.cenario(),work.ug(),work.loteId(),"LOTE_PROCESSADO_SUCESSO",work.due());return true;
     }
+    public void discard(Remessa remessa,Assunto subject,long generation,Instant now) {
+        var selected=jdbc.queryForList("SELECT numero FROM lotes WHERE remessa_id=? AND cenario=? AND ug=? AND assunto=? AND ativo=1 ORDER BY ordem",Long.class,remessa.id(),remessa.scenario(),remessa.ug(),subject.name());
+        for(long lot:selected) {
+            if(state(lot)==Processing.State.RECEBIDO) {
+                var work=new Processing.Work(0,lot,remessa.id(),remessa.scenario(),remessa.ug(),generation,Processing.State.RECEBIDO,now,0);
+                terminal(work,lot,Processing.State.LOTE_DESCARTADO,"SIM_DESCARTE_ASSUNTO","Dados removidos por descarte do assunto",null,now);
+            } else {
+                removeData(lot);
+                event(remessa.id(),remessa.scenario(),remessa.ug(),lot,"DADOS_LOTE_REMOVIDOS",now);
+            }
+        }
+        jdbc.update("UPDATE remessas SET atividade=? WHERE id=?",now.toString(),remessa.id());
+        event(remessa.id(),remessa.scenario(),remessa.ug(),null,"ASSUNTO_DESCARTADO_"+subject.name(),now);
+    }
     public boolean isActive(long lot) {return jdbc.queryForObject("SELECT ativo FROM lotes WHERE numero=?",Integer.class,lot)==1;}
     public Processing.Diagnostic diagnostic(long lot) {
         return jdbc.query("SELECT codigo,mensagem,registro FROM processamento_trabalhos WHERE lote_id=? AND codigo IS NOT NULL",(r,n)->new Processing.Diagnostic(r.getString(1),r.getString(2),(Integer)r.getObject(3)),lot).stream().findFirst().orElse(null);
@@ -78,12 +92,15 @@ public final class JdbcProcessingRepository implements ProcessingRepository {
         return true;
     }
     private void terminal(Processing.Work work,long lot,Processing.State state,String code,String message,Integer record,Instant now) {
+        removeData(lot);
+        jdbc.update("INSERT INTO processamento_trabalhos(lote_id,remessa_id,cenario,ug,geracao,situacao,devido_segundos,devido_nanos,latencia_ms,codigo,mensagem,registro) VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(lote_id) DO UPDATE SET situacao=excluded.situacao,codigo=excluded.codigo,mensagem=excluded.mensagem,registro=excluded.registro",lot,work.remessaId(),work.cenario(),work.ug(),work.geracao(),state.name(),now.getEpochSecond(),now.getNano(),work.latencyMillis(),code,message,record);
+        event(work.remessaId(),work.cenario(),work.ug(),lot,state.name(),now);
+    }
+    private void removeData(long lot) {
         jdbc.update("DELETE FROM registros_efetivos WHERE lote_id=?",lot);
         jdbc.update("DELETE FROM registros_processados WHERE lote_id=?",lot);
         jdbc.update("DELETE FROM valores_recebidos WHERE lote_id=?",lot);
         jdbc.update("UPDATE lotes SET ativo=0 WHERE numero=?",lot);
-        jdbc.update("INSERT INTO processamento_trabalhos(lote_id,remessa_id,cenario,ug,geracao,situacao,devido_segundos,devido_nanos,latencia_ms,codigo,mensagem,registro) VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(lote_id) DO UPDATE SET situacao=excluded.situacao,codigo=excluded.codigo,mensagem=excluded.mensagem,registro=excluded.registro",lot,work.remessaId(),work.cenario(),work.ug(),work.geracao(),state.name(),now.getEpochSecond(),now.getNano(),work.latencyMillis(),code,message,record);
-        event(work.remessaId(),work.cenario(),work.ug(),lot,state.name(),now);
     }
     private void event(long remessa,String scenario,String ug,Long lot,String type,Instant now) {jdbc.update("INSERT INTO remessa_eventos(remessa_id,cenario,ug,lote_id,tipo,instante) VALUES (?,?,?,?,?,?)",remessa,scenario,ug,lot,type,now.toString());}
     public Processing.State state(long lot) {return jdbc.query("SELECT situacao FROM processamento_trabalhos WHERE lote_id=?",(r,n)->Processing.State.valueOf(r.getString(1)),lot).stream().findFirst().orElse(Processing.State.RECEBIDO);}
