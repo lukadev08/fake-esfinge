@@ -13,8 +13,8 @@ E0 está concluído documentalmente no recorte inicial. As fatias E1
 [#7](https://github.com/lukadev08/fake-esfinge/issues/7) implementam autenticação
 fictícia, abertura de envio, recepção dos seis assuntos, consulta `RECEBIDO` e
 inspeção administrativa com persistência SQLite. A fatia E2 #9 acrescenta disparo
-explícito e processamento estrutural persistido. Finalização, reset e painel
-ainda não estão implementados.
+explícito e processamento estrutural persistido. A #10 acrescenta finalização
+com totalizadores efetivos e histórico preservado. Reset e painel permanecem pendentes.
 A saída E1 depende do aceite humano da #8; testes locais não comprovam T01.
 A continuidade técnica E2 autorizada está delimitada na
 [seção 13.1 do planejamento](docs/planejamento-simulador-tributario.md#131-pendência-e1-e-continuidade-de-e2).
@@ -47,7 +47,7 @@ Dados originais do piloto permanecem no ambiente local controlado, fora do Git
 e de serviços externos. Exemplos e evidências compartilhadas exigem sanitização;
 credenciais e tokens do simulador serão fictícios.
 
-## Executar e validar as fatias #1–#9
+## Executar e validar as fatias #1–#10
 
 Requer JDK 21. O wrapper oficial fixa Maven 3.9.9; o primeiro uso baixa Maven e
 as dependências do Maven Central. O build fixa Spring Boot 3.5.10, SQLite JDBC
@@ -70,7 +70,9 @@ A V6 permite saldo inicial com quatro valores por registro e nomeia os valores
 antigos pelo assunto, mantendo TEXT e todos os dados. A V7 admite início do prazo
 prescricional, preservando os dados e os valores nomeados V6; prazo não gera
 linhas monetárias. A V8 acrescenta trabalhos, configuração, deslocamento de tempo e
-registros processados/efetivos sem reescrever V1–V7 ou o recebido. Schema, migração ou configuração persistida incompatíveis
+registros processados/efetivos sem reescrever V1–V7 ou o recebido. A V9 acrescenta
+`remessas.finalizada_em` e atualiza o índice de abertura sem reconstruir tabelas
+ou alterar V1–V8. Schema, migração ou configuração persistida incompatíveis
 interrompem a inicialização sem recriar dados. Não há reset nesta
 fatia. Para outra execução, use outro arquivo/volume; preserve o anterior.
 
@@ -86,7 +88,7 @@ curl -i 'http://localhost:8080/__simulator/configuracao' \
 O login devolve `{"chave":"sim-..."}`; use esse valor em `auth_token`. Credenciais
 inválidas retornam 401; UG não autorizada, 403; parâmetros/corpo inválidos, 400.
 As rotas contratuais conhecidas ainda indisponíveis validam o token e retornam
-422 `SIM_COBERTURA_AUSENTE`; não finalizam remessas nem aprovam dados.
+422 `SIM_COBERTURA_AUSENTE`; não aprovam dados fiscais.
 Recurso inexistente retorna 404. Erros têm `codigo`, `mensagem` sanitizada e `correlacao`.
 
 A inspeção administrativa usa exclusivamente `X-Simulator-Key`; não aceita o
@@ -393,3 +395,31 @@ fatias #2–#7 acima representam o estado anterior ao disparo.
 
 Consulte [evidência da #9](docs/evidencias/issue-9.md). A implementação técnica
 não encerra o aceite humano E1/#8, T01, E2 completo ou homologação oficial.
+
+
+## Finalizar envio — #10
+
+Use POST `/v6/tributario/finalizarEnvio`, `auth_token`, JSON UTF-8 e nenhuma query.
+O corpo exige `chavePacote` e todos os 17 totalizadores string do
+[schema `finalizar`](docs/contratos/2026-v6-6.06/schemas.json).
+Os seis assuntos aceitam somente dígitos ASCII, comparados numericamente sem
+limite de inteiro fixo; zeros iniciais são aceitos. Os onze assuntos sem suporte
+exigem string exata `"0"`; positivo retorna422 de cobertura. Campos ausentes,
+nulos, tipos incorretos ou extras retornam422; JSON/mídia/query inválidos retornam400.
+
+Há pelo menos um lote e todos os lotes atuais devem estar em `PROCESSADO_SUCESSO`,
+inclusive os recebidos após o último disparo. Totais contam linhas efetivas por
+assunto e envio, conservando duplicatas; não somam dinheiro nem usam a contagem
+de recepção. Pendência ou divergência retorna409 sem efeitos. Sucesso retorna200
+com corpo vazio e confirma marcador/atividade/evento em uma transação SQLite.
+
+Recepção, disparo e nova finalização na chave fechada retornam409. Consulta
+histórica autorizada mantém estado/conteúdo, sem renovar atividade nem gerar
+novo evento de consulta. Uma abertura posterior da mesma UG/competência retorna
+chave nova e preserva o histórico, sem cota mensal adicional nesta fatia.
+Reinício conserva o fechamento; falha de statement/COMMIT reverte a finalização.
+
+Consulte [evidência da #10](docs/evidencias/issue-10.md). Todos os lotes atuais
+são ativos; descarte, cancelamento, recuperação, sem movimento e T17 ainda não
+estão implementados. Testes fictícios locais não encerram #8/E1, T01/E3 ou
+homologação oficial. Publicação da #10 permanece sem autorização.

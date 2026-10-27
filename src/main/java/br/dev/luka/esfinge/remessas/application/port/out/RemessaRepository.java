@@ -11,5 +11,7 @@ public interface RemessaRepository { Remessa open(String scenario, String ug, in
     Optional<Lote> findLote(long number,String scenario,String ug);
     Optional<Lote> inspectLote(long number,String scenario);
     List<RemessaEvent> events(long remessaId);
+    Finalization.State finalization(Remessa remessa);
+    void finish(Remessa remessa,Instant now);
     void touch(Lote lote,Instant now);
 }

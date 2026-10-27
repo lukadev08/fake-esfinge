@@ -170,12 +170,28 @@ propositalmente o horizonte técnico esgotado; não serve para prosseguir opera�
 temporais. Exclusão depende de autorização específica. Imagem/clientes temporários
 em `/private/tmp/fake-esfinge-issue9-supervisao` preservados localmente.
 
+Após autorização específica posterior do solicitante, os três volumes acima
+foram excluídos, exit0; ausência confirmada no contexto `orbstack`. Nenhum outro
+volume foi excluído. Imagem e clientes locais preservados.
+
+## Publicação e integração
+
+Push da branch `issue-9-processamento-assuntos`, criação e merge do
+[PR #36](https://github.com/lukadev08/fake-esfinge/pull/36) realizados com autorização
+específica. Head revisado `5e9e8a459b0765779daea6cc7e9a49d79f656994`; base
+`ddf84875a5afd5a336537ca631afe04ef9ebfd1c`. Comparação remota confirmou os cinco
+commits preparados, sem divergência de base. PR sem conflitos; merge protegido
+pelo SHA esperado, resultado
+`eb376d07fd8efe915d2588cb69e4a0f41b1dcf75`. GitHub confirmou PR merged, #9 completed,
+`main` no merge e #8 ainda aberta. PR anexado à tarefa. Status/check-runs remotos
+vazios: não há evidência de CI executado. Nenhuma nova alteração de código exigiu
+repetição da suíte já aprovada.
+
 ## Limites
 
 Esta evidência não executa integrador real, aceite E1/#8 ou T01 completo.
 Finalização, falhas de negócio, descarte, cancelamento, reset, expiração72h,
 controle global #16, painel e regras fiscais continuam fora da #9.
-CI remoto, publicação de imagem, push, PR e merge da #9 não realizados. Implementação
-técnica local pronta para publicação específica; #8 permanece aberta, inclusive a
-dependência remota registrada na #9. A exceção de sequência não comprova E1/E2
-integral, T01/E3 nem homologação oficial.
+CI remoto, publicação de imagem e implantação não realizados. #8 permanece aberta;
+sua dependência documental na #9 foi preservada. A exceção de sequência não
+comprova E1/E2 integral, T01/E3 nem homologação oficial.

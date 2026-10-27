@@ -1621,3 +1621,122 @@ Obter autorização específica para publicar/integrar a #9 com o rascunho concr
 exclusão dos três volumes requer decisão própria. Após integração, prosseguir à
 #10 e às demais fatias E2 dentro de suas dependências. Solicitante mantém o ensaio
 e aceite humano #8/E1 pendentes, sem data presumida.
+
+## 2026-10-26 — Publicar e integrar #9; limpar ensaios autorizados
+
+Referência: respostas expressas “Autorizar publicação e merge” da #9 e
+“Autorizar exclusão dos três volumes”. Situação: PR #36 integrado; #9 completed;
+continuidade técnica para #10, com #8/E1 pendente.
+
+### O que foi feito
+
+- Push de `issue-9-processamento-assuntos`, head revisado `5e9e8a4`, criação do
+  [PR #36](https://github.com/lukadev08/fake-esfinge/pull/36) com corpo preparado e
+  anexo à tarefa. Base remota reconfirmada `ddf8487`; comparação sem divergência
+  e PR sem conflitos. Merge com SHA esperado produziu
+  `eb376d07fd8efe915d2588cb69e4a0f41b1dcf75`.
+- GitHub confirmou PR merged, `main` no merge, #9 closed/completed e #8 aberta.
+  Checks/statuses do head vazios, sem CI executado; 137 testes e 1.094 verificações
+  Docker verdes continuam evidência local do artefato revisado.
+- Após conferir nomes e ausência de containers usuários, excluídos somente os
+  volumes `fake-esfinge-issue9-supervisao`, `fake-esfinge-issue9-supervisao-final`
+  e `fake-esfinge-issue9-supervisao-auto` no contexto `orbstack`, exit0; ausência
+  confirmada. Imagem/clientes preservados. Evidência, manifesto e registro do PR
+  atualizados sem alterar o corpo publicado.
+- Criada branch local `issue-10-finalizacao` sobre `origin/main` integrado.
+  #10 reconfirmada aberta `ready-for-agent`, sem comentários, dependente apenas
+  da #9 agora concluída. Iniciada exploração própria para finalização/totalizadores.
+
+### O que deu errado
+
+Nenhuma falha de publicação, merge ou exclusão. Nenhum código mudou desde a suíte
+final; testes não repetidos nesta operação documental. Ensaio real e aceite
+humano #8/E1, T01/E3 e CI remoto seguem pendentes; merge não comprova esses marcos.
+
+### Próximo passo
+
+Concluir exploração e plano de transições da #10, implementar em equipe própria
+com TDD/revisão/supervisão, mantendo publicação da nova fatia sob autorização
+específica. Solicitante conserva a pendência interna #8/E1.
+
+## 2026-10-26 — Preparar implementação da #10
+
+Referência: continuação técnica E2 autorizada e
+[issue #10](https://github.com/lukadev08/fake-esfinge/issues/10), após merge da #9.
+Situação: exploração/plano concluídos antes do código; implementação em seguida.
+
+### O que foi feito
+
+- `grupo10_explorer`, identificado GPT-6 Luna/médio, concluiu leitura do contrato,
+  arquitetura, chamadas e persistência. Supervisor leu fontes pertinentes e
+  reconfirmou #10 aberta, sem comentários, com #9 completed e #8/E1 pendente.
+- [Plano da #10](.scratch/issue-10-plan.md) define17 totalizadores, precondições,
+  fechamento/transições, histórico, migração V9 e fatias TDD. Escolhido marcador
+  `finalizada_em` com índice parcial, preservando dados V8 e substituindo guardas
+  que dependiam só do estado legado. Sem reconstrução desnecessária de tabelas.
+- Planejados comparação numérica exata com linhas efetivas, erro409 sem efeitos,
+  sucesso200 vazio, consulta histórica sem renovar atividade e nova abertura
+  sem cota mensal. Recuperação e operações indisponíveis seguem explicitamente fora.
+- Comandos herdados inspecionados; nenhuma dependência/configuração nova necessária.
+  .DS_Store preexistentes preservados; nenhuma publicação da #10 autorizada.
+
+### O que deu errado
+
+Nenhuma falha executada. Estado ABERTO restrito pela V2 exigiu definir marcador
+persistido e revisar todas as guardas; não foi tratado como impedimento externo.
+Nenhum build/teste/código da #10 executado nesta preparação. E1 real permanece pendente.
+
+### Próximo passo
+
+Executor próprio implementar TDD da #10; revisão independente e correções delegadas,
+seguindo supervisão de suíte limpa e Docker no artefato final antes da publicação.
+
+## 2026-10-26 — Concluir implementação técnica local da #10
+
+Referência: continuação E2 autorizada e
+[issue #10](https://github.com/lukadev08/fake-esfinge/issues/10). Situação: pronta
+localmente, revisão/suíte/Docker aprovados; publicação específica pendente.
+
+### O que foi feito
+
+- Executor próprio `grupo10_executor`, identificado GPT-6.1 Sol/baixo, implementou
+  finalização com 17 totalizadores estritos, comparação BigInteger com linhas
+  efetivas por origem e fechamento/evento/atividade atômicos. V9 aditiva e guardas
+  conservam histórico, recusam mutações fechadas e liberam nova chave por competência.
+  Recuperação/descartes não foram antecipados.
+- Reviewer próprio `grupo10_reviewer` concluiu leitura independente de produção,
+  testes/fixtures e migração, sem achados materiais. Papel configurado reviewer
+  GPT-6.1 Sol/médio; autodeclarou Codex/GPT-6 sem variante/esforço expostos. Nenhuma
+  correção adicional de produção foi necessária; supervisor não editou código.
+- TDD nominal comprovou RED 200/422 e GREEN. Executor verify 155 testes verdes,
+  exit0,16,413s. Supervisor repetiu `clean verify`: **155 testes**, zero falhas/
+  erros/ignorados, exit0,17,517s; 21 relatórios Surefire conferidos e jar identificado
+  na [evidência](docs/evidencias/issue-10.md).
+- **1.279 verificações na imagem final V9**, todas exit0: quinze tabelas V8
+  preservadas, estados em fases distintas retomados, rejeições sem efeitos,
+  seis assuntos, 17 campos, 10.001 créditos, concorrência, 200 vazio, consulta histórica
+  sem renovar atividade e nova chave após reinício. SQLite confirmou três
+  fechamentos/eventos, 21 trabalhos, 10.021 registros/efeitos e10.016 valores TEXT
+  com conteúdo/origem exatos. Preparação V8: 538 verificações +3 de snapshot, separadas.
+- README, manifesto, plano e [rascunho de PR](.scratch/pr-issue-10.md) atualizados.
+  V1–V8/fontes/schemas/build/dependências intactos; .DS_Store preexistentes preservados.
+  Container removido e ausência confirmada; volume fictício
+  `fake-esfinge-issue10-supervisao` preservado no contexto `orbstack`.
+
+### O que deu errado
+
+- Duas expectativas intermediárias de teste foram corrigidas: token do cenário B
+  deve autenticar no serviço B para provar 404 sobre chave A; contagem monetária
+  de saldo continuava oito, enquanto a versão de schema avançava para 9.
+  Fixtures antigas passaram a usar SQL legado somente em testes para semear
+  schemas V2–V8 sem marcador; produção não detecta schema dinamicamente.
+- Nenhuma falha remanescente na revisão, suíte ou imagem final. Avisos herdados
+  de Mockito/ByteBuddy/JDK e SLF4J dos clientes não falharam validação. Nenhum
+  integrador real, aceite #8/E1/T01/E3 ou CI remoto executado; conclusão técnica
+  da #10 não encerra E2 integral ou homologação oficial.
+
+### Próximo passo
+
+Obter autorização específica para push/PR/merge da #10 e decisão separada sobre
+exclusão do volume fictício. Depois de integrar, prosseguir à #11 dentro das
+dependências e supervisão autorizadas. Solicitante mantém #8/E1 pendente.

@@ -39,6 +39,18 @@ public final class RemessaController {
         var lote=remessas.receive(token,parameter(request,"chavePacote",true),content);
         return new ReceiveResponse("RECEBIDO",lote.number(),lote.receivedAt(),lote.remessaId());
     }
+    @PostMapping("/v6/tributario/finalizarEnvio")
+    public void finish(HttpServletRequest request) throws IOException {
+        String token=request.getHeader("auth_token");authentication.authenticate(token);
+        if(request.getQueryString()!=null || !request.getParameterMap().isEmpty()) throw invalid();
+        try {
+            var type=org.springframework.http.MediaType.parseMediaType(request.getContentType());
+            if(!type.getType().equalsIgnoreCase("application") || !type.getSubtype().equalsIgnoreCase("json")
+                || (type.getCharset()!=null && !type.getCharset().equals(java.nio.charset.StandardCharsets.UTF_8))) throw invalid();
+        } catch(IllegalArgumentException failure) {throw invalid();}
+        var body=new FinalizationPayload().read(request.getInputStream().readAllBytes());
+        remessas.finish(token,body.key(),body.totals());
+    }
     public record ConsultResponse(String situacao,long identificadorRemessa,long numeroLote,java.time.Instant dataEnvio) {}
     @GetMapping("/v6/tributario/consultarPorNumeroLote/{numeroLote}")
     public ConsultResponse consult(@PathVariable String numeroLote,HttpServletRequest request) throws IOException {
