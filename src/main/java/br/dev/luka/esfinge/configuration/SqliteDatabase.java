@@ -26,7 +26,7 @@ public final class SqliteDatabase {
         } catch (Exception e) { throw new IllegalStateException("Base SQLite indisponivel ou incompativel; dados preservados"); }
     }
     private static void migrate(DataSource source) throws Exception {
-        String[] scripts = {"V1__authentication.sql", "V2__remessas.sql", "V3__creditos.sql", "V4__arrecadacao.sql", "V5__baixas.sql", "V6__saldo.sql", "V7__prazo.sql", "V8__processamento.sql", "V9__finalizacao.sql", "V10__erro_processamento.sql", "V11__cancelamento.sql", "V12__falhas_recepcao.sql", "V13__bloqueio_competencia.sql"};
+        String[] scripts = {"V1__authentication.sql", "V2__remessas.sql", "V3__creditos.sql", "V4__arrecadacao.sql", "V5__baixas.sql", "V6__saldo.sql", "V7__prazo.sql", "V8__processamento.sql", "V9__finalizacao.sql", "V10__erro_processamento.sql", "V11__cancelamento.sql", "V12__falhas_recepcao.sql", "V13__bloqueio_competencia.sql", "V14__expiracao.sql"};
         try (var connection = source.getConnection()) {
             connection.setAutoCommit(false);
             try {
@@ -49,12 +49,22 @@ public final class SqliteDatabase {
                 for (int i=version;i<scripts.length;i++) {
                     var resource=new ClassPathResource("db/migration/"+scripts[i]);
                     ScriptUtils.executeSqlScript(connection,resource);
+                    if(i+1==14) backfillExpiration(connection);
                     try (var statement=connection.prepareStatement("INSERT INTO schema_migrations(version,checksum) VALUES (?,?)")) {
                         statement.setInt(1,i+1);statement.setString(2,CredentialHash.token(resource.getContentAsString(StandardCharsets.UTF_8)));statement.executeUpdate();
                     }
                 }
                 connection.commit();
             } catch (Exception e) { connection.rollback(); throw e; }
+        }
+    }
+    private static void backfillExpiration(java.sql.Connection connection) throws java.sql.SQLException {
+        try(var query=connection.createStatement();var rows=query.executeQuery("SELECT id,atividade FROM remessas");
+            var update=connection.prepareStatement("UPDATE remessas SET expira_segundos=?,expira_nanos=? WHERE id=?")) {
+            while(rows.next()) {
+                var due=br.dev.luka.esfinge.remessas.domain.Remessa.deadline(java.time.Instant.parse(rows.getString("atividade")));
+                update.setLong(1,due.getEpochSecond());update.setInt(2,due.getNano());update.setLong(3,rows.getLong("id"));update.executeUpdate();
+            }
         }
     }
     private static void seed(DataSource source, SimulatorSettings settings) {

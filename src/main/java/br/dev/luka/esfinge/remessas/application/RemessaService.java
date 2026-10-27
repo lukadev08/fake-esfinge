@@ -12,10 +12,11 @@ public final class RemessaService implements Remessas {
     private final Authentication authentication;
     private final RemessaRepository repository;
     private final Transactions transactions;
+    private final ProcessingRepository processing;
     private final Clock clock;
     private final br.dev.luka.esfinge.cenarios.application.port.in.InspectScenario inspection;
-    public RemessaService(Authentication authentication, RemessaRepository repository, Transactions transactions, Clock clock, br.dev.luka.esfinge.cenarios.application.port.in.InspectScenario inspection) {
-        this.authentication = authentication; this.repository = repository; this.transactions = transactions; this.clock = clock; this.inspection=inspection;
+    public RemessaService(Authentication authentication, RemessaRepository repository, Transactions transactions, Clock clock, br.dev.luka.esfinge.cenarios.application.port.in.InspectScenario inspection,ProcessingRepository processing) {
+        this.authentication = authentication; this.repository = repository; this.transactions = transactions; this.clock = clock; this.inspection=inspection;this.processing=processing;
     }
     public Remessa open(String token, int yearMonth, String cancellation) {
         var session = authentication.authenticate(token);
@@ -23,7 +24,8 @@ public final class RemessaService implements Remessas {
         if (!"NAO".equals(cancellation)) throw new RemessaFailure(UNSUPPORTED);
         return transactions.execute(() -> {
             requireUnblocked(session.scenario(),session.ug(),yearMonth);
-            return repository.open(session.scenario(),session.ug(),yearMonth,"sim-envio-"+UUID.randomUUID(),clock.instant());
+            var now=clock.instant();repository.findOpen(session.scenario(),session.ug(),yearMonth).ifPresent(remessa->expire(remessa,now));
+            return repository.open(session.scenario(),session.ug(),yearMonth,"sim-envio-"+UUID.randomUUID(),now);
         });
     }
     public Lote receive(String token,String key,ReceivedContent content) {
@@ -32,21 +34,26 @@ public final class RemessaService implements Remessas {
         if (content==null || content.records()<1 || content.bytes().length==0) throw new RemessaFailure(INVALID_STRUCTURE);
         var result=transactions.execute(() -> {
             var remessa=repository.find(key,session.scenario(),session.ug()).orElseThrow(() -> new RemessaFailure(NOT_FOUND));
+            var now=clock.instant();if(expire(remessa,now)) return new Receipt(null,null);
             requireUnblocked(remessa.scenario(),remessa.ug(),remessa.yearMonth());
             remessa.requireOpen();
             var interruption=repository.receptionAttempt(remessa,content.subject());
             if(interruption==Reception.Type.ANTES_ACEITACAO) return new Receipt(null,interruption);
             try {
                 String hash=java.util.HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(content.bytes()));
-                var now=clock.instant();var lot=repository.receive(remessa,content,hash,now);
+                var lot=repository.receive(remessa,content,hash,now);
                 if(interruption==Reception.Type.APOS_COMMIT) repository.responseLost(remessa,lot,now);
                 return new Receipt(lot,interruption);
             } catch (java.security.NoSuchAlgorithmException e) { throw new IllegalStateException(); }
         });
         if(result.interruption()!=null) throw new Reception.Interrupted(result.interruption());
+        if(result.lot()==null) throw new RemessaFailure(CONFLICT);
         return result.lot();
     }
     private record Receipt(Lote lot,Reception.Type interruption) {}
+    private boolean expire(Remessa remessa,java.time.Instant now) {
+        return remessa.expiredAt()!=null || remessa.due(now) && processing.expire(remessa,processing.generation(remessa.scenario()),now);
+    }
     public Competencia competencia(String adminKey,String ug,int yearMonth) {
         var scenario=competenciaScenario(adminKey,ug,yearMonth);
         return transactions.execute(()->new Competencia(ug,yearMonth,repository.blocked(scenario,ug,yearMonth)));
@@ -72,30 +79,33 @@ public final class RemessaService implements Remessas {
         var scenario=inspection.inspect(adminKey).scenario();validatePlanKey(key,subject);
         if(type==null || attempt<1) throw new RemessaFailure(INVALID_REQUEST);
         return transactions.execute(()->{
-            var remessa=repository.find(key,scenario).orElseThrow(()->new RemessaFailure(NOT_FOUND));remessa.requireOpen();
-            repository.planReception(remessa,subject,type,attempt,clock.instant());return repository.receptionPlan(remessa,subject).orElseThrow();
+            var remessa=repository.find(key,scenario).orElseThrow(()->new RemessaFailure(NOT_FOUND));var now=clock.instant();remessa.requireOpen(now);
+            repository.planReception(remessa,subject,type,attempt,now);return repository.receptionPlan(remessa,subject).orElseThrow();
         });
     }
     public void removeReceptionPlan(String adminKey,String key,Assunto subject) {
         var scenario=inspection.inspect(adminKey).scenario();validatePlanKey(key,subject);
-        transactions.execute(()->{var remessa=repository.find(key,scenario).orElseThrow(()->new RemessaFailure(NOT_FOUND));remessa.requireOpen();repository.removeReceptionPlan(remessa,subject,clock.instant());return null;});
+        transactions.execute(()->{var remessa=repository.find(key,scenario).orElseThrow(()->new RemessaFailure(NOT_FOUND));var now=clock.instant();remessa.requireOpen(now);repository.removeReceptionPlan(remessa,subject,now);return null;});
     }
     private void validatePlanKey(String key,Assunto subject) {if(key==null || key.isEmpty() || subject==null) throw new RemessaFailure(INVALID_REQUEST);}
     public void finish(String token,String key,Finalization totals) {
         var session=authentication.authenticate(token);
         if(key==null || key.isEmpty()) throw new RemessaFailure(INVALID_STRUCTURE);
         if(totals==null) throw new RemessaFailure(INVALID_STRUCTURE);
-        transactions.execute(()->{
+        boolean expired=transactions.execute(()->{
             var remessa=repository.find(key,session.scenario(),session.ug()).orElseThrow(()->new RemessaFailure(NOT_FOUND));
+            var now=clock.instant();if(expire(remessa,now)) return true;
             requireUnblocked(remessa.scenario(),remessa.ug(),remessa.yearMonth());
-            remessa.requireOpen();totals.verify(repository.finalization(remessa));repository.finish(remessa,clock.instant());return null;
+            remessa.requireOpen();totals.verify(repository.finalization(remessa));repository.finish(remessa,now);return false;
         });
+        if(expired) throw new RemessaFailure(CONFLICT);
     }
     public Lote consult(String token,long number) {
         var session=authentication.authenticate(token);
         return transactions.execute(() -> {
             var lote=repository.findLote(number,session.scenario(),session.ug()).orElseThrow(() -> new RemessaFailure(NOT_FOUND));
-            repository.touch(lote,clock.instant());
+            var now=clock.instant();var remessa=repository.find(lote.key(),session.scenario(),session.ug()).orElseThrow(()->new RemessaFailure(NOT_FOUND));
+            if(!expire(remessa,now)) repository.touch(lote,now);
             return lote;
         });
     }

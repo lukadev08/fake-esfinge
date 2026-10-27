@@ -2423,3 +2423,132 @@ CI remoto e homologação continuam pendentes.
 
 Supervisão preparar commit/push/PR/merge da #15 nos limites da autorização
 vigente e retomar a coordenação da #16 com grupo próprio.
+
+## 2026-10-27 — Publicar e integrar a issue #15
+
+Referência: ciclo autorizado e
+[PR #42](https://github.com/lukadev08/fake-esfinge/pull/42).
+Situação: integrada; #15 closed/completed; #16 explorada, ainda não implementada.
+
+### O que foi feito
+
+- Supervisão publicou head `70ee641aed8449f52752d1787000e119c98e71e0` sobre base
+  `f4ba836` e integrou no merge `df77df16a131c5a419648ce472915a237a6a3c70`.
+  GitHub confirmou PR MERGED e #15 CLOSED/COMPLETED. Checkout alinhado ao merge
+  por fast-forward; check rollup vazio, sem execução de CI remoto.
+- Encerramento registrado somente em documentação. Código/testes/smoke/jar
+  permaneceram inalterados e corpo publicado exato preservado em
+  `.scratch/pr-issue-15.md`. Não houve nova execução de testes por estes registros.
+- Container ausente, nenhum volume Docker criado e bases fictícias tmp
+  preservadas; nenhuma limpeza destrutiva adicional.
+
+### O que deu errado
+
+Nenhuma falha de publicação ou merge informada. Aceites humanos #8/E1 e T01/E3,
+reset #17, CI remoto e homologação continuam pendentes; #15 não conclui E2 integral.
+
+### Próximo passo
+
+Supervisão retomar a coordenação da #16 com explorer/executor/reviewer próprios,
+reconferindo os pontos alterados pela #15 antes de implementar.
+
+## 2026-10-27 — Preparar expiração controlada da issue #16
+
+Referência: continuidade técnica E2 autorizada e
+[issue #16](https://github.com/lukadev08/fake-esfinge/issues/16).
+Situação: exploração reconferida após #15; plano anterior ao código preparado.
+
+### O que foi feito
+
+- Executor exclusivo leu contrato, planejamento, arquitetura, progresso, issue
+  e chamadores; confirmou branch `codex/issue-16-expiracao`, base `df77df1` e
+  registro `9f58eae`. Produção/testes permanecem intactos nesta preparação.
+- [Plano local](.scratch/issue-16-plan.md) define agenda durável exata no envio,
+  renovação atômica, marcador separado, histórico, outcomes após commit e guardas
+  de trabalhos tardios. V14/backfill Java transacional preservará nanos legados.
+- Reutilização do relógio/avanço/executor existentes; sem API ou TTL novo. Token
+  padrão de uma hora e envio de 72 horas são políticas derivadas documentadas.
+
+### O que deu errado
+
+Nenhum teste/build foi executado nesta preparação. Expiração e remoção dos dados
+ativos são desenho proposto, ainda sem implementação ou aceite técnico.
+#8/E1 e T01/E3 continuam pendentes.
+
+### Próximo passo
+
+Supervisão revisar o desenho; depois executor implementar por TDD e submeter
+resultado a reviewer independente, com correções delegadas quando necessárias.
+
+## 2026-10-27 — Implementar e validar expiração técnica local da #16
+
+Referência: [issue #16](https://github.com/lukadev08/fake-esfinge/issues/16) e
+continuidade técnica E2 autorizada. Situação: código/testes congelados, suíte e
+Docker finais verdes; revisão independente do código aprovada, documental pendente.
+
+### O que foi feito
+
+- Desenho aprovado antes do código. V14 aditiva conserva V1–V13 e acrescenta
+  deadline em segundos/nanos, marcador separado e índice de aberta; backfill
+  Java exato na mesma transação. Nenhum TTL/API/dependência extra.
+- Renovação atômica nas operações compatíveis bem-sucedidas e expiração de 72h
+  inclusiva. Autenticação/isolamento precedem expiração; chave vencida 409 é
+  devolvida após confirmar a expiração. Administração vencida recusa sem efeitos;
+  abertura bloqueada 403 não expira chave anterior. Consultas históricas não
+  renovam nem conduzem processamento. Dados ativos removidos, originais/controles
+  e sucessos históricos preservados; pendentes ABORTADO/SIM_ENVIO_EXPIRADO.
+- TDD RED/GREEN e focal final165 verdes. Executor verify: **304 testes**, zero
+  falhas/erros/ignorados, exit 0, 34,813s; novos 25 JDBC/4 HTTP. Limites/nanos,
+  seis renovações, isolamento por cenário/UG/deadline, reinício, rollback e
+  backfill inválido revertendo schema, corrida pausada e guardas tardias cobertos.
+- Supervisor clean verify:304, exit 0, 37,382s. Jar final
+  `28d43a86093a158d4d8f45bf75b2cf8a46c6f478565b64acc1694f68e597eb3f`.
+  Smoke no jar copiado e na imagem final Linux amd64: **56 verificações em cada**,
+  25 prepare/31 resume, com reinício e avanço virtual no limite. Imagem
+  `sha256:2d0199d53abba7656b6a878b9d71862d7fe26807b5b3a41bb8b7eabee246675b`;
+  hash do jar interno conferido, SQLite somente leitura íntegro/FKs sem violações.
+- Serviços 18196 encerrados e listener ausente; container Docker removido e
+  ausência confirmada. Nenhum volume criado; dados fictícios tmp preservados.
+  README, cobertura, [evidência](docs/evidencias/issue-16.md), plano e rascunhoPR
+  consolidados. Revisor independente aprovou código/testes sem achados materiais,
+  conferiu 32 relatórios/304 testes e diff check. Sem commit/push pelo executor.
+
+### O que deu errado
+
+- Primeira regressão encontrou14 expectativas de versão13 contra 14; corrigidas
+  somente fixtures, com conferência adicional dos deadlines exatos no upgrade.
+- Expansão dos testes encontrou precedência incorreta em chave já expirada+
+  bloqueada (403 em vez de409) e falta de guarda da geração na expiração direta.
+  RED 6 comprovou; ajuste mínimo e GREEN 6 antes de congelar produção/testes.
+- Sondagens Docker de prontidão tiveram conexão vazia durante startup; porta
+  reconferida após restart. Nenhum smoke ou teste final falhou. Avisos herdados
+  Mockito/ByteBuddy/JDK não impediram validação; aceites humanos e CI não executados.
+
+### Próximo passo
+
+Reviewer próprio concluir revisão independente e reconferir documentação final.
+Supervisão preparar PR/merge após aprovação; depois coordenar #17 com equipe
+própria. #8/E1, T01/E3, regras fiscais e homologação permanecem pendentes.
+
+## 2026-10-27 — Aprovar consolidação documental final da #16
+
+Referência: revisão independente da
+[issue #16](https://github.com/lukadev08/fake-esfinge/issues/16).
+Situação: código/documentos aprovados; pronta para publicação pela supervisão.
+
+### O que foi feito
+
+Reviewer exclusivo aprovou a conferência documental final sem achados materiais.
+Executor atualizou somente marcadores em plano, evidência, cobertura, README e
+rascunho do PR. Código, testes, smoke e jar final permaneceram congelados;
+resultados e limites preservados, sem repetição de build ou ensaios.
+
+### O que deu errado
+
+Nenhuma correção funcional solicitada. Reset #17, inspeção #18, aceites humanos,
+T01/E3, regras fiscais, CI remoto e homologação continuam pendentes.
+
+### Próximo passo
+
+Supervisão preparar commit/push/PR/merge da #16 nos limites da autorização e
+retomar a coordenação da #17 com grupo próprio.

@@ -13,7 +13,13 @@ final class LegacyRemessaRepository implements RemessaRepository {
     private final br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcRemessaRepository current;
     public boolean blocked(String scenario,String ug,int yearMonth) {return false;}
     public void block(String scenario,String ug,int yearMonth,boolean blocked) {throw new UnsupportedOperationException();}
-    public Remessa open(String scenario,String ug,int yearMonth,String key,Instant now) {return current.open(scenario,ug,yearMonth,key,now);}
+    public Remessa open(String scenario,String ug,int yearMonth,String key,Instant now) {
+        long id=jdbc.queryForObject("INSERT INTO remessas(chave,cenario,ug,competencia,abertura,atividade) VALUES(?,?,?,?,?,?) RETURNING id",Long.class,key,scenario,ug,yearMonth,now.toString(),now.toString());
+        jdbc.update("INSERT INTO remessa_eventos(remessa_id,cenario,ug,tipo,instante) VALUES(?,?,?,?,?)",id,scenario,ug,"ENVIO_ABERTO",now.toString());
+        return new Remessa(id,key,scenario,ug,yearMonth,now,now,null,null,Remessa.deadline(now),null);
+    }
+    public java.util.Optional<Remessa> findOpen(String scenario,String ug,int yearMonth) {return java.util.Optional.empty();}
+    public java.util.List<Remessa> due(String scenario,Instant now) {return java.util.List.of();}
     public java.util.Optional<Remessa> find(String key,String scenario) {throw new UnsupportedOperationException();}
     public java.util.Optional<Reception.Plan> receptionPlan(Remessa remessa,Assunto subject) {return java.util.Optional.empty();}
     public void planReception(Remessa remessa,Assunto subject,Reception.Type type,long attempt,Instant now) {throw new UnsupportedOperationException();}
@@ -23,7 +29,7 @@ final class LegacyRemessaRepository implements RemessaRepository {
     public java.util.Optional<Remessa> find(String key,String scenario,String ug) {
         return jdbc.query("SELECT id,chave,cenario,ug,competencia,abertura,atividade FROM remessas WHERE chave=? AND cenario=? AND ug=? AND estado='ABERTO'",
                 (r,n) -> new Remessa(r.getLong("id"),r.getString("chave"),r.getString("cenario"),r.getString("ug"),r.getInt("competencia"),
-                        Instant.parse(r.getString("abertura")),Instant.parse(r.getString("atividade")),null,null),key,scenario,ug).stream().findFirst();
+                        Instant.parse(r.getString("abertura")),Instant.parse(r.getString("atividade")),null,null,Remessa.deadline(Instant.parse(r.getString("atividade"))),null),key,scenario,ug).stream().findFirst();
     }
     public Lote receive(Remessa remessa,ReceivedContent content,String hash,Instant now) {
         int order=jdbc.queryForObject("SELECT COALESCE(MAX(ordem),0)+1 FROM lotes WHERE remessa_id=?",Integer.class,remessa.id());

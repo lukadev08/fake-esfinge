@@ -2,7 +2,7 @@
 
 Data: 27/10/2026. Perfil derivado 2026/V6/leiaute 6.06, artefato 0.1.0.
 Referência: [issue #15](https://github.com/lukadev08/fake-esfinge/issues/15), T09/T10.
-Situação: código/documentos aprovados e validação final verde; publicação pendente.
+Situação: código/documentos aprovados e validação final verde; PR #42 integrado.
 Dados inteiramente fictícios; sem execução do integrador ou chamada ao TCE.
 
 ## Contrato e alcance
@@ -123,6 +123,19 @@ de executar Docker; aspas corrigiram o argumento. Sondagens GET aguardaram a
 prontidão e a porta efêmera foi reconferida após reinício. O cliente do smoke não
 repete mutações. Esses incidentes não representam falha funcional ou RED adicional.
 
-Publicação permanece pendente. Repetição após reset
-pertence à #17. Aceite humano #8/E1, integrador T01/E3, CI remoto, regras fiscais
-e homologação oficial continuam pendentes.
+Repetição após reset pertence à #17. Aceite humano #8/E1, integrador T01/E3,
+CI remoto, regras fiscais e homologação oficial continuam pendentes.
+
+## Publicação e encerramento
+
+Em 27/10/2026, supervisão integrou o
+[PR #42](https://github.com/lukadev08/fake-esfinge/pull/42), head
+`70ee641aed8449f52752d1787000e119c98e71e0` sobre base `f4ba836`, merge
+`df77df16a131c5a419648ce472915a237a6a3c70`. GitHub confirmou MERGED e
+#15 CLOSED/COMPLETED. Check rollup vazio: os resultados de testes e Docker
+acima são locais, sem execução de CI remoto.
+
+Checkout alinhado por fast-forward. Código/testes/smoke/jar permaneceram iguais;
+testes não foram repetidos para este encerramento documental. Container ausente,
+nenhum volume Docker criado e tmp fictício preservado. Corpo publicado exato
+conservado em `.scratch/pr-issue-15.md`. Próxima #16 explorada, ainda não implementada.

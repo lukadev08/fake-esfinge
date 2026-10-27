@@ -87,3 +87,14 @@ conferência documental final também aprovada, sem achados materiais. Nenhuma p
 depois da suíte; detalhes e incidentes operacionais na
 [evidência](../docs/evidencias/issue-15.md). Container temporário ausente,
 nenhum volume Docker criado, bindmount/base fictícios tmp preservados.
+
+## Publicação e encerramento — 27/10/2026
+
+Supervisão publicou e integrou o [PR #42](https://github.com/lukadev08/fake-esfinge/pull/42),
+head `70ee641aed8449f52752d1787000e119c98e71e0`, base `f4ba836`, merge
+`df77df16a131c5a419648ce472915a237a6a3c70`. GitHub confirmou MERGED e
+#15 CLOSED/COMPLETED; checkout alinhado ao merge por fast-forward.
+Check rollup vazio, sem CI remoto. Encerramento somente documental, sem nova
+execução de testes ou mudança do código/testes/smoke/jar. Corpo publicado
+preservado em `.scratch/pr-issue-15.md`. #16 explorada, ainda não implementada;
+aceites humanos e reset #17 permanecem pendentes.

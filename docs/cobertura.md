@@ -13,7 +13,8 @@ Artefato 0.1.0, issues [#1](https://github.com/lukadev08/fake-esfinge/issues/1) 
 [#12](https://github.com/lukadev08/fake-esfinge/issues/12) e
 [#13](https://github.com/lukadev08/fake-esfinge/issues/13) e
 [#14](https://github.com/lukadev08/fake-esfinge/issues/14) e
-[#15](https://github.com/lukadev08/fake-esfinge/issues/15).
+[#15](https://github.com/lukadev08/fake-esfinge/issues/15) e
+[#16](https://github.com/lukadev08/fake-esfinge/issues/16).
 Fontes: [contrato E0](contrato-e0.md), [pacote derivado](contratos/2026-v6-6.06/README.md)
 e [hashes das fontes](contratos/2026-v6-6.06/fontes.json), consolidados em 23/10/2026.
 Não há OpenAPI oficial nem ensaio independente do integrador/TCE. O manifesto
@@ -29,7 +30,7 @@ registra a evolução implementada.
 | Bloqueio de competência | GET/PUT `/__simulator/competencias/{ug}/{anoMes}`, chave própria, UG opaca configurada, mês ASCII 2026 e JSON booleano estrito; V13 aditiva, reinício e rollback | `CompetenciaHttpTest`, `JdbcCompetenciaTest`; parcelas T09/T10 | Implementada no contrato administrativo derivado |
 | Mutações em competência bloqueada | Abrir/receber/disparar/finalizar/descartar/cancelar retornam 403 `SIM_ACESSO_NEGADO` dentro da transação, após autenticação/resolução isolada, sem efeitos ou consumo da tentativa #14 | `CompetenciaHttpTest`, `JdbcCompetenciaTest`; ausência de efeitos, corrida/isolamento/reinício | Implementada no contrato derivado; consultas autorizadas permanecem disponíveis |
 | Bloqueio prospectivo | Trabalhos previamente aceitos continuam; administração mantém suas precondições; desbloqueio libera novas mutações | E0/T09, interpretação documentada no plano #15; `CompetenciaHttpTest`, `JdbcCompetenciaTest` | Aproximada; política local sem suspender/cancelar trabalho ou inventar ratificação compatível |
-| Persistência | SQLite real, migrações V1→V2→V3→V4→V5→V6→V7→V8→V9→V10→V11→V12 com checksum/version, FK por conexão, reabertura, incompatibilidade sem recriar | `JdbcAuthenticationRepositoryTest`, `JdbcRemessaTest`, `JdbcCancellationTest`, `JdbcReceptionFailureTest` | Implementada para contexto/identidades/sessões/remessas/lotes/eventos/planos; parcela de T13 |
+| Persistência | SQLite real, migrações V1–V14 com checksum/version, FK por conexão, reabertura, incompatibilidade sem recriar; V14 faz backfill Java transacional exato de atividade+72h | `JdbcAuthenticationRepositoryTest`, `JdbcRemessaTest`, `JdbcCancellationTest`, `JdbcReceptionFailureTest`, `JdbcExpirationTest` | Implementada para contexto/identidades/sessões/remessas/lotes/eventos/planos/agenda; parcela de T13 |
 | Erros e logs | Envelope próprio sanitizado, sem senha/token/SQL/stack trace | `InternalFailureHttpTest`, testes HTTP/configuração | Implementada; logs padrão desabilitados |
 | Fronteiras | Núcleo Java puro, domínio sem aplicação, capacidades sem ciclos | `ArchitectureTest`, análise de dependências de classes | Implementada na fatia atual |
 | Operações ainda indisponíveis | Token válido recebe 422 de cobertura, inválido 401; inexistente 404 | `AuthenticationHttpTest`, `RemessaHttpTest`; parcela de T18 | Cobertura ausente explícita; sem aprovação fiscal |
@@ -59,7 +60,10 @@ registra a evolução implementada.
 | Controle de cancelamento | Pendentes ABORTADO/SIM_ENVIO_CANCELADO/registro null, sucesso histórico preservado; V11 distingue cancelamento/finalização, copia V10 inclusive diagnósticos/sequências e revalida resultado tardio sem mudar geração global | `JdbcCancellationTest`, `CancelamentoHttpTest`; rollback statement/COMMIT, corrida/pausa fora da transação, reinício/upgrade | Aproximada na situação/diagnóstico próprios do simulador, sem equivalência oficial |
 | Falhas de recepção antes/depois do commit | Plano administrativo por tentativa elegível e remessa/assunto/geração; socket real recebe zero bytes HTTP; antes confirma só consumo do controle sem lote/atividade/aceitação, depois conserva RECEBIDO/original/valores/evento e marca | `ReceptionTransportTest`, `JdbcReceptionFailureTest`; parcela T12, rollback statement/COMMIT, reabertura e duas instâncias | Aproximada; injeção própria do simulador, sem demora/500 adicionais |
 | Recuperar resposta perdida | Retry409 SIM_ENVIO_ABERTO_SEM_PROCESSAMENTO somente no assunto/contexto marcado; PUT/DELETE409 não contornam recuperação; descarte limpa marca e dados ativos atomicamente, reenvio novos IDs sem dedupe e finalização efetiva | `ReceptionTransportTest`, `JdbcReceptionFailureTest`; seis assuntos, bytes/decimais/multiplicidades/histórico e isolamento | Implementada no contrato derivado; descarte de RECEBIDO permanece aproximação divergente do manual |
-| Reset / bloqueio de competência / expiração de envio | Efeitos, geração e relógio administrativo; rota explícita de lote também indisponível | Issues #15–#17 | Não implementada |
+| Expiração de envio | Agenda72h inclusiva em segundos/nanos, renovação atômica nas seis operações, fechamento distinto/remoção de ativos/histórico, nova chave; token1h/novo login e prioridade401/404/409 | `JdbcExpirationTest`, `ExpiracaoHttpTest`, `RemessaExpiryHttpTest`, `AuthenticationServiceTest`; parcelas T02/T11/T19 | Aproximada; prazo e operações renovadoras são políticas derivadas |
+| Execução da expiração | Advance/tick usam a mesma agenda, manual não processa por tick, cenário/deadline isolados, reinício, rollback statement/COMMIT e geração; begin/complete/fail tardios não gravam | `JdbcExpirationTest`, `ExpiracaoHttpTest`; corrida pausada e guardas antes do marcador, upgrade V13/nanos/horizonte | Implementada tecnicamente; diagnósticos ABORTADO/SIM_ENVIO_EXPIRADO próprios |
+| Administração de envio vencido | GET sem efeitos, controles que exigem chave aberta recusam409 antes de materializar marcador; nova abertura bloqueada403 sem expirar; consulta compatível vencida pode expirar e retorna histórico sem conduzir processamento | Plano16; `JdbcExpirationTest`, `ExpiracaoHttpTest` | Aproximada; sem rota compatível nova |
+| Reset / descarte explícito de lote | Geração/estado inicial e rota explícita | Issue #17 / exclusão do contrato inicial | Não implementada |
 | Regras fiscais / vínculos entre assuntos / CONs | Evolução sem catálogo aprovado | Issue #27 | Não implementada |
 | Aceites humanos / T01 / E1–E5 | Integrador real, referência independente e reprodução | Issues #8, #19, #20, #22, #26 | Pendente |
 | Docker Linux amd64 | Imagem mínima, volume local e runtime Java21 | Dockerfile; supervisão da #2 com 178 verificações HTTP/reinício sem rede, imagem identificada na evidência | Implementada e exercitada localmente no jar da #2 |
@@ -195,5 +199,21 @@ ignorados, exit0; 12 novos HTTP/SQLite. Smoke do jar local: **51 verificações*
 desbloqueio e decimal exato. Na imagem final Linux amd64, outras **51 verificações**
 passaram com reinício, integridade SQLite e hash do jar conferidos. Código aprovado
 por revisão independente sem achados; conferência documental final também
-aprovada. Publicação permanece pendente. Reset #17,
+aprovada. Publicação/merge concluídos no
+[PR #42](https://github.com/lukadev08/fake-esfinge/pull/42), head `70ee641`, merge
+`df77df16a131c5a419648ce472915a237a6a3c70`; #15 completed. Check rollup vazio,
+sem CI remoto; encerramento documental não alterou código ou repetiu testes.
+Próxima #16 explorada, ainda não implementada. Reset #17,
 #8/E1, T01/E3, CI remoto, regras fiscais e homologação não demonstrados.
+
+Evidência da #16: [execução local](evidencias/issue-16.md). V14 aditiva, backfill
+Java transacional exato e agenda por envio. Novos 25 casos JDBC e 4 HTTP cobrem
+nanos/limite inclusivo, renovação/ausência de renovação, token, histórico,
+isolamento, reinício, upgrade preenchido, rollback statement/COMMIT e cálculo
+concorrente. Executor `verify` e supervisão `clean verify`: **304 testes**, zero
+falhas/erros/ignorados. Smoke no jar copiado e na imagem final Linux amd64:
+**56 verificações em cada**, com avanço virtual/reinício/expiração/nova chave e
+decimal exato. Jar interno conferido, SQLite íntegro/FKs sem violações.
+Código/testes e conferência documental final aprovados por revisão independente
+sem achados. Reset #17, inspeção #18, #8/E1, integrador/T01/E3, CI remoto, regras
+fiscais e homologação continuam pendentes. Publicação depende da supervisão.

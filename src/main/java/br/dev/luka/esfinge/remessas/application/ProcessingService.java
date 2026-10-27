@@ -24,14 +24,15 @@ public final class ProcessingService implements Processamento {
     }
     public synchronized Processing.Started start(String token,String key) {
         var session=auth.authenticate(token);if(key==null || key.isEmpty()) throw new RemessaFailure(INVALID_REQUEST);
-        return transactions.execute(()->{
+        var result=transactions.execute(()->{
             var remessa=lots.find(key,session.scenario(),session.ug()).orElseThrow(()->new RemessaFailure(NOT_FOUND));
+            var now=clock.instant();if(expire(remessa,now)) return null;
             requireUnblocked(remessa);
             remessa.requireOpen();
             long generation=repository.generation(session.scenario());
             if(repository.active(remessa.id(),generation)) throw new RemessaFailure(CONFLICT);
             var pending=repository.eligible(remessa);if(pending.isEmpty()) throw new RemessaFailure(CONFLICT);
-            var now=clock.instant();var config=repository.configuration(session.scenario(),now);
+            var config=repository.configuration(session.scenario(),now);
             try {
                 var due=now;time.validate(due);
                 for(int i=0;i<pending.size();i++) {due=due.plusMillis(config.latenciaMilissegundos());time.validate(due);}
@@ -40,24 +41,29 @@ public final class ProcessingService implements Processamento {
             catch(ArithmeticException|DateTimeException failure) {throw new RemessaFailure(INVALID_REQUEST);}
             return new Processing.Started("RECEBIDO",now,remessa.id());
         });
+        if(result==null) throw new RemessaFailure(CONFLICT);return result;
     }
     public synchronized void discard(String token,String key,Assunto subject) {
         var session=auth.authenticate(token);if(key==null || key.isEmpty() || subject==null) throw new RemessaFailure(INVALID_REQUEST);
-        transactions.execute(()->{
+        boolean expired=transactions.execute(()->{
             var remessa=lots.find(key,session.scenario(),session.ug()).orElseThrow(()->new RemessaFailure(NOT_FOUND));
+            var now=clock.instant();if(expire(remessa,now)) return true;
             requireUnblocked(remessa);
             remessa.requireOpen();long generation=repository.generation(session.scenario());
             if(repository.active(remessa.id(),generation)) throw new RemessaFailure(CONFLICT);
-            repository.discard(remessa,subject,generation,clock.instant());return null;
+            repository.discard(remessa,subject,generation,now);return false;
         });
+        if(expired) throw new RemessaFailure(CONFLICT);
     }
     public synchronized void cancel(String token,String key) {
         var session=auth.authenticate(token);if(key==null || key.isEmpty()) throw new RemessaFailure(INVALID_REQUEST);
-        transactions.execute(()->{
+        boolean expired=transactions.execute(()->{
             var remessa=lots.find(key,session.scenario(),session.ug()).orElseThrow(()->new RemessaFailure(NOT_FOUND));
+            var now=clock.instant();if(expire(remessa,now)) return true;
             requireUnblocked(remessa);
-            remessa.requireOpen();repository.cancel(remessa,repository.generation(session.scenario()),clock.instant());return null;
+            remessa.requireOpen();repository.cancel(remessa,repository.generation(session.scenario()),now);return false;
         });
+        if(expired) throw new RemessaFailure(CONFLICT);
     }
     public Processing.Consultation consult(String token,long number) {
         return transactions.execute(()->{var lot=remessas.consult(token,number);return new Processing.Consultation(lot,repository.state(lot.number()),repository.diagnostic(lot.number()));});
@@ -65,6 +71,8 @@ public final class ProcessingService implements Processamento {
     private void requireUnblocked(Remessa remessa) {
         if(lots.blocked(remessa.scenario(),remessa.ug(),remessa.yearMonth())) throw new RemessaFailure(BLOCKED);
     }
+    private boolean expire(Remessa remessa,Instant now) {return remessa.expiredAt()!=null || remessa.due(now) && repository.expire(remessa,repository.generation(remessa.scenario()),now);}
+    private void expireDue(Instant now) {for(var remessa:lots.due(scenario,now)) expire(remessa,now);}
     public Processing.Snapshot inspect(String adminKey,long number) {
         return transactions.execute(()->{var received=remessas.inspect(adminKey,number);long lot=received.lote().number();return new Processing.Snapshot(received,repository.state(lot),repository.processed(lot),repository.effective(lot),repository.isActive(lot),repository.diagnostic(lot));});
     }
@@ -90,21 +98,23 @@ public final class ProcessingService implements Processamento {
         int executed=0;for(int i=0;i<steps;i++) {if(!step()) break;executed++;}
         return new Processing.Advanced(clock.instant(),executed);
     }
-    public synchronized void tick() {if(transactions.execute(()->repository.configuration(scenario,clock.instant()).modo())==Processing.Mode.AUTOMATICO) step();}
+    public synchronized void tick() {
+        if(transactions.execute(()->{var now=clock.instant();expireDue(now);return repository.configuration(scenario,now).modo();})==Processing.Mode.AUTOMATICO) step();
+    }
     private record Candidate(Processing.Work work,Lote lote,boolean begun) {}
     private boolean step() {
         var candidate=transactions.execute(()->{
-            var next=repository.next(scenario,clock.instant());if(next.isEmpty()) return null;
+            var now=clock.instant();expireDue(now);var next=repository.next(scenario,now);if(next.isEmpty()) return null;
             var work=next.get();
-            if(work.state()==Processing.State.RECEBIDO) return new Candidate(work,null,repository.begin(work,work.due().plusMillis(work.latencyMillis())));
+            if(work.state()==Processing.State.RECEBIDO) return new Candidate(work,null,repository.begin(work,work.due().plusMillis(work.latencyMillis()),now));
             var lot=lots.inspectLote(work.loteId(),scenario).orElseThrow(()->new RemessaFailure(NOT_FOUND));
             return new Candidate(work,lot,false);
         });
         if(candidate==null) return false;
         if(candidate.work().state()==Processing.State.RECEBIDO) return candidate.begun();
         if(transactions.execute(()->repository.failurePlan(candidate.work().loteId(),scenario,candidate.work().geracao()).isPresent()))
-            return transactions.execute(()->repository.fail(candidate.work(),clock.instant()));
+            return transactions.execute(()->{var now=clock.instant();expireDue(now);return repository.fail(candidate.work(),now);});
         var records=processor.process(candidate.lote());
-        return transactions.execute(()->repository.complete(candidate.work(),records,clock.instant()));
+        return transactions.execute(()->{var now=clock.instant();expireDue(now);return repository.complete(candidate.work(),records,now);});
     }
 }

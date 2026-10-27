@@ -18,10 +18,10 @@ public final class JdbcRemessaRepository implements RemessaRepository {
         else jdbc.update("DELETE FROM competencias_bloqueadas WHERE cenario=? AND ug=? AND competencia=?",scenario,ug,yearMonth);
     }
     public Remessa open(String scenario, String ug, int yearMonth, String key, Instant now) {
-        long id;
+        long id;var due=Remessa.deadline(now);
         try {
-            id = jdbc.queryForObject("INSERT INTO remessas(chave,cenario,ug,competencia,abertura,atividade) VALUES (?,?,?,?,?,?) RETURNING id", Long.class,
-                    key, scenario, ug, yearMonth, now.toString(), now.toString());
+            id = jdbc.queryForObject("INSERT INTO remessas(chave,cenario,ug,competencia,abertura,atividade,expira_segundos,expira_nanos) VALUES (?,?,?,?,?,?,?,?) RETURNING id", Long.class,
+                    key, scenario, ug, yearMonth, now.toString(), now.toString(),due.getEpochSecond(),due.getNano());
         } catch (DataAccessException failure) {
             if (failure.getMostSpecificCause() instanceof org.sqlite.SQLiteException sqlite
                     && sqlite.getResultCode() == org.sqlite.SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE)
@@ -29,16 +29,26 @@ public final class JdbcRemessaRepository implements RemessaRepository {
             throw failure;
         }
         jdbc.update("INSERT INTO remessa_eventos(remessa_id,cenario,ug,tipo,instante) VALUES (?,?,?,?,?)", id, scenario, ug, "ENVIO_ABERTO", now.toString());
-        return new Remessa(id, key, scenario, ug, yearMonth, now, now, null, null);
+        return new Remessa(id, key, scenario, ug, yearMonth, now, now, null, null,due,null);
     }
     public java.util.Optional<Remessa> find(String key,String scenario,String ug) {
-        return jdbc.query("SELECT id,chave,cenario,ug,competencia,abertura,atividade,finalizada_em,cancelada_em FROM remessas WHERE chave=? AND cenario=? AND ug=?",
-                (r,n) -> new Remessa(r.getLong("id"),r.getString("chave"),r.getString("cenario"),r.getString("ug"),r.getInt("competencia"),
-                        Instant.parse(r.getString("abertura")),Instant.parse(r.getString("atividade")),r.getString("finalizada_em")==null?null:Instant.parse(r.getString("finalizada_em")),r.getString("cancelada_em")==null?null:Instant.parse(r.getString("cancelada_em"))),key,scenario,ug).stream().findFirst();
+        return jdbc.query("SELECT * FROM remessas WHERE chave=? AND cenario=? AND ug=?",(r,n)->remessa(r),key,scenario,ug).stream().findFirst();
     }
     public java.util.Optional<Remessa> find(String key,String scenario) {
         var ugs=jdbc.queryForList("SELECT ug FROM remessas WHERE chave=? AND cenario=?",String.class,key,scenario);
         return ugs.isEmpty()?java.util.Optional.empty():find(key,scenario,ugs.getFirst());
+    }
+    private Remessa remessa(java.sql.ResultSet r) throws java.sql.SQLException {
+        return new Remessa(r.getLong("id"),r.getString("chave"),r.getString("cenario"),r.getString("ug"),r.getInt("competencia"),
+            Instant.parse(r.getString("abertura")),Instant.parse(r.getString("atividade")),r.getString("finalizada_em")==null?null:Instant.parse(r.getString("finalizada_em")),
+            r.getString("cancelada_em")==null?null:Instant.parse(r.getString("cancelada_em")),Instant.ofEpochSecond(r.getLong("expira_segundos"),r.getInt("expira_nanos")),
+            r.getString("expirada_em")==null?null:Instant.parse(r.getString("expirada_em")));
+    }
+    public java.util.Optional<Remessa> findOpen(String scenario,String ug,int yearMonth) {
+        return jdbc.query("SELECT * FROM remessas WHERE cenario=? AND ug=? AND competencia=? AND finalizada_em IS NULL AND cancelada_em IS NULL AND expirada_em IS NULL",(r,n)->remessa(r),scenario,ug,yearMonth).stream().findFirst();
+    }
+    public java.util.List<Remessa> due(String scenario,Instant now) {
+        return jdbc.query("SELECT * FROM remessas WHERE cenario=? AND finalizada_em IS NULL AND cancelada_em IS NULL AND expirada_em IS NULL AND (expira_segundos<? OR (expira_segundos=? AND expira_nanos<=?)) ORDER BY expira_segundos,expira_nanos,id",(r,n)->remessa(r),scenario,now.getEpochSecond(),now.getEpochSecond(),now.getNano());
     }
     private long generation(Remessa remessa) {return jdbc.queryForObject("SELECT generation FROM scenarios WHERE id=?",Long.class,remessa.scenario());}
     public java.util.Optional<Reception.Plan> receptionPlan(Remessa remessa,Assunto subject) {
@@ -46,14 +56,14 @@ public final class JdbcRemessaRepository implements RemessaRepository {
             (r,n)->new Reception.Plan(remessa.key(),subject,Reception.Type.valueOf(r.getString(1)),r.getLong(2),r.getLong(3),r.getBoolean(4),r.getBoolean(5)),remessa.id(),remessa.scenario(),remessa.ug(),subject.name(),generation(remessa)).stream().findFirst();
     }
     public void planReception(Remessa remessa,Assunto subject,Reception.Type type,long attempt,Instant now) {
-        requireOpen(remessa.id());var existing=receptionPlan(remessa,subject);
+        requireOpen(remessa.id(),now);var existing=receptionPlan(remessa,subject);
         if(existing.isPresent() && existing.get().recuperacaoPendente()) throw new RemessaFailure(RemessaFailure.Kind.CONFLICT);
         jdbc.update("INSERT INTO falhas_recepcao(remessa_id,cenario,ug,geracao,assunto,tipo,tentativa) VALUES(?,?,?,?,?,?,?) ON CONFLICT(remessa_id,assunto,geracao) DO UPDATE SET tipo=excluded.tipo,tentativa=excluded.tentativa,tentativas=0,consumida=0,recuperacao=0",
             remessa.id(),remessa.scenario(),remessa.ug(),generation(remessa),subject.name(),type.name(),attempt);
         receptionEvent(remessa,null,"FALHA_RECEPCAO_CONFIGURADA",now);
     }
     public void removeReceptionPlan(Remessa remessa,Assunto subject,Instant now) {
-        requireOpen(remessa.id());var plan=receptionPlan(remessa,subject).orElseThrow(()->new RemessaFailure(RemessaFailure.Kind.NOT_FOUND));
+        requireOpen(remessa.id(),now);var plan=receptionPlan(remessa,subject).orElseThrow(()->new RemessaFailure(RemessaFailure.Kind.NOT_FOUND));
         if(plan.recuperacaoPendente()) throw new RemessaFailure(RemessaFailure.Kind.CONFLICT);
         jdbc.update("DELETE FROM falhas_recepcao WHERE remessa_id=? AND assunto=? AND geracao=?",remessa.id(),subject.name(),generation(remessa));
         receptionEvent(remessa,null,"FALHA_RECEPCAO_REMOVIDA",now);
@@ -75,14 +85,14 @@ public final class JdbcRemessaRepository implements RemessaRepository {
     }
     public Lote receive(Remessa remessa,ReceivedContent content,String hash,Instant now) {
         remessa.requireOpen();
-        requireOpen(remessa.id());
+        requireOpen(remessa.id(),now);
         int order=jdbc.queryForObject("SELECT COALESCE(MAX(ordem),0)+1 FROM lotes WHERE remessa_id=?",Integer.class,remessa.id());
         long number=jdbc.queryForObject("INSERT INTO lotes(remessa_id,cenario,ug,ordem,assunto,payload,hash,registros,recebimento) VALUES (?,?,?,?,?,?,?,?,?) RETURNING numero",Long.class,
                 remessa.id(),remessa.scenario(),remessa.ug(),order,content.subject().name(),content.bytes(),hash,content.records(),now.toString());
         for (int i=0;i<content.monetaryValues().size();i++) for (var value:content.monetaryValues().get(i).entrySet()) jdbc.update(
                 "INSERT INTO valores_recebidos(lote_id,remessa_id,cenario,ug,indice,campo,valor) VALUES (?,?,?,?,?,?,?)",
                 number,remessa.id(),remessa.scenario(),remessa.ug(),i,value.getKey(),value.getValue().toString());
-        jdbc.update("UPDATE remessas SET atividade=? WHERE id=?",now.toString(),remessa.id());
+        if(renew(jdbc,remessa.id(),now)!=1) throw new RemessaFailure(RemessaFailure.Kind.CONFLICT);
         jdbc.update("INSERT INTO remessa_eventos(remessa_id,cenario,ug,lote_id,tipo,instante) VALUES (?,?,?,?,?,?)",remessa.id(),remessa.scenario(),remessa.ug(),number,"LOTE_RECEBIDO",now.toString());
         return new Lote(number,remessa.id(),remessa.key(),remessa.scenario(),remessa.ug(),remessa.yearMonth(),order,content.records(),content.subject(),hash,content.bytes(),now);
     }
@@ -102,9 +112,13 @@ public final class JdbcRemessaRepository implements RemessaRepository {
             long lote=r.getLong("lote_id"); Long loteId=r.wasNull()?null:lote; return new RemessaEvent(r.getLong("id"),loteId,r.getString("tipo"),Instant.parse(r.getString("instante")));
         },remessaId);
     }
-    private void requireOpen(long id) {
-        if(jdbc.queryForObject("SELECT COUNT(*) FROM remessas WHERE id=? AND estado='ABERTO' AND finalizada_em IS NULL AND cancelada_em IS NULL",Integer.class,id)!=1)
+    private void requireOpen(long id,Instant now) {
+        if(jdbc.queryForObject("SELECT COUNT(*) FROM remessas WHERE id=? AND estado='ABERTO' AND finalizada_em IS NULL AND cancelada_em IS NULL AND expirada_em IS NULL AND (expira_segundos>? OR (expira_segundos=? AND expira_nanos>?))",Integer.class,id,now.getEpochSecond(),now.getEpochSecond(),now.getNano())!=1)
             throw new RemessaFailure(RemessaFailure.Kind.CONFLICT);
+    }
+    static int renew(JdbcTemplate jdbc,long id,Instant now) {
+        var due=Remessa.deadline(now);
+        return jdbc.update("UPDATE remessas SET atividade=?,expira_segundos=?,expira_nanos=? WHERE id=? AND estado='ABERTO' AND finalizada_em IS NULL AND cancelada_em IS NULL AND expirada_em IS NULL AND (expira_segundos>? OR (expira_segundos=? AND expira_nanos>?))",now.toString(),due.getEpochSecond(),due.getNano(),id,now.getEpochSecond(),now.getEpochSecond(),now.getNano());
     }
     public Finalization.State finalization(Remessa remessa) {
         long count=jdbc.queryForObject("SELECT COUNT(*) FROM lotes WHERE ativo=1 AND remessa_id=? AND cenario=? AND ug=?",Long.class,remessa.id(),remessa.scenario(),remessa.ug());
@@ -114,12 +128,13 @@ public final class JdbcRemessaRepository implements RemessaRepository {
         return new Finalization.State(count,success,effective);
     }
     public void finish(Remessa remessa,Instant now) {
-        if(jdbc.update("UPDATE remessas SET finalizada_em=?,atividade=? WHERE id=? AND cenario=? AND ug=? AND estado='ABERTO' AND finalizada_em IS NULL AND cancelada_em IS NULL",now.toString(),now.toString(),remessa.id(),remessa.scenario(),remessa.ug())!=1)
+        var due=Remessa.deadline(now);
+        if(jdbc.update("UPDATE remessas SET finalizada_em=?,atividade=?,expira_segundos=?,expira_nanos=? WHERE id=? AND cenario=? AND ug=? AND estado='ABERTO' AND finalizada_em IS NULL AND cancelada_em IS NULL AND expirada_em IS NULL AND (expira_segundos>? OR (expira_segundos=? AND expira_nanos>?))",now.toString(),now.toString(),due.getEpochSecond(),due.getNano(),remessa.id(),remessa.scenario(),remessa.ug(),now.getEpochSecond(),now.getEpochSecond(),now.getNano())!=1)
             throw new RemessaFailure(RemessaFailure.Kind.CONFLICT);
         jdbc.update("INSERT INTO remessa_eventos(remessa_id,cenario,ug,tipo,instante) VALUES (?,?,?,?,?)",remessa.id(),remessa.scenario(),remessa.ug(),"ENVIO_FINALIZADO",now.toString());
     }
     public void touch(Lote lote,Instant now) {
-        if(jdbc.update("UPDATE remessas SET atividade=? WHERE id=? AND estado='ABERTO' AND finalizada_em IS NULL AND cancelada_em IS NULL",now.toString(),lote.remessaId())==0) return;
+        if(renew(jdbc,lote.remessaId(),now)==0) return;
         jdbc.update("INSERT INTO remessa_eventos(remessa_id,cenario,ug,lote_id,tipo,instante) VALUES (?,?,?,?,?,?)",lote.remessaId(),lote.scenario(),lote.ug(),lote.number(),"LOTE_CONSULTADO",now.toString());
     }
 }
