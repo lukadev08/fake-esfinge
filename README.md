@@ -582,3 +582,5 @@ Veja [evidência da #14](docs/evidencias/issue-14.md). Limpar RECEBIDO por desca
 demora/500 adicionais, reset, expiração, regras fiscais, #8/E1 e T01/E3 continuam
 pendentes. Código aprovado por revisão independente;263 testes e51 verificações
 Docker Linux amd64 confirmados pela supervisão, com limites na evidência.
+Publicação e merge concluídos em27/10/2026 no
+[PR #41](https://github.com/lukadev08/fake-esfinge/pull/41); #14 encerrada.

@@ -176,3 +176,8 @@ Revisão independente do código e conferência documental final aprovadas sem
 achados materiais. SQLite da imagem íntegro e sem violações de FK; imagem
 e jar identificados na evidência. Sem aceite humano #8/E1, T01/E3, CI remoto,
 regras fiscais ou homologação implícitos.
+
+Publicação/merge da #14 concluídos em27/10/2026 no
+[PR #41](https://github.com/lukadev08/fake-esfinge/pull/41), head `32882ce`,
+merge `f4ba83693ce9d12900ff140248b6dc3661cb193e`; #14 completed.
+Checks remotos vazios; resultados acima são locais. #15 explorada, ainda não implementada.

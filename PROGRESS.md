@@ -2294,3 +2294,32 @@ homologação permanecem pendentes; aprovação desta fatia não conclui E2 inte
 
 Supervisão realizar commit/push/PR/merge da #14 conforme o ciclo autorizado e
 retomar a coordenação da #15 com grupo próprio.
+
+## 2026-10-27 — Publicar e integrar a issue #14
+
+Referência: ciclo de coordenação autorizado e
+[PR #41](https://github.com/lukadev08/fake-esfinge/pull/41).
+Situação: integrada; #14 closed/completed; #15 explorada, ainda não implementada.
+
+### O que foi feito
+
+- Supervisão publicou head `32882ce546def7fe1ace775a9e8be8f645928e2a` sobre base
+  `566afda` e integrou o PR #41 no merge
+  `f4ba83693ce9d12900ff140248b6dc3661cb193e`. GitHub confirmou MERGED e
+  #14 CLOSED/COMPLETED; checkout alinhado ao merge por fast-forward.
+- Código/testes/smoke/jar validados permaneceram inalterados. Encerramento
+  registrado somente em documentação; cópia exata do corpo publicado preservada
+  em `.scratch/pr-issue-14.md`. Check rollup vazio, sem execução de CI remoto.
+- Container temporário ausente, nenhum volume Docker criado, dados e registros
+  fictícios em tmp preservados. Não houve limpeza destrutiva adicional.
+
+### O que deu errado
+
+Nenhuma falha de publicação ou merge informada. Não foram repetidos testes para
+este encerramento documental. #8/E1, T01/E3, CI remoto e homologação continuam
+pendentes; esta entrega não conclui E2 integral.
+
+### Próximo passo
+
+Supervisão retomar a coordenação da #15, usando sua exploração já concluída e
+executor/reviewer exclusivos. Nenhuma implementação da #15 pertence a esta entrada.
