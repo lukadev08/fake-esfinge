@@ -21,6 +21,7 @@ public interface ProcessingRepository {
     void discard(Remessa remessa,Assunto subject,long generation,Instant now);
     void cancel(Remessa remessa,long generation,Instant now);
     boolean expire(Remessa remessa,long generation,Instant now);
+    Processing.ResetCounts reset(String scenario);
     boolean isActive(long lot);
     Processing.Diagnostic diagnostic(long lot);
     Processing.State state(long lot);

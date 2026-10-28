@@ -28,6 +28,7 @@ public final class JdbcAuthenticationRepository implements AuthenticationReposit
         jdbc.update("INSERT INTO sessions(token_hash, scenario_id, user_id, ug, issued_at, expires_at) VALUES (?, ?, ?, ?, ?, ?)",
                 CredentialHash.token(token), session.scenario(), session.user(), session.ug(), session.issuedAt().toString(), session.expiresAt().toString());
     }
+    public long invalidateSessions(String scenario) {return jdbc.update("DELETE FROM sessions WHERE scenario_id=?",scenario);}
     public Optional<Session> findSession(String token, String scenario) {
         return jdbc.query("SELECT user_id, ug, scenario_id, issued_at, expires_at FROM sessions WHERE token_hash = ? AND scenario_id = ?",
                 (rs, row) -> new Session(rs.getString(1), rs.getString(2), rs.getString(3), Instant.parse(rs.getString(4)), Instant.parse(rs.getString(5))),

@@ -14,4 +14,7 @@ public final class JdbcScenarioRepository implements ScenarioRepository {
                 (rs, row) -> new ScenarioSnapshot(rs.getString(1), rs.getString(2), rs.getLong(3), Instant.parse(rs.getString(4)),
                         rs.getString(5), rs.getLong(6), rs.getLong(7), java.util.List.of()), scenario);
     }
+    public boolean advanceGeneration(String scenario,long expected) {
+        return jdbc.update("UPDATE scenarios SET generation=generation+1 WHERE id=? AND generation=? AND generation<9223372036854775807",scenario,expected)==1;
+    }
 }

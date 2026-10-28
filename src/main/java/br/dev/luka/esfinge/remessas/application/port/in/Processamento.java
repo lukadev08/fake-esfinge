@@ -15,5 +15,6 @@ public interface Processamento {
     void removeFailure(String adminKey,long number);
     void discard(String token,String key,Assunto subject);
     void cancel(String token,String key);
+    Processing.Reset reset(String adminKey,String scenario,long expectedGeneration);
     void tick();
 }

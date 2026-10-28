@@ -14,7 +14,8 @@ Artefato 0.1.0, issues [#1](https://github.com/lukadev08/fake-esfinge/issues/1) 
 [#13](https://github.com/lukadev08/fake-esfinge/issues/13) e
 [#14](https://github.com/lukadev08/fake-esfinge/issues/14) e
 [#15](https://github.com/lukadev08/fake-esfinge/issues/15) e
-[#16](https://github.com/lukadev08/fake-esfinge/issues/16).
+[#16](https://github.com/lukadev08/fake-esfinge/issues/16) e
+[#17](https://github.com/lukadev08/fake-esfinge/issues/17).
 Fontes: [contrato E0](contrato-e0.md), [pacote derivado](contratos/2026-v6-6.06/README.md)
 e [hashes das fontes](contratos/2026-v6-6.06/fontes.json), consolidados em 23/10/2026.
 Não há OpenAPI oficial nem ensaio independente do integrador/TCE. O manifesto
@@ -63,7 +64,9 @@ registra a evolução implementada.
 | Expiração de envio | Agenda72h inclusiva em segundos/nanos, renovação atômica nas seis operações, fechamento distinto/remoção de ativos/histórico, nova chave; token1h/novo login e prioridade401/404/409 | `JdbcExpirationTest`, `ExpiracaoHttpTest`, `RemessaExpiryHttpTest`, `AuthenticationServiceTest`; parcelas T02/T11/T19 | Aproximada; prazo e operações renovadoras são políticas derivadas |
 | Execução da expiração | Advance/tick usam a mesma agenda, manual não processa por tick, cenário/deadline isolados, reinício, rollback statement/COMMIT e geração; begin/complete/fail tardios não gravam | `JdbcExpirationTest`, `ExpiracaoHttpTest`; corrida pausada e guardas antes do marcador, upgrade V13/nanos/horizonte | Implementada tecnicamente; diagnósticos ABORTADO/SIM_ENVIO_EXPIRADO próprios |
 | Administração de envio vencido | GET sem efeitos, controles que exigem chave aberta recusam409 antes de materializar marcador; nova abertura bloqueada403 sem expirar; consulta compatível vencida pode expirar e retorna histórico sem conduzir processamento | Plano16; `JdbcExpirationTest`, `ExpiracaoHttpTest` | Aproximada; sem rota compatível nova |
-| Reset / descarte explícito de lote | Geração/estado inicial e rota explícita | Issue #17 / exclusão do contrato inicial | Não implementada |
+| Reset administrativo do cenário | POST protegido com alvo/geração esperados, geração+1/purge de dados e histórico/defaults/sessões em uma TX, sem apagar arquivos; configuração/identidades/seq preservadas | `ResetHttpTest`, `JdbcResetTest`; parcelas T09/T13/T19, rollback statement/COMMIT, outra base/cenário, seis assuntos e replay | Implementada tecnicamente; retenção e API administrativas derivadas |
+| Barreira de reset | Trabalho antigo inelegível após purge/geração, abertura reautentica dentroTX e login serializa conta/tempo/save; sem token com offset antigo ou ID reutilizado | `JdbcResetTest`, `ArchitectureTest`; cálculo pausado, duas ordens login/abertura, high-water900, reinício | Implementada; sem ciclo entre capacidades ou migração nova |
+| Descarte explícito de lote | Rota explícita | Exclusão do contrato inicial | Não implementada |
 | Regras fiscais / vínculos entre assuntos / CONs | Evolução sem catálogo aprovado | Issue #27 | Não implementada |
 | Aceites humanos / T01 / E1–E5 | Integrador real, referência independente e reprodução | Issues #8, #19, #20, #22, #26 | Pendente |
 | Docker Linux amd64 | Imagem mínima, volume local e runtime Java21 | Dockerfile; supervisão da #2 com 178 verificações HTTP/reinício sem rede, imagem identificada na evidência | Implementada e exercitada localmente no jar da #2 |
@@ -221,3 +224,17 @@ fiscais e homologação continuam pendentes. Publicação e merge concluídos no
 `9411e16fb095170a405f57b3d9d66e287b88f232`; #16 completed. Check rollup vazio,
 sem CI remoto. Encerramento documental não alterou código ou repetiu testes;
 próxima #17 explorada, ainda não implementada.
+
+Evidência da #17: [execução local](evidencias/issue-17.md). Sem migração nova:
+V1–V14 permanecem intactas. Reset coordenado em remessas usa portas públicas de
+cenários e autenticação; cada adaptador escreve apenas tabelas da sua capacidade.
+Executor `verify` e supervisão `clean verify`: **326 testes**, zero falhas/erros/ignorados, incluindo22 novos
+HTTP/SQLite. Focal104 verde. Smoke do jar copiado: **63 verificações**,34 antes e29
+após reinício, com reset explícito, invalidação, defaults, IDs novos, decimal
+exato e finalização. Outras **63 verificações** na imagem final Linux amd64
+passaram com reinício, integridade/FKs SQLite e hash do jar conferidos. Código e
+testes e conferência documental final aprovados por revisão independente, sem
+achados materiais. Publicação pendente.
+Remoção de histórico/payloads é deliberada e restrita ao cenário confirmado;
+fixtures não aprovam #8/E1, integrador/T01/E3 ou homologação. #18/CI remoto e
+regras fiscais continuam pendentes.

@@ -42,7 +42,7 @@ class JdbcCompetenciaTest {
         var inspection=new br.dev.luka.esfinge.cenarios.application.ScenarioService(new br.dev.luka.esfinge.cenarios.adapter.out.jdbc.JdbcScenarioRepository(f.source()),"cenario-a",ADMIN,f.auth());
         var processor=new br.dev.luka.esfinge.remessas.application.ProcessingService(f.auth(),inspection,f.remessas(),new br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcRemessaRepository(f.source()),new br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcProcessingRepository(f.source()),new br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcTransactions(f.source()),f.clock(),f.clock(),received->{
             f.remessas().blockCompetencia(ADMIN,"0001",202601,true);return new br.dev.luka.esfinge.remessas.adapter.out.json.StructuralRecords().process(received);
-        },"cenario-a");
+        },"cenario-a",f.auth(),inspection);
         assertEquals(1,processor.advance(ADMIN,0,1).passosExecutados());var snapshot=processor.inspect(ADMIN,lot.number());assertEquals(Processing.State.PROCESSADO_SUCESSO,snapshot.state());assertEquals(1,snapshot.effective().size());assertArrayEquals(CreditoHttpTest.PAYLOAD.getBytes(StandardCharsets.UTF_8),snapshot.received().lote().bytes());
         var jdbc=new JdbcTemplate(f.source());var before=snapshot(jdbc);assertEquals(RemessaFailure.Kind.BLOCKED,assertThrows(RemessaFailure.class,()->f.processing().cancel(token,key)).kind());assertEquals(before,snapshot(jdbc));
     }

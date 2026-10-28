@@ -7,7 +7,7 @@ import br.dev.luka.esfinge.autenticacao.domain.AuthenticationFailure;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
-public final class ScenarioService implements InspectScenario {
+public final class ScenarioService implements InspectScenario, br.dev.luka.esfinge.cenarios.application.port.in.AdvanceGeneration {
     private final ScenarioRepository repository;
     private final String scenario, adminKey;
     private final br.dev.luka.esfinge.autenticacao.application.port.in.ListIdentities identities;
@@ -21,5 +21,9 @@ public final class ScenarioService implements InspectScenario {
         return new ScenarioSnapshot(state.scenario(), state.profile(), state.seed(), state.initialTime(), state.clockMode(),
                 state.tokenSeconds(), state.generation(), identities.identities().stream()
                         .map(account -> new ScenarioSnapshot.Identity(account.user(), account.ugs().stream().sorted().toList())).toList());
+    }
+    public boolean advanceGeneration(String key,long expected) {
+        inspect(key);
+        return expected>=0 && expected<Long.MAX_VALUE && repository.advanceGeneration(scenario,expected);
     }
 }

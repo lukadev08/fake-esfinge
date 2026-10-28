@@ -19,10 +19,11 @@ public final class RemessaService implements Remessas {
         this.authentication = authentication; this.repository = repository; this.transactions = transactions; this.clock = clock; this.inspection=inspection;this.processing=processing;
     }
     public Remessa open(String token, int yearMonth, String cancellation) {
-        var session = authentication.authenticate(token);
+        authentication.authenticate(token);
         if (yearMonth < 202601 || yearMonth > 202612) throw new RemessaFailure(INVALID_REQUEST);
         if (!"NAO".equals(cancellation)) throw new RemessaFailure(UNSUPPORTED);
         return transactions.execute(() -> {
+            var session=authentication.authenticate(token);
             requireUnblocked(session.scenario(),session.ug(),yearMonth);
             var now=clock.instant();repository.findOpen(session.scenario(),session.ug(),yearMonth).ifPresent(remessa->expire(remessa,now));
             return repository.open(session.scenario(),session.ug(),yearMonth,"sim-envio-"+UUID.randomUUID(),now);

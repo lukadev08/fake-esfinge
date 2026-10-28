@@ -2581,3 +2581,132 @@ esta fatia não conclui E2 integral.
 
 Supervisão retomar a coordenação da #17 com equipe exclusiva, reconferindo os
 pontos alterados pela expiração antes de implementar o reset.
+
+## 2026-10-27 — Preparar reset administrativo da issue #17
+
+Referência: continuidade técnica E2 autorizada e
+[issue #17](https://github.com/lukadev08/fake-esfinge/issues/17).
+Situação: exploração reconferida após a #16; plano anterior ao código preparado.
+
+### O que foi feito
+
+- Executor exclusivo conferiu branch `codex/issue-17-reset-cenario`, base funcional
+  `9411e16`, registro `7af56d5`, planejamento, arquitetura, E0 e issue sem comentários.
+- [Plano local](.scratch/issue-17-plan.md) define POST protegido com confirmação de
+  cenário/geração, purge restrito ao cenário e geração/defaults na mesma transação.
+  Configuração/identidades/migrações/high-water permanecem; histórico e sessões
+  são removidos explicitamente, sem apagar arquivos ou volumes externos.
+- Corridas de abertura e login são parte do recorte: autenticação da abertura
+  dentro da transação e conta/tempo/salvamento do login serializados com reset,
+  sem dependência circular entre capacidades. Guardas existentes de trabalhos
+  antigos serão reutilizadas e verificadas por corrida determinística.
+
+### O que deu errado
+
+Nenhuma produção ou teste alterado/executado nesta preparação. O reset é remoção
+local deliberada do histórico operacional; ensaios usarão somente SQLite tmp
+fictício. #8/E1, T01/E3, regras fiscais, CI remoto e homologação seguem pendentes.
+
+### Próximo passo
+
+Supervisão revisar o desenho. Depois, executor implementar por fatias TDD e rodar
+focais/suíte; reviewer independente avaliar código e evidências. #18 não iniciada.
+
+## 2026-10-28 — Retomar e corrigir o desenho da issue #17
+
+Referência: solicitação de verificar a última tarefa e continuar,
+[issue #17](https://github.com/lukadev08/fake-esfinge/issues/17).
+Situação: planejamento corrigido; produção e testes ainda intactos.
+
+### O que foi feito
+
+- Checkout reconfirmado em `codex/issue-17-reset-cenario`, HEAD `7af56d5`, base
+  funcional `9411e16`. Preservados plano e registro anteriores, além de `.DS_Store`.
+- Explorer exclusivo reconferiu o conflito do desenho: cenário não deve acessar
+  tabelas de outras capacidades. O [plano](.scratch/issue-17-plan.md) agora põe a
+  coordenação em `ProcessingService`, com portas públicas para CAS de geração em
+  cenários e invalidação de sessões em autenticação. Cada adaptador escreve só
+  tabelas da própria capacidade, na mesma unidade transacional e DataSource.
+- Mantidas fronteiras transacionais para login e abertura, alcance restrito do
+  reset, retenção explícita e verificações previstas. Nenhuma migração ou nova
+  infraestrutura foi adicionada.
+
+### O que deu errado
+
+Execução anterior interrompida por limite de uso após o plano, sem implementação.
+O desenho anterior atribuía purge de tabelas alheias ao repositório de cenários;
+foi corrigido antes de código. Docker indisponível por ausência do socket OrbStack
+na retomada; não foi inferida ausência de containers nem alterada infraestrutura.
+
+### Próximo passo
+
+Supervisão aprovar o desenho corrigido. Depois, executor concluir TDD e validações
+locais; reviewer próprio revisar. A supervisão tratará a disponibilidade de Docker
+para a imagem final. #18, aceites humanos e CI remoto continuam pendentes.
+
+## 2026-10-28 — Implementar e validar localmente o reset da #17
+
+Referência: retomada autorizada e [issue #17](https://github.com/lukadev08/fake-esfinge/issues/17).
+Situação: implementação/suíte/imagem final e revisões concluídas; publicação pendente.
+
+### O que foi feito
+
+- Desenho corrigido aprovado antes de código. Reset em `ProcessingService`
+  coordena CAS de geração e invalidação de sessões por portas públicas; cada
+  adaptador escreve só tabelas próprias na mesma transação/DataSource.
+- POST administrativo estrito confirma cenário/geração; purge restrito remove
+  dados/histórico/controles/sessões e restaura MANUAL/1000/offset0. Configuração,
+  identidades, migrações e high-water preservados; nenhuma migração/dependência nova.
+- Login serializa conta/tempo/salvamento e abertura reautentica dentro da TX.
+  Corridas nas duas ordens e trabalho calculado antes do reset não contaminam
+  nova execução. Cenário/base independentes, reinício e replay dos seis assuntos
+  preservam conteúdo/contagens/bytes/decimais; geração antiga recusa o comando.
+- RED1 esperado404/4,309s; GREEN1/4,536s; focal30/7,179s e focal104/15,656s verdes.
+  `verify`:**326 testes**, zero falhas/erros/ignorados, exit0,37,139s;22 novos casos.
+  Supervisão `clean verify` confirmou326 testes, exit0,39,548s e jar final identificado.
+- Smoke no jar copiado:34+29=**63 verificações**, exit0, com reset explícito,
+  reinício, token/chave antigos inválidos, IDs novos e finalização. SQLite
+  readonly íntegro/sem violações de FK. Serviço18197 encerrado, listener ausente;
+  somente dados fictícios tmp preservados. Código/testes/smoke congelados.
+- README, manifesto, plano, rascunho do PR e [evidência](docs/evidencias/issue-17.md)
+  atualizados com alcance e limites. Nenhum commit/push/publicação pelo executor.
+- Supervisão da imagem Linux amd64 confirmou outras63 verificações (34+29),
+  reset/reinício/replay/stale409, integridade/FKs e hash do jar final. Container
+  temporário removido/ausente, nenhum volume criado; bindmount fictício preservado.
+  Reviewer próprio aprovou código/testes sem achados; artefato permaneceu congelado.
+
+### O que deu errado
+
+Primeira ampliação não compilou por helper `received()` inexistente em fixture;
+correção só do teste e da ordem de preparação, sem falha funcional após GREEN.
+Avisos herdados Mockito/ByteBuddy/JDK não impediram validação. Docker inicialmente
+indisponível foi restabelecido pela supervisão; nenhuma base do usuário foi resetada.
+
+### Próximo passo
+
+Supervisão preparar PR/merge da #17 e retomar coordenação da #18 com equipe
+exclusiva, após conferência documental final aprovada.
+#18, aceites humanos #8/E1/T01/E3, CI remoto, regras fiscais e homologação pendentes.
+
+
+## 2026-10-28 — Aprovar conferência documental final da #17
+
+Referência: revisão independente da [issue #17](https://github.com/lukadev08/fake-esfinge/issues/17).
+Situação: código e documentos aprovados; publicação é o próximo passo.
+
+### O que foi feito
+
+Reviewer exclusivo aprovou a consolidação documental final sem achados materiais.
+Executor atualizou somente marcadores em plano, evidência, cobertura, README e
+rascunho do PR; código, testes, smoke e jar permaneceram congelados.
+
+### O que deu errado
+
+Nenhuma correção funcional solicitada e nenhum teste repetido para esses ajustes
+documentais. Aceites humanos, CI remoto, regras fiscais e homologação permanecem
+pendentes; esta fatia não conclui E2 integral.
+
+### Próximo passo
+
+Supervisão preparar commit/push/PR/merge da #17 e retomar a coordenação da #18,
+conforme o ciclo autorizado e suas dependências.
