@@ -119,8 +119,16 @@ temporário parado/removido e ausência confirmada; bindmount/dados fictícios e
 imagem preservados. Nenhuma base do usuário foi resetada.
 
 Reviewer independente da #17 aprovou código/testes e a conferência documental
-final, sem achados materiais. Publicação permanece pendente. Código/testes/
+final, sem achados materiais. Publicação e merge concluídos pela supervisão no
+[PR #44](https://github.com/lukadev08/fake-esfinge/pull/44), em28/10/2026:
+head `d6579c9478cee42ff1a3b11e9910009fa3cc3888`, base `9411e16`, merge
+`c30ccb7ce70aae82cd1c5713a6716bd5661bbb82`. GitHub confirmou MERGED e
+#17 CLOSED/COMPLETED. Check rollup vazio; resultados anteriores são locais, sem CI
+remoto. Checkout alinhado ao merge por fast-forward. Código/testes/
 smoke/jar não mudaram após congelamento; nenhum commit/push/PR pelo executor.
+Corpo publicado preservado em `.scratch/pr-issue-17.md`. Encerramento somente
+documental, sem repetição de testes. Container temporário ausente, nenhum volume
+criado, dados fictícios tmp preservados. Próxima #18 explorada, ainda não implementada.
 
 ## Limites
 

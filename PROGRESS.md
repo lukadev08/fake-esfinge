@@ -2710,3 +2710,31 @@ pendentes; esta fatia não conclui E2 integral.
 
 Supervisão preparar commit/push/PR/merge da #17 e retomar a coordenação da #18,
 conforme o ciclo autorizado e suas dependências.
+
+## 2026-10-28 — Publicar e integrar a issue #17
+
+Referência: ciclo autorizado e
+[PR #44](https://github.com/lukadev08/fake-esfinge/pull/44).
+Situação: integrada; #17 closed/completed; #18 explorada, ainda não implementada.
+
+### O que foi feito
+
+- Supervisão publicou head `d6579c9478cee42ff1a3b11e9910009fa3cc3888` sobre base
+  `9411e16` e integrou no merge `c30ccb7ce70aae82cd1c5713a6716bd5661bbb82`.
+  GitHub confirmou PR MERGED e #17 CLOSED/COMPLETED. Checkout alinhado ao merge
+  por fast-forward; check rollup vazio, sem execução de CI remoto.
+- Encerramento registrado somente em documentação. Código/testes/smoke/jar
+  permaneceram congelados; cópia exata do corpo publicado preservada em
+  `.scratch/pr-issue-17.md`. Nenhum teste repetido para estes registros.
+- Container temporário ausente, nenhum volume criado e dados fictícios tmp
+  preservados. Nenhuma base do usuário foi resetada ou limpeza adicional executada.
+
+### O que deu errado
+
+Nenhuma falha de publicação ou merge informada. #18, aceites humanos #8/E1/T01/E3,
+CI remoto, regras fiscais e homologação seguem pendentes; #17 não conclui E2 integral.
+
+### Próximo passo
+
+Supervisão retomar coordenação da #18 com equipe exclusiva e sua exploração,
+reconferindo geração/reset antes de implementar inspeção e relatório.

@@ -232,9 +232,12 @@ Executor `verify` e supervisão `clean verify`: **326 testes**, zero falhas/erro
 HTTP/SQLite. Focal104 verde. Smoke do jar copiado: **63 verificações**,34 antes e29
 após reinício, com reset explícito, invalidação, defaults, IDs novos, decimal
 exato e finalização. Outras **63 verificações** na imagem final Linux amd64
-passaram com reinício, integridade/FKs SQLite e hash do jar conferidos. Código e
+passaram com reinício, integridade/FKs SQLite e hash do jar conferidos. Código,
 testes e conferência documental final aprovados por revisão independente, sem
-achados materiais. Publicação pendente.
+achados materiais. Publicação/merge concluídos no
+[PR #44](https://github.com/lukadev08/fake-esfinge/pull/44), head `d6579c9`, merge
+`c30ccb7ce70aae82cd1c5713a6716bd5661bbb82`; #17 completed. Check rollup vazio,
+sem CI remoto. Encerramento documental não alterou código ou repetiu testes.
 Remoção de histórico/payloads é deliberada e restrita ao cenário confirmado;
 fixtures não aprovam #8/E1, integrador/T01/E3 ou homologação. #18/CI remoto e
 regras fiscais continuam pendentes.

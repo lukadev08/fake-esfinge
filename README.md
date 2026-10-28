@@ -767,3 +767,6 @@ reenvio; na imagem final Linux amd64, outras63 verificações passaram e o hash 
 jar foi conferido. Código/testes e conferência documental final aprovados por
 revisão independente, sem achados. #18, #8/E1, integrador/T01/E3, CI remoto, regras fiscais e homologação
 permanecem pendentes; fixtures não substituem os aceites humanos.
+Publicação e merge concluídos em28/10/2026 no
+[PR #44](https://github.com/lukadev08/fake-esfinge/pull/44); #17 encerrada. Check
+rollup vazio, sem CI remoto. Próxima #18 explorada, ainda não implementada.

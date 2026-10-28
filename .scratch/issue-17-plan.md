@@ -132,3 +132,13 @@ na imagem final Linux amd64, com hash do jar/integridade SQLite conferidos.
 Revisão independente de código/testes e conferência documental final aprovadas
 sem achados materiais. Publicação é o próximo passo. Evidência detalhada em
 [issue-17.md](../docs/evidencias/issue-17.md). Nenhum commit/push pelo executor.
+
+## Publicação e encerramento — 28/10/2026
+
+Supervisão publicou head `d6579c9478cee42ff1a3b11e9910009fa3cc3888` sobre base
+`9411e16` e integrou no [PR #44](https://github.com/lukadev08/fake-esfinge/pull/44),
+merge `c30ccb7ce70aae82cd1c5713a6716bd5661bbb82`. GitHub confirmou MERGED e
+#17 CLOSED/COMPLETED; checkout alinhado ao merge por fast-forward. Check rollup
+vazio, sem CI remoto. Código/testes/jar não mudaram, sem repetição de testes.
+Corpo publicado do PR preservado, container ausente, nenhum volume criado e tmp
+fictício preservado. #18 explorada, sem implementação; aceites humanos pendentes.
