@@ -45,4 +45,9 @@ public class Composition {
     @Bean br.dev.luka.esfinge.remessas.adapter.in.scheduler.ProcessingScheduler processingScheduler(br.dev.luka.esfinge.remessas.application.port.in.Processamento processing) {
         return new br.dev.luka.esfinge.remessas.adapter.in.scheduler.ProcessingScheduler(processing);
     }
+    @Bean br.dev.luka.esfinge.remessas.application.port.in.InspectExecution executionInspection(DataSource source, Clock clock, br.dev.luka.esfinge.cenarios.application.port.in.InspectScenario scenario) {
+        var remessas=new br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcRemessaRepository(source);
+        var processing=new br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcProcessingRepository(source);
+        return new br.dev.luka.esfinge.remessas.application.InspectionService(scenario,remessas,processing,processing,new br.dev.luka.esfinge.remessas.adapter.out.jdbc.JdbcTransactions(source),clock);
+    }
 }

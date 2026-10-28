@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.dao.DataAccessException;
 
-public final class JdbcRemessaRepository implements RemessaRepository {
+public final class JdbcRemessaRepository implements RemessaRepository, br.dev.luka.esfinge.remessas.application.port.out.InspectionRemessas {
     private final JdbcTemplate jdbc;
     public JdbcRemessaRepository(DataSource source) { jdbc = new JdbcTemplate(source); }
     public boolean blocked(String scenario,String ug,int yearMonth) {
@@ -136,5 +136,60 @@ public final class JdbcRemessaRepository implements RemessaRepository {
     public void touch(Lote lote,Instant now) {
         if(renew(jdbc,lote.remessaId(),now)==0) return;
         jdbc.update("INSERT INTO remessa_eventos(remessa_id,cenario,ug,lote_id,tipo,instante) VALUES (?,?,?,?,?,?)",lote.remessaId(),lote.scenario(),lote.ug(),lote.number(),"LOTE_CONSULTADO",now.toString());
+    }
+
+    public long ceiling(String scenario,String resource,long id) {
+        if(resource.equals("registros")) return jdbc.queryForObject("SELECT COALESCE(MAX(registros)-1,-1) FROM lotes WHERE cenario=? AND numero=?",Long.class,scenario,id);
+        String table=switch(resource) {case "remessas"->"remessas";case "lotes"->"lotes";case "eventos"->"remessa_eventos";default->throw new IllegalArgumentException();};
+        return jdbc.queryForObject("SELECT COALESCE(MAX("+(resource.equals("lotes")?"numero":"id")+"),0) FROM "+table+" WHERE cenario=?"+(resource.equals("eventos") && id>0?" AND remessa_id=?":""),Long.class,resource.equals("eventos") && id>0?new Object[]{scenario,id}:new Object[]{scenario});
+    }
+    private String filters(Inspection.Filter f,java.util.List<Object> args,boolean lots) {
+        String sql="r.cenario=?";args.add(f.cenario());
+        if(f.codigoUg()!=null){sql+=" AND r.ug=?";args.add(f.codigoUg());}
+        if(f.anoMes()!=null){sql+=" AND r.competencia=?";args.add(f.anoMes());}
+        if(f.assunto()!=null){sql+=lots?" AND l.assunto=?":" AND EXISTS(SELECT 1 FROM lotes x WHERE x.remessa_id=r.id AND x.assunto=?)";args.add(f.assunto().name());}
+        return sql;
+    }
+    public java.util.List<Remessa> remessas(Inspection.Filter f,Inspection.Window w) {
+        var args=new java.util.ArrayList<Object>();String where=filters(f,args,false);args.add(w.depois());args.add(w.teto());args.add(w.limite());
+        return jdbc.query("SELECT r.* FROM remessas r WHERE "+where+" AND r.id>? AND r.id<=? ORDER BY r.id LIMIT ?",(r,n)->remessa(r),args.toArray());
+    }
+    public java.util.Optional<Remessa> remessa(String scenario,long id) {
+        return jdbc.query("SELECT * FROM remessas WHERE cenario=? AND id=?",(r,n)->remessa(r),scenario,id).stream().findFirst();
+    }
+    private static final String LOT_METADATA="SELECT l.numero,l.remessa_id,r.chave,l.cenario,l.ug,r.competencia,l.ordem,l.assunto,l.ativo,l.registros,l.hash,l.recebimento FROM lotes l JOIN remessas r ON r.id=l.remessa_id AND r.cenario=l.cenario AND r.ug=l.ug";
+    private Inspection.Lot metadata(java.sql.ResultSet r) throws java.sql.SQLException {
+        return new Inspection.Lot(r.getLong(1),r.getLong(2),r.getString(3),r.getString(4),r.getString(5),r.getInt(6),r.getInt(7),Assunto.valueOf(r.getString(8)),r.getBoolean(9),r.getLong(10),r.getString(11),Instant.parse(r.getString(12)));
+    }
+    public java.util.List<Inspection.Lot> lotes(Inspection.Filter f,Inspection.Window w) {
+        var args=new java.util.ArrayList<Object>();String where=filters(f,args,true);args.add(w.depois());args.add(w.teto());args.add(w.limite());
+        return jdbc.query(LOT_METADATA+" WHERE "+where+" AND l.numero>? AND l.numero<=? ORDER BY l.numero LIMIT ?",(r,n)->metadata(r),args.toArray());
+    }
+    public java.util.Optional<Inspection.Lot> lote(String scenario,long id) {
+        return jdbc.query(LOT_METADATA+" WHERE l.cenario=? AND l.numero=?",(r,n)->metadata(r),scenario,id).stream().findFirst();
+    }
+    public java.util.List<Inspection.Event> eventos(String scenario,long remessa,Inspection.Window w) {
+        return jdbc.query("SELECT id,remessa_id,lote_id,tipo,instante FROM remessa_eventos WHERE cenario=?"+(remessa>0?" AND remessa_id=?":"")+" AND id>? AND id<=? ORDER BY id LIMIT ?",(r,n)->{
+            long lot=r.getLong(3);Long number=r.wasNull()?null:lot;return new Inspection.Event(r.getLong(1),r.getLong(2),number,r.getString(4),Instant.parse(r.getString(5)));
+        },remessa>0?new Object[]{scenario,remessa,w.depois(),w.teto(),w.limite()}:new Object[]{scenario,w.depois(),w.teto(),w.limite()});
+    }
+    public java.util.List<Inspection.Record> recebidos(String scenario,long lot,boolean historical,Inspection.Window w) {
+        return jdbc.query("SELECT payload FROM lotes WHERE cenario=? AND numero=?"+(historical?"":" AND ativo=1"),rs->{
+            var records=new java.util.ArrayList<Inspection.Record>();if(!rs.next()) return records;
+            var mapper=new com.fasterxml.jackson.databind.ObjectMapper().enable(com.fasterxml.jackson.databind.DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+            try(var stream=rs.getBinaryStream(1);var parser=mapper.getFactory().createParser(stream)) {
+                parser.nextToken();parser.nextToken();parser.nextToken();long index=0;
+                while(parser.nextToken()!=com.fasterxml.jackson.core.JsonToken.END_ARRAY) {
+                    if(index>w.teto() || records.size()==w.limite()) break;
+                    if(index>w.depois()) records.add(new Inspection.Record(index,mapper.writeValueAsBytes(mapper.readTree(parser))));else parser.skipChildren();
+                    index++;
+                }
+            } catch(java.io.IOException failure){throw new IllegalStateException("Payload persistido invalido",failure);}
+            return records;
+        },scenario,lot);
+    }
+    public java.util.List<Inspection.Counts> counts(String scenario,Long remessa) {
+        return jdbc.query("SELECT assunto,COUNT(*),COALESCE(SUM(CASE WHEN ativo=1 THEN registros ELSE 0 END),0),COALESCE(SUM(registros),0) FROM lotes WHERE cenario=?"+(remessa==null?"":" AND remessa_id=?")+" GROUP BY assunto ORDER BY assunto",
+            (r,n)->new Inspection.Counts(Assunto.valueOf(r.getString(1)),r.getLong(2),r.getLong(3),r.getLong(4)),remessa==null?new Object[]{scenario}:new Object[]{scenario,remessa});
     }
 }

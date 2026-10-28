@@ -2710,3 +2710,175 @@ pendentes; esta fatia não conclui E2 integral.
 
 Supervisão preparar commit/push/PR/merge da #17 e retomar a coordenação da #18,
 conforme o ciclo autorizado e suas dependências.
+
+## 2026-10-28 — Publicar e integrar a issue #17
+
+Referência: ciclo autorizado e
+[PR #44](https://github.com/lukadev08/fake-esfinge/pull/44).
+Situação: integrada; #17 closed/completed; #18 explorada, ainda não implementada.
+
+### O que foi feito
+
+- Supervisão publicou head `d6579c9478cee42ff1a3b11e9910009fa3cc3888` sobre base
+  `9411e16` e integrou no merge `c30ccb7ce70aae82cd1c5713a6716bd5661bbb82`.
+  GitHub confirmou PR MERGED e #17 CLOSED/COMPLETED. Checkout alinhado ao merge
+  por fast-forward; check rollup vazio, sem execução de CI remoto.
+- Encerramento registrado somente em documentação. Código/testes/smoke/jar
+  permaneceram congelados; cópia exata do corpo publicado preservada em
+  `.scratch/pr-issue-17.md`. Nenhum teste repetido para estes registros.
+- Container temporário ausente, nenhum volume criado e dados fictícios tmp
+  preservados. Nenhuma base do usuário foi resetada ou limpeza adicional executada.
+
+### O que deu errado
+
+Nenhuma falha de publicação ou merge informada. #18, aceites humanos #8/E1/T01/E3,
+CI remoto, regras fiscais e homologação seguem pendentes; #17 não conclui E2 integral.
+
+### Próximo passo
+
+Supervisão retomar coordenação da #18 com equipe exclusiva e sua exploração,
+reconferindo geração/reset antes de implementar inspeção e relatório.
+
+## 2026-10-28 — Preparar inspeção e relatório da issue #18
+
+Referência: ciclo autorizado e [issue #18](https://github.com/lukadev08/fake-esfinge/issues/18).
+Situação: plano concreto preparado; aguardando aprovação antes de código.
+
+### O que foi feito
+
+Executor próprio leu contrato, planejamento, arquitetura, issue e registros da
+#17; reconferiu branch e interfaces existentes. Registrou em
+`.scratch/issue-18-plan.md` endpoints administrativos, validação, keyset com teto
+e geração, semântica mutável, índices originais, relatório LOCAL resumido e
+síntese compartilhável sem dados da execução. Manifesto será empacotado e
+congelado antes da build. Nenhuma produção/teste/POM foi alterada.
+
+### O que deu errado
+
+Nenhuma falha funcional investigada. Baseline de 326 testes informado pela
+supervisão, ainda não repetido nesta fatia. Sem aceite #8/E1/T01/E3 ou homologação.
+
+### Próximo passo
+
+Supervisão aprovar o contrato, especialmente relatório resumido com reconciliação
+paginada; depois executar TDD vertical e revisão independente. Sem commit/push ou
+publicação pelo executor. `.DS_Store` preexistentes preservados.
+
+## 2026-10-28 — Implementar e validar inspeção/relatório da #18
+
+Referência: plano aprovado e [issue #18](https://github.com/lukadev08/fake-esfinge/issues/18).
+Situação: executor concluído; revisão independente e supervisão final pendentes.
+
+### O que foi feito
+
+- Contrato aprovado antes de código, com ajuste para eventos reais paginados no
+  relatório LOCAL. Novas leituras administrativas estritas/protegidas e keyset
+  com teto/geração, metadados sem payload e registros com índices originais.
+  Leituras não renovam atividade/expiram/avançam processamento/relógio/eventos.
+- Reutilizados adaptadores JDBC por dono dos dados; sem migração/dependência nova.
+  Relatório LOCAL com origem declarada/configuração/contagens/eventos reais e
+  síntese separada sem dados da execução. Comparação NAO_COMPARADO/divergênciasnull.
+  Maven resources empacota o manifesto real; versão do jar disponível e demais
+  identificadores indisponíveis são declarados, sem inferência.
+- RED1 esperado401/obtido404; GREEN1verde. Focal final20testes,exit0,7,549s.
+  verify final:**343testes**,zero falhas/erros/ignorados,exit0,39,815s;17novoscasos.
+  Saldo duplicado/4valores monetários e vários eventos prova contagens sem joins
+  multiplicadores. Suíte anterior342verde foi ampliada a pedido da supervisão.
+- Produção/testes/POM/manifesto congelados, inventário em
+  `.scratch/issue-18-freeze.sha256`; detalhes/hashes na
+  [evidência18](docs/evidencias/issue-18.md). Manifesto congelado antes da build,
+  fonte igual ao recurso do jar. Nenhum Maven/código repetido/alterado na retomada.
+- Smoke do jar copiado:45verificações,27antes+18após reinício,exit0,com versão0.1.0,
+  manifesto/filtros/páginas/relatório/reset/read-only/zeros/decimais/IDs novos.
+  SQLite íntegro/sem violaçõesFK. Host18198 encerrado; só base fictícia tmp
+  preservada. Guia/README/plano/rascunhoPR/evidência atualizados; sem publicação.
+
+### O que deu errado
+
+Fixture inicial tentou apagar processado referenciado por efetivo; SQLite negou
+pela FK. Corrigida só ordem de preparação. Avisos herdados Mockito/ByteBuddy/JDK
+não impediram validação. Interrupção por quota entre host e smoke foi operacional;
+retomada reconferiu inventário/hashes/run.json/PID/listener antes de prosseguir.
+TERM do host temporário exigiu escalada sandbox, autorizada. Saída Maven ficou no
+transcript e XML/TXT de `target/surefire-reports`, sem log redirecionado em/tmp;
+resumo posterior dos XML salvo em `.scratch/issue-18-validation-summary.json`.
+
+### Próximo passo
+
+Reviewer próprio revisar código/testes/evidências; supervisão validar clean verify
+/imagem final. Correções de revisão cabem a outro executor e outro reviewer.
+Sem commit/push/publicação pelo executor. #8/E1, integrador/T01/E3, CI remoto,
+regras fiscais, UI/E4 e homologação permanecem pendentes.
+
+## 2026-10-28 — Aprovar revisão e clean verify da #18
+
+Referência: revisão independente da [issue #18](https://github.com/lukadev08/fake-esfinge/issues/18).
+Situação: código/testes aprovados; imagem final em validação pela supervisão.
+
+### O que foi feito
+
+Reviewer exclusivo aprovou código/testes sem achados materiais. Supervisão
+confirmou clean verify343/0/0/0,exit0,42,346s; executor conferiu log real e hash do
+jar final45eedfed5f1cb239a16bb906298e34f5259eaea4c52cf746f94f76b11228fcd6.
+Manifesto extraído permanece igual à fonte congelada. Evidência distingue smoke
+host45verificações no jar copiado anterior da reconstrução e futura imagem final.
+Nenhuma mudança em produção/testes/POM/manifesto/smoke; só registros documentais.
+
+### O que deu errado
+
+Nenhuma correção funcional solicitada. Aceites humanos, CI remoto, regras fiscais
+e homologação continuam pendentes.
+
+### Próximo passo
+
+Supervisão concluir build/smoke Docker e revisão documental final. Executor não
+realizou commit/push/publicação.
+
+## 2026-10-28 — Validar imagem final da #18
+
+Referência: supervisão da [issue #18](https://github.com/lukadev08/fake-esfinge/issues/18).
+Situação: imagem final validada; conferência documental final pendente.
+
+### O que foi feito
+
+Supervisão confirmou45verificações adicionais(27prepare+18resume),ambas exit0,
+na imagem Linux amd64 `fake-esfinge:issue-18-local`,ID
+`sha256:4bf6cf1acdf7819389a5428f1a9a11d92c7f58cfe4f2ec1fbd709049089cc3bb`.
+Jar interno45eedfed... e manifesto3704770c... conferidos; relatório/inspeção,
+reinício/reset/read-only, integridadeSQLite/FKs passaram. Build sem rede/pullfalse;
+runtimebridge em loopback. Container parado/removido e ausência confirmada;
+nenhum volume criado, bindmount fictício tmp preservado. Evidência/README/plano/
+rascunhoPR consolidados; nenhum input congelado ou jar alterado pelo executor.
+
+### O que deu errado
+
+Nenhum smoke final falhou. Aceites humanos, CI remoto, regras fiscais e
+homologação continuam pendentes; resultados Docker são da supervisão.
+
+### Próximo passo
+
+Reviewer independente conferir documentos finais; supervisão preparar próximos
+passos autorizados. Executor não realizou commit/push/publicação.
+
+## 2026-10-28 — Aprovar conferência documental final da #18
+
+Referência: revisão independente da [issue #18](https://github.com/lukadev08/fake-esfinge/issues/18).
+Situação: código, testes e documentos aprovados; publicação é o próximo passo.
+
+### O que foi feito
+
+Reviewer exclusivo aprovou documentação final sem achados materiais. Executor
+atualizou somente marcadores documentais e esclareceu que issue-18-run.json é
+estado operacional local não versionado, preservado, sem entrega pública portátil.
+Inventário freeze e validation-summary reconferidos: somente hashes, caminhos e
+totais sanitizados, sem dados originais. Inputs congelados e jar preservados.
+
+### O que deu errado
+
+Nenhuma correção funcional solicitada. Nenhum teste repetido para estes registros;
+aceites humanos, CI remoto, regras fiscais e homologação permanecem pendentes.
+
+### Próximo passo
+
+Supervisão preparar publicação dentro da autorização vigente. Executor não
+realizou commit/push/publicação.
