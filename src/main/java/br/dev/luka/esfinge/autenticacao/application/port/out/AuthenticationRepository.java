@@ -9,4 +9,5 @@ public interface AuthenticationRepository {
     Optional<Account> findAccount(String scenario, String accessCode, String password);
     Optional<Session> findSession(String token, String scenario);
     void saveSession(String token, Session session);
+    long invalidateSessions(String scenario);
 }

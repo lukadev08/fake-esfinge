@@ -19,8 +19,21 @@ public final class ProcessingService implements Processamento {
     private final BusinessTime time;
     private final ProcessRecords processor;
     private final String scenario;
-    public ProcessingService(Authentication auth,InspectScenario inspection,Remessas remessas,RemessaRepository lots,ProcessingRepository repository,Transactions transactions,Clock clock,BusinessTime time,ProcessRecords processor,String scenario) {
+    private final br.dev.luka.esfinge.autenticacao.application.port.in.InvalidateSessions sessions;
+    private final br.dev.luka.esfinge.cenarios.application.port.in.AdvanceGeneration generations;
+    public ProcessingService(Authentication auth,InspectScenario inspection,Remessas remessas,RemessaRepository lots,ProcessingRepository repository,Transactions transactions,Clock clock,BusinessTime time,ProcessRecords processor,String scenario,br.dev.luka.esfinge.autenticacao.application.port.in.InvalidateSessions sessions,br.dev.luka.esfinge.cenarios.application.port.in.AdvanceGeneration generations) {
         this.auth=auth;this.inspection=inspection;this.remessas=remessas;this.lots=lots;this.repository=repository;this.transactions=transactions;this.clock=clock;this.time=time;this.processor=processor;this.scenario=scenario;
+        this.sessions=sessions;this.generations=generations;
+    }
+    public Processing.Reset reset(String key,String target,long expected) {
+        authorize(key);
+        if(target==null || target.isEmpty() || expected<0) throw new RemessaFailure(INVALID_REQUEST);
+        if(!scenario.equals(target) || expected==Long.MAX_VALUE) throw new RemessaFailure(CONFLICT);
+        return transactions.execute(()->{
+            if(!generations.advanceGeneration(key,expected)) throw new RemessaFailure(CONFLICT);
+            var removed=repository.reset(scenario);long invalidated=sessions.invalidateSessions();
+            return new Processing.Reset(scenario,expected,expected+1,removed.remessas(),removed.lotes(),invalidated);
+        });
     }
     public synchronized Processing.Started start(String token,String key) {
         var session=auth.authenticate(token);if(key==null || key.isEmpty()) throw new RemessaFailure(INVALID_REQUEST);

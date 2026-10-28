@@ -36,7 +36,7 @@ class JdbcRemessaTest {
     }
     Fixture fixture(String scenario) { return fixture(SqliteDatabase.open(settings(scenario)),scenario,Clock.fixed(INITIAL,ZoneOffset.UTC)); }
     Fixture fixture(DataSource source,String scenario,Clock clock) {
-        var authentication=new AuthenticationService(new JdbcAuthenticationRepository(source),clock,scenario,Duration.ofHours(1));
+        var authentication=new AuthenticationService(new JdbcAuthenticationRepository(source),clock,scenario,Duration.ofHours(1),new br.dev.luka.esfinge.autenticacao.adapter.out.jdbc.JdbcAuthenticationTransactions(source));
         var inspection=new ScenarioService(new JdbcScenarioRepository(source),scenario,"admin-ficticio",authentication);
         return new Fixture(source,authentication,new RemessaService(authentication,new JdbcTemplate(source).queryForObject("PRAGMA user_version",Integer.class)<9?new LegacyRemessaRepository(source):new JdbcRemessaRepository(source),new JdbcTransactions(source),clock,inspection,new JdbcProcessingRepository(source)));
     }

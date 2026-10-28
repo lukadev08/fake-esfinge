@@ -13,6 +13,8 @@ public final class Processing {
     public record Work(long id,long loteId,long remessaId,String cenario,String ug,long geracao,State state,Instant due,long latencyMillis) {}
     public record FailurePlan(long numeroLote,Integer registro) {}
     public record Diagnostic(String codigo,String mensagem,Integer registro) {}
+    public record ResetCounts(long remessas,long lotes) {}
+    public record Reset(String cenario,long geracaoAnterior,long geracao,long remessasRemovidas,long lotesRemovidos,long sessoesInvalidadas) {}
     public record Consultation(Lote lote,State state,Diagnostic diagnostic) {}
     public record Snapshot(LoteInspection received,State state,List<byte[]> processed,List<byte[]> effective,boolean active,Diagnostic diagnostic) {
         public Snapshot { processed=copy(processed);effective=copy(effective); }

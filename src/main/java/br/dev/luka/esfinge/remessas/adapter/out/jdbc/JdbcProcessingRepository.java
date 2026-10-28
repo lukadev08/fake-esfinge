@@ -75,6 +75,16 @@ public final class JdbcProcessingRepository implements ProcessingRepository {
         removeAll(remessa,generation,now,"SIM_ENVIO_EXPIRADO","Envio expirado no simulador");
         event(remessa.id(),remessa.scenario(),remessa.ug(),null,"ENVIO_EXPIRADO",now);return true;
     }
+    public Processing.ResetCounts reset(String scenario) {
+        for(String table:List.of("registros_efetivos","registros_processados","valores_recebidos","falhas_processamento","processamento_trabalhos","falhas_recepcao","remessa_eventos"))
+            jdbc.update("DELETE FROM "+table+" WHERE cenario=?",scenario);
+        long lots=jdbc.update("DELETE FROM lotes WHERE cenario=?",scenario);
+        long remittances=jdbc.update("DELETE FROM remessas WHERE cenario=?",scenario);
+        jdbc.update("DELETE FROM competencias_bloqueadas WHERE cenario=?",scenario);
+        if(jdbc.update("UPDATE processamento_config SET modo='MANUAL',latencia_ms=1000 WHERE cenario=?",scenario)!=1
+            || jdbc.update("UPDATE relogio_negocio SET deslocamento_ms=0 WHERE cenario=?",scenario)!=1) throw new RemessaFailure(RemessaFailure.Kind.CONFLICT);
+        return new Processing.ResetCounts(remittances,lots);
+    }
     private void removeAll(Remessa remessa,long generation,Instant now,String code,String message) {
         var selected=jdbc.queryForList("SELECT numero FROM lotes WHERE remessa_id=? AND cenario=? AND ug=? AND ativo=1 ORDER BY ordem",Long.class,remessa.id(),remessa.scenario(),remessa.ug());
         for(long lot:selected) {

@@ -38,10 +38,10 @@ class JdbcFinalizationTest {
     }
     Fixture fixture(String scenario) {
         var source=SqliteDatabase.open(settings(scenario));var clock=new JdbcBusinessClock(source,scenario,Clock.fixed(INITIAL,ZoneOffset.UTC));
-        var auth=new AuthenticationService(new JdbcAuthenticationRepository(source),clock,scenario,Duration.ofHours(1));
+        var auth=new AuthenticationService(new JdbcAuthenticationRepository(source),clock,scenario,Duration.ofHours(1),new br.dev.luka.esfinge.autenticacao.adapter.out.jdbc.JdbcAuthenticationTransactions(source));
         var inspection=new ScenarioService(new JdbcScenarioRepository(source),scenario,ADMIN,auth);var repository=new JdbcRemessaRepository(source);var tx=new JdbcTransactions(source);
         var remessas=new RemessaService(auth,repository,tx,clock,inspection,new JdbcProcessingRepository(source));
-        return new Fixture(source,auth,remessas,new ProcessingService(auth,inspection,remessas,repository,new JdbcProcessingRepository(source),tx,clock,clock,new StructuralRecords(),scenario),clock);
+        return new Fixture(source,auth,remessas,new ProcessingService(auth,inspection,remessas,repository,new JdbcProcessingRepository(source),tx,clock,clock,new StructuralRecords(),scenario,auth,inspection),clock);
     }
     static Finalization totals(long count) {
         var values=new EnumMap<Assunto,java.math.BigInteger>(Assunto.class);for(var subject:Assunto.values()) values.put(subject,java.math.BigInteger.ZERO);
@@ -111,7 +111,7 @@ class JdbcFinalizationTest {
         var jdbc=new JdbcTemplate(f.source);var inspection=new ScenarioService(new JdbcScenarioRepository(f.source),"cenario-a",ADMIN,f.auth);
         var guarded=new ProcessingService(f.auth,inspection,f.remessas,new JdbcRemessaRepository(f.source),new JdbcProcessingRepository(f.source),new JdbcTransactions(f.source),f.clock,f.clock,received->{
             var records=new StructuralRecords().process(received);jdbc.update("UPDATE remessas SET finalizada_em=? WHERE chave=?",INITIAL.toString(),key);return records;
-        },"cenario-a");
+        },"cenario-a",f.auth,inspection);
         assertEquals(0,guarded.advance(ADMIN,0,1).passosExecutados());var before=snapshot(jdbc);assertEquals(0,guarded.advance(ADMIN,0,10).passosExecutados());guarded.consult(token,lot.number());assertEquals(before,snapshot(jdbc));assertTrue(guarded.inspect(ADMIN,lot.number()).effective().isEmpty());
         var repository=new JdbcRemessaRepository(f.source);var closed=repository.find(key,"cenario-a","0001").orElseThrow();
         assertNotNull(closed.finalizedAt());assertTrue(new JdbcProcessingRepository(f.source).eligible(closed).isEmpty());

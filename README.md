@@ -14,7 +14,8 @@ E0 está concluído documentalmente no recorte inicial. As fatias E1
 fictícia, abertura de envio, recepção dos seis assuntos, consulta `RECEBIDO` e
 inspeção administrativa com persistência SQLite. A fatia E2 #9 acrescenta disparo
 explícito e processamento estrutural persistido. A #10 acrescenta finalização
-com totalizadores efetivos e histórico preservado. Reset e painel permanecem pendentes.
+com totalizadores efetivos e histórico preservado. A #17 acrescenta reset
+administrativo atômico; o painel permanece pendente.
 A saída E1 depende do aceite humano da #8; testes locais não comprovam T01.
 A continuidade técnica E2 autorizada está delimitada na
 [seção 13.1 do planejamento](docs/planejamento-simulador-tributario.md#131-pendência-e1-e-continuidade-de-e2).
@@ -73,8 +74,9 @@ linhas monetárias. A V8 acrescenta trabalhos, configuração, deslocamento de t
 registros processados/efetivos sem reescrever V1–V7 ou o recebido. A V9 acrescenta
 `remessas.finalizada_em` e atualiza o índice de abertura sem reconstruir tabelas
 ou alterar V1–V8. Schema, migração ou configuração persistida incompatíveis
-interrompem a inicialização sem recriar dados. Não há reset nesta
-fatia. Para outra execução, use outro arquivo/volume; preserve o anterior.
+interrompem a inicialização sem recriar dados. O reset administrativo da #17
+abaixo remove somente a execução do cenário confirmado. Para preservar uma
+execução anterior, use outro arquivo/volume.
 
 Exemplo inteiramente fictício, sem corpo na requisição:
 
@@ -457,7 +459,8 @@ diagnósticos e terminais; rollback reverte o grupo inteiro, inclusive exclusõe
 
 Esta é injeção aproximada do simulador, sem regra fiscal/CON ou mensagem oficial.
 Recuperação por descarte de assunto/reenvio está na #12 abaixo; cancelamento
-integral está na #13. Rota explícita de lote e reset seguem pendentes. Veja
+integral está na #13; reset está na #17 abaixo. Rota explícita de lote fica fora
+do contrato inicial. Veja
 [evidência da #11](docs/evidencias/issue-11.md); #8/E1, T01/E3 e homologação seguem
 pendentes. Publicação da #11 exige autorização específica.
 
@@ -620,7 +623,7 @@ Essa é uma política derivada do simulador, sem ratificação fictícia na API 
 
 V13 acrescenta somente a tabela de bloqueios por cenário/UG/competência;
 V1–V12 e seus checksums permanecem intactos. Reinício conserva bloqueios e dados.
-Reset e repetição com estado inicial pertencem à #17, ainda pendente.
+Reset e repetição com estado inicial estão na #17 abaixo.
 
 O [smoke fictício](.scratch/issue-15-smoke.py) exige instância/base vazia e exclusiva,
 relógio fixo e duas UGs: `--simulator.clock-mode=fixed` e
@@ -701,5 +704,66 @@ python3 .scratch/issue-16-smoke.py resume --port 8080 --state /tmp/issue-16-fict
 304 testes verdes; smoke no jar copiado e na imagem final Linux amd64 passaram 56
 verificações cada, com avanço virtual, reinício, expiração e reenvio. Revisão
 independente do código e conferência documental final aprovadas sem achados.
-Reset #17, #8/E1, integrador/T01/E3, regras fiscais, CI remoto e homologação permanecem
-pendentes. Publicação é a próxima etapa, a cargo da supervisão.
+#8/E1, integrador/T01/E3, regras fiscais, CI remoto e homologação permanecem
+pendentes. Publicação e merge concluídos em 27/10/2026 no
+[PR #43](https://github.com/lukadev08/fake-esfinge/pull/43); #16 encerrada.
+
+## Reset explícito do cenário — #17
+
+POST `/__simulator/reset` usa exclusivamente `X-Simulator-Key`, nenhuma query e
+JSON UTF-8 estrito com cenário e geração esperados. Obtenha os valores atuais em
+GET `/__simulator/configuracao` e confirme o alvo antes de executar:
+
+```json
+{"cenario":"cenario-ficticio-a","geracaoEsperada":0}
+```
+
+**O reset apaga o histórico e os payloads da execução desse cenário.** Guarde
+localmente as evidências necessárias antes do comando. A remoção ocorre dentro
+do SQLite; não apaga arquivos, bases ou volumes externos. Não use o smoke abaixo
+em uma base que precise preservar.
+
+A mesma transação incrementa a geração, remove remessas/lotes/dados/eventos/
+trabalhos/planos/bloqueios/sessões do cenário e restaura MANUAL/1000ms e offset0.
+Configuração, perfil, seed, identidades, migrações e sequências de IDs permanecem;
+outros cenários e instâncias são independentes. Em fixed, o instante retorna ao
+inicial; em system, o relógio real continua com offset0. Reiniciar o processo
+conserva o estado; resetar o cenário remove sua execução.
+
+Sucesso retorna200 com `cenario`, `geracaoAnterior`, `geracao`,
+`remessasRemovidas`, `lotesRemovidos` e `sessoesInvalidadas`, da unidade confirmada.
+Chave administrativa ausente/inválida ou token compatível no lugar dela recebe
+401; query/corpo/mídia/UTF-8/JSON inválidos recebem400. Cenário diferente, geração
+obsoleta ou incremento além de `Long.MAX_VALUE` recebem409 `SIM_ESTADO_INVALIDO`
+sem efeitos. Não há coerção de tipos, campos extras/duplicados ou nulls. Falha de
+statement/COMMIT recebe500 sanitizado e reverte todos os participantes.
+
+Tokens antigos passam a401; chaves/lotes removidos deixam de existir. Faça novo
+login para repetir o fluxo. Novos IDs ficam acima dos high-water anteriores,
+inclusive com tabelas vazias; não há reutilização de identificadores. Trabalho
+capturado antes do reset revalida geração/elegibilidade na transação final e não
+grava no cenário novo. Login lê conta/tempo e salva sessão na mesma transação;
+abertura usa a autenticação feita dentro da transação. Isso evita sessões com
+validade do relógio anterior e abertura tardia com token invalidado.
+
+O contrato administrativo e sua retenção são políticas do simulador. Repetição
+lógica conserva conteúdo, contagens, multiplicidades e estados, não exige tokens,
+chaves ou correlações aleatórias literalmente iguais. V1–V14 permanecem intactas;
+nenhuma migração, dependência ou scheduler novo foi necessário.
+
+Smoke em instância/base fictícias exclusivas, relógio fixed e duas UGs
+(`--simulator.clock-mode=fixed` e `'--simulator.users[0].ugs=0001,0002'`):
+
+```sh
+python3 .scratch/issue-17-smoke.py prepare --port 8080 --state /tmp/issue-17-ficticio.json
+# Reinicie a mesma instância conservando a base; depois:
+python3 .scratch/issue-17-smoke.py resume --port 8080 --state /tmp/issue-17-ficticio.json
+```
+
+[Evidência da #17](docs/evidencias/issue-17.md): executor confirmou326 testes
+verdes, incluindo22 novos HTTP/SQLite; a supervisão confirmou os mesmos326 em
+`clean verify`. Smoke no jar copiado passou63 verificações com reset/reinício/
+reenvio; na imagem final Linux amd64, outras63 verificações passaram e o hash do
+jar foi conferido. Código/testes e conferência documental final aprovados por
+revisão independente, sem achados. #18, #8/E1, integrador/T01/E3, CI remoto, regras fiscais e homologação
+permanecem pendentes; fixtures não substituem os aceites humanos.

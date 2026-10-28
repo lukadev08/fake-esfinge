@@ -38,10 +38,10 @@ class JdbcProcessingTest {
     }
     Fixture fixture(String scenario) {
         var source=SqliteDatabase.open(settings(scenario));var clock=new JdbcBusinessClock(source,scenario,Clock.fixed(INITIAL,ZoneOffset.UTC));
-        var auth=new AuthenticationService(new JdbcAuthenticationRepository(source),clock,scenario,Duration.ofHours(1));
+        var auth=new AuthenticationService(new JdbcAuthenticationRepository(source),clock,scenario,Duration.ofHours(1),new br.dev.luka.esfinge.autenticacao.adapter.out.jdbc.JdbcAuthenticationTransactions(source));
         var inspection=new ScenarioService(new JdbcScenarioRepository(source),scenario,ADMIN,auth);var repository=new JdbcRemessaRepository(source);var tx=new JdbcTransactions(source);
         var remessas=new RemessaService(auth,repository,tx,clock,inspection,new JdbcProcessingRepository(source));
-        return new Fixture(source,auth,remessas,new ProcessingService(auth,inspection,remessas,repository,new JdbcProcessingRepository(source),tx,clock,clock,new StructuralRecords(),scenario),clock);
+        return new Fixture(source,auth,remessas,new ProcessingService(auth,inspection,remessas,repository,new JdbcProcessingRepository(source),tx,clock,clock,new StructuralRecords(),scenario,auth,inspection),clock);
     }
     @Test void horizonteDeConclusaoRejeitaSnapshotInteiroSemEfeitos() {
         var f=fixture("cenario-a");String token=f.token("0001"),key=f.remessas.open(token,202601,"NAO").key();
@@ -172,7 +172,7 @@ class JdbcProcessingTest {
         var inspection=new ScenarioService(new JdbcScenarioRepository(f.source),"cenario-a",ADMIN,f.auth);
         var guarded=new ProcessingService(f.auth,inspection,f.remessas,new JdbcRemessaRepository(f.source),new JdbcProcessingRepository(f.source),new JdbcTransactions(f.source),f.clock,f.clock,received->{
             var records=new StructuralRecords().process(received);jdbc.update("UPDATE scenarios SET generation=1 WHERE id='cenario-a'");return records;
-        },"cenario-a");
+        },"cenario-a",f.auth,inspection);
         assertEquals(0,guarded.advance(ADMIN,0,1).passosExecutados());
         var after=guarded.inspect(ADMIN,lot.number());assertEquals(before.state(),after.state());assertEquals(before.received().events(),after.received().events());
         assertTrue(after.processed().isEmpty());assertTrue(after.effective().isEmpty());
@@ -187,7 +187,7 @@ class JdbcProcessingTest {
         jdbc.update("INSERT INTO scenarios(id,profile,seed,initial_time,clock_mode,token_seconds) VALUES(?,?,?,?,?,?)",s.scenario,s.profile,s.seed,s.initialTime.toString(),s.clockMode,s.tokenValidity.toSeconds());
         String salt=CredentialHash.salt();jdbc.update("INSERT INTO users VALUES(?,?,?,?,?)",s.scenario,"usuario-ficticio","acesso-ficticio",CredentialHash.password("senha-ficticia",salt),salt);
         for(String ug:List.of("0001","0002")) jdbc.update("INSERT INTO user_ugs VALUES(?,?,?)",s.scenario,"usuario-ficticio",ug);
-        var auth=new AuthenticationService(new JdbcAuthenticationRepository(source),Clock.fixed(INITIAL,ZoneOffset.UTC),s.scenario,s.tokenValidity);
+        var auth=new AuthenticationService(new JdbcAuthenticationRepository(source),Clock.fixed(INITIAL,ZoneOffset.UTC),s.scenario,s.tokenValidity,new br.dev.luka.esfinge.autenticacao.adapter.out.jdbc.JdbcAuthenticationTransactions(source));
         var inspection=new ScenarioService(new JdbcScenarioRepository(source),s.scenario,ADMIN,auth);var repository=new LegacyRemessaRepository(source);
         var remessas=new RemessaService(auth,repository,new JdbcTransactions(source),Clock.fixed(INITIAL,ZoneOffset.UTC),inspection,new JdbcProcessingRepository(source));String token=auth.login("acesso-ficticio","senha-ficticia","0001"),key=remessas.open(token,202601,"NAO").key();
         var lots=new ArrayList<Lote>();for(String payload:List.of(RemessaHttpTest.PAYLOAD,CreditoHttpTest.PAYLOAD,ArrecadacaoHttpTest.PAYLOAD,BaixaHttpTest.PAYLOAD,SaldoHttpTest.PAYLOAD,PrazoHttpTest.PAYLOAD)) lots.add(remessas.receive(token,key,new LotePayload().read(payload.getBytes(StandardCharsets.UTF_8))));

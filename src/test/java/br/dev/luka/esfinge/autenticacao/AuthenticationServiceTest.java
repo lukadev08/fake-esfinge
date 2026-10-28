@@ -18,9 +18,13 @@ class AuthenticationServiceTest {
         }
         public Optional<Session> findSession(String token, String scenario) { return Optional.ofNullable(sessions.get(token)).filter(s -> s.scenario().equals(scenario)); }
         public void saveSession(String token, Session session) { sessions.put(token, session); }
+        public long invalidateSessions(String scenario) {long before=sessions.size();sessions.entrySet().removeIf(entry->entry.getValue().scenario().equals(scenario));return before-sessions.size();}
+    };
+    final br.dev.luka.esfinge.autenticacao.application.port.out.AuthenticationTransactions transactions=new br.dev.luka.esfinge.autenticacao.application.port.out.AuthenticationTransactions() {
+        public <T> T execute(java.util.function.Supplier<T> operation) {return operation.get();}
     };
     final AuthenticationService service = new AuthenticationService(repository,
-            Clock.fixed(Instant.parse("2026-01-01T00:00:00Z"), ZoneOffset.UTC), "cenario-a", Duration.ofHours(1));
+            Clock.fixed(Instant.parse("2026-01-01T00:00:00Z"), ZoneOffset.UTC), "cenario-a", Duration.ofHours(1),transactions);
 
     @Test void autenticaComChaveOpaca() {
         String token = service.login("usuario-ficticio", "senha-ficticia", "0001");
@@ -35,14 +39,14 @@ class AuthenticationServiceTest {
     @Test void expiraExatamenteNoLimiteSemEfeitos() {
         String token = service.login("usuario-ficticio", "senha-ficticia", "0001");
         var expired = new AuthenticationService(repository, Clock.fixed(Instant.parse("2026-01-01T01:00:00Z"), ZoneOffset.UTC),
-                "cenario-a", Duration.ofHours(1));
+                "cenario-a", Duration.ofHours(1),transactions);
         assertThrows(AuthenticationFailure.class, () -> expired.authenticate(token));
         assertEquals(1, sessions.size());
         assertThrows(AuthenticationFailure.class, () -> service.authenticate("token-inexistente"));
     }
     @Test void outroCenarioNaoAceitaToken() {
         String token = service.login("usuario-ficticio", "senha-ficticia", "0001");
-        var other = new AuthenticationService(repository, Clock.systemUTC(), "cenario-b", Duration.ofHours(1));
+        var other = new AuthenticationService(repository, Clock.systemUTC(), "cenario-b", Duration.ofHours(1),transactions);
         assertThrows(AuthenticationFailure.class, () -> other.authenticate(token));
     }
     @Test void ugNaoAutorizadaNaoEmiteToken() {
@@ -57,7 +61,7 @@ class AuthenticationServiceTest {
     }
     @Test void validadeConfiguradaNaoUsaUmaHoraFixa() {
         var custom = new AuthenticationService(repository, Clock.fixed(Instant.parse("2026-01-01T00:00:00Z"), ZoneOffset.UTC),
-                "cenario-a", Duration.ofSeconds(30));
+                "cenario-a", Duration.ofSeconds(30),transactions);
         String token = custom.login("usuario-ficticio", "senha-ficticia", "0001");
         assertEquals(Instant.parse("2026-01-01T00:00:30Z"), sessions.get(token).expiresAt());
     }

@@ -108,3 +108,15 @@ achados materiais e conferência documental final aprovada. Containers/processos
 temporários encerrados, bases fictícias
 tmp preservadas; nenhum volume Docker criado. Evidência completa em
 [issue-16.md](../docs/evidencias/issue-16.md). Sem commit/push pelo executor.
+
+## Encerramento publicado
+
+Supervisão publicou e integrou a #16 no
+[PR #43](https://github.com/lukadev08/fake-esfinge/pull/43), head
+`24287a8c906026aab38807c302929a6178d4bfa6`, base `df77df1` e merge
+`9411e16fb095170a405f57b3d9d66e287b88f232`. GitHub reconfirmou MERGED e
+#16 CLOSED/COMPLETED; checkout alinhado ao merge por fast-forward. Check rollup
+vazio, sem execução de CI remoto. Corpo publicado exato preservado em
+`pr-issue-16.md`; código/testes/smoke/jar inalterados, sem repetir validação.
+Container ausente, nenhum volume criado, dados fictícios tmp preservados.
+Próxima #17 explorada, sem implementação nesta entrada. #8/E1 e T01/E3 pendentes.
