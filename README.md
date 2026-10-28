@@ -770,3 +770,21 @@ permanecem pendentes; fixtures não substituem os aceites humanos.
 Publicação e merge concluídos em28/10/2026 no
 [PR #44](https://github.com/lukadev08/fake-esfinge/pull/44); #17 encerrada. Check
 rollup vazio, sem CI remoto. Próxima #18 explorada, ainda não implementada.
+
+
+## Inspeção administrativa e relatório da execução
+
+A [referência administrativa](docs/inspecao-administrativa.md) define listagens
+filtradas/paginadas, detalhe de remessa, registros por tipo e relatórios LOCAL e
+COMPARTILHAVEL. Todos exigem chave administrativa; leitura não avança tarefas,
+relógio ou atividade. LOCAL inclui eventos reais paginados; salve todas as páginas
+com `curl -o` no ambiente controlado. O manifesto real acompanha o jar e seu hash
+aparece no relatório; comparação independente permanece `NAO_COMPARADO`/null.
+Sem UI, aceite humano #8/E1/T01/E3 ou homologação implícitos.
+
+Validação local da #18: executor `verify` e supervisão `clean verify` com343testes,
+zero falhas/erros/ignorados. Reviewer independente aprovou código/testes sem
+achados. Smoke do jar copiado:45verificações; imagem final Linux amd64: outras45,
+ambos com reinício/reset. Jar interno/manifesto conferidos e SQLite íntegro/FKs
+válidas; container temporário removido. Conferência documental final aprovada sem achados materiais.
+A [evidência da #18](docs/evidencias/issue-18.md) distingue artefatos e execuções.

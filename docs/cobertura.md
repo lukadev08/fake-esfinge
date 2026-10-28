@@ -15,7 +15,8 @@ Artefato 0.1.0, issues [#1](https://github.com/lukadev08/fake-esfinge/issues/1) 
 [#14](https://github.com/lukadev08/fake-esfinge/issues/14) e
 [#15](https://github.com/lukadev08/fake-esfinge/issues/15) e
 [#16](https://github.com/lukadev08/fake-esfinge/issues/16) e
-[#17](https://github.com/lukadev08/fake-esfinge/issues/17).
+[#17](https://github.com/lukadev08/fake-esfinge/issues/17) e
+[#18](https://github.com/lukadev08/fake-esfinge/issues/18).
 Fontes: [contrato E0](contrato-e0.md), [pacote derivado](contratos/2026-v6-6.06/README.md)
 e [hashes das fontes](contratos/2026-v6-6.06/fontes.json), consolidados em 23/10/2026.
 Não há OpenAPI oficial nem ensaio independente do integrador/TCE. O manifesto
@@ -66,6 +67,9 @@ registra a evolução implementada.
 | Administração de envio vencido | GET sem efeitos, controles que exigem chave aberta recusam409 antes de materializar marcador; nova abertura bloqueada403 sem expirar; consulta compatível vencida pode expirar e retorna histórico sem conduzir processamento | Plano16; `JdbcExpirationTest`, `ExpiracaoHttpTest` | Aproximada; sem rota compatível nova |
 | Reset administrativo do cenário | POST protegido com alvo/geração esperados, geração+1/purge de dados e histórico/defaults/sessões em uma TX, sem apagar arquivos; configuração/identidades/seq preservadas | `ResetHttpTest`, `JdbcResetTest`; parcelas T09/T13/T19, rollback statement/COMMIT, outra base/cenário, seis assuntos e replay | Implementada tecnicamente; retenção e API administrativas derivadas |
 | Barreira de reset | Trabalho antigo inelegível após purge/geração, abertura reautentica dentroTX e login serializa conta/tempo/save; sem token com offset antigo ou ID reutilizado | `JdbcResetTest`, `ArchitectureTest`; cálculo pausado, duas ordens login/abertura, high-water900, reinício | Implementada; sem ciclo entre capacidades ou migração nova |
+| Inspeção administrativa / seis assuntos | GET remessas/lotes, filtros cenário/UG/competência/assunto, detalhe remessa/eventos/registro; keyset+teto/geração e índices originais, limites locais 50/200; sem payload nas listas ou efeitos de leitura | Contrato administrativo 0.1.0, [referência](inspecao-administrativa.md); `InspectionHttpTest`, `JdbcInspectionTest`; parcelas T01/T02/T18/T19 | Implementada; estados atuais entre páginas, sem snapshot imutável ou validação fiscal |
+| Relatório LOCAL / sequência e origem | Eventos reais paginados com referência local persistida e vínculos; origem estritamente declarada, configuração não secreta/contagens; divergências null/NAO_COMPARADO | Contrato administrativo 0.1.0; `InspectionHttpTest`, `JdbcInspectionTest`; [evidência](evidencias/issue-18.md) | Implementada; comparação/SQL independente e aceites humanos pendentes |
+| Síntese compartilhável / manifesto | Construção separada sem dados da execução; manifesto real empacotado via Maven resources, SHA-256 do snapshot; versão do jar disponível, Git/tag/digest imagem indisponíveis | Contrato administrativo 0.1.0; `InspectionHttpTest`, smoke do jar descrito na evidência | Implementada; sem exportação server-side, publicação ou detecção de dados originais |
 | Descarte explícito de lote | Rota explícita | Exclusão do contrato inicial | Não implementada |
 | Regras fiscais / vínculos entre assuntos / CONs | Evolução sem catálogo aprovado | Issue #27 | Não implementada |
 | Aceites humanos / T01 / E1–E5 | Integrador real, referência independente e reprodução | Issues #8, #19, #20, #22, #26 | Pendente |
@@ -241,3 +245,10 @@ sem CI remoto. Encerramento documental não alterou código ou repetiu testes.
 Remoção de histórico/payloads é deliberada e restrita ao cenário confirmado;
 fixtures não aprovam #8/E1, integrador/T01/E3 ou homologação. #18/CI remoto e
 regras fiscais continuam pendentes.
+
+
+Snapshot funcional da #18: contrato e testes acima identificam a cobertura da
+inspeção/relatório. Este manifesto é recurso do jar: congelado antes de verify e
+imagem. Resultados/revisões posteriores ficam em [evidência18](evidencias/issue-18.md),
+README e PROGRESS; não alteram o snapshot empacotado. E2 técnico não encerra os
+aceites humanos #8/E1/T01/E3, CI remoto, regras fiscais ou homologação.

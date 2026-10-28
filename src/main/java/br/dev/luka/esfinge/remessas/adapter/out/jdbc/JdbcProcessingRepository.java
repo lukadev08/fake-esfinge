@@ -7,7 +7,7 @@ import java.util.*;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-public final class JdbcProcessingRepository implements ProcessingRepository {
+public final class JdbcProcessingRepository implements ProcessingRepository, br.dev.luka.esfinge.remessas.application.port.out.InspectionProcessing {
     private final JdbcTemplate jdbc;
     public JdbcProcessingRepository(DataSource source) {jdbc=new JdbcTemplate(source);}
     public Processing.Configuration configuration(String scenario,Instant now) {
@@ -142,4 +142,16 @@ public final class JdbcProcessingRepository implements ProcessingRepository {
     public Processing.State state(long lot) {return jdbc.query("SELECT situacao FROM processamento_trabalhos WHERE lote_id=?",(r,n)->Processing.State.valueOf(r.getString(1)),lot).stream().findFirst().orElse(Processing.State.RECEBIDO);}
     public List<byte[]> processed(long lot) {return jdbc.query("SELECT payload FROM registros_processados WHERE lote_id=? ORDER BY indice",(r,n)->r.getBytes(1),lot);}
     public List<byte[]> effective(long lot) {return jdbc.query("SELECT payload FROM registros_efetivos WHERE lote_id=? ORDER BY indice",(r,n)->r.getBytes(1),lot);}
+
+    public Inspection.State summary(String scenario,long lot) {
+        return new Inspection.State(state(lot),diagnostic(lot),jdbc.queryForObject("SELECT COUNT(*) FROM registros_processados WHERE cenario=? AND lote_id=?",Long.class,scenario,lot),jdbc.queryForObject("SELECT COUNT(*) FROM registros_efetivos WHERE cenario=? AND lote_id=?",Long.class,scenario,lot));
+    }
+    public List<Inspection.Record> records(String scenario,long lot,Inspection.Type type,Inspection.Window w) {
+        String table=switch(type){case PROCESSADOS->"registros_processados";case EFETIVOS->"registros_efetivos";default->throw new IllegalArgumentException();};
+        return jdbc.query("SELECT indice,payload FROM "+table+" WHERE cenario=? AND lote_id=? AND indice>? AND indice<=? ORDER BY indice LIMIT ?",(r,n)->new Inspection.Record(r.getLong(1),r.getBytes(2)),scenario,lot,w.depois(),w.teto(),w.limite());
+    }
+    public List<Inspection.ResultCounts> counts(String scenario,Long remessa) {
+        return jdbc.query("SELECT l.assunto,COALESCE(t.situacao,'RECEBIDO'),COUNT(*),COALESCE(SUM((SELECT COUNT(*) FROM registros_processados p WHERE p.lote_id=l.numero)),0),COALESCE(SUM((SELECT COUNT(*) FROM registros_efetivos e WHERE e.lote_id=l.numero)),0) FROM lotes l LEFT JOIN processamento_trabalhos t ON t.lote_id=l.numero WHERE l.cenario=?"+(remessa==null?"":" AND l.remessa_id=?")+" GROUP BY l.assunto,COALESCE(t.situacao,'RECEBIDO') ORDER BY l.assunto,2",
+            (r,n)->new Inspection.ResultCounts(Assunto.valueOf(r.getString(1)),r.getString(2),r.getLong(3),r.getLong(4),r.getLong(5)),remessa==null?new Object[]{scenario}:new Object[]{scenario,remessa});
+    }
 }
